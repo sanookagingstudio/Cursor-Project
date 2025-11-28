@@ -21,7 +21,7 @@ from app.schemas.publishing import (
     FinanceResponse
 )
 from app.services.dashboard_service import DashboardService
-from app.contexts.auth_context import get_current_user  # TODO: Implement auth context
+# from app.contexts.auth_context import get_current_user  # TODO: Implement auth context
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 

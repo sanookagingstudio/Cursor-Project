@@ -54,10 +54,87 @@ class TemplateApplyRequest(BaseModel):
 
 class SpecialFeatureRequest(BaseModel):
     project_id: Optional[UUID] = None
-    feature_type: str = Field(..., description="Feature type: coloring_book, pattern, origami, etc.")
+    feature_type: str = Field(..., description="Feature type: coloring_book, pattern, origami, mosaic, pixel_art, line_sticker, gif, emoji, digital_card, meme, qr_code, face_swap, style_transfer, ocr, collage, watermark, color_palette, etc.")
     prompt: str = Field(..., min_length=1)
     options: Dict[str, Any] = Field(default={})
     provider: Optional[str] = Field(default="flux")
+    source_image_ids: Optional[List[UUID]] = Field(default=None, description="Source image IDs for features that need input images")
+
+
+# Enhanced Feature Specific Schemas
+class MosaicRequest(BaseModel):
+    project_id: Optional[UUID] = None
+    source_image_ids: List[UUID] = Field(..., min_items=1, description="Source images for mosaic")
+    tile_size: int = Field(default=50, ge=10, le=200, description="Tile size in pixels")
+    grid_size: Optional[tuple] = Field(default=None, description="Grid size (rows, cols)")
+    provider: Optional[str] = Field(default="mock")
+
+
+class PixelArtRequest(BaseModel):
+    project_id: Optional[UUID] = None
+    source_image_id: UUID = Field(..., description="Source image to convert")
+    pixel_depth: str = Field(default="8bit", description="8bit or 16bit")
+    color_count: int = Field(default=256, ge=2, le=256, description="Number of colors")
+    pixel_size: int = Field(default=4, ge=1, le=20, description="Pixel size")
+    provider: Optional[str] = Field(default="mock")
+
+
+class LineStickerRequest(BaseModel):
+    project_id: Optional[UUID] = None
+    prompt: str = Field(..., min_length=1)
+    sticker_type: str = Field(default="static", description="static or animated")
+    size: str = Field(default="512x512", description="Sticker size")
+    style: Optional[str] = Field(default="cute")
+    provider: Optional[str] = Field(default="mock")
+
+
+class GifGeneratorRequest(BaseModel):
+    project_id: Optional[UUID] = None
+    source_image_ids: List[UUID] = Field(..., min_items=2, description="Source images for GIF")
+    frame_rate: int = Field(default=10, ge=1, le=30, description="Frames per second")
+    loop: bool = Field(default=True, description="Loop GIF")
+    delay: int = Field(default=100, ge=10, le=1000, description="Delay between frames (ms)")
+    provider: Optional[str] = Field(default="mock")
+
+
+class EmojiGeneratorRequest(BaseModel):
+    project_id: Optional[UUID] = None
+    prompt: str = Field(..., min_length=1)
+    size: str = Field(default="128x128", description="Emoji size: 32x32, 64x64, 128x128, 256x256")
+    style: Optional[str] = Field(default="cute")
+    provider: Optional[str] = Field(default="mock")
+
+
+class DigitalCardRequest(BaseModel):
+    project_id: Optional[UUID] = None
+    card_type: str = Field(..., description="birthday, wedding, invitation, etc.")
+    template_id: Optional[UUID] = None
+    text: Dict[str, str] = Field(default={}, description="Text fields: title, message, etc.")
+    images: Dict[str, UUID] = Field(default={}, description="Image fields: background, logo, etc.")
+    colors: Dict[str, str] = Field(default={}, description="Color customization")
+    provider: Optional[str] = Field(default="mock")
+
+
+class MemeGeneratorRequest(BaseModel):
+    project_id: Optional[UUID] = None
+    template_id: Optional[str] = Field(default=None, description="Meme template ID")
+    source_image_id: Optional[UUID] = None
+    top_text: Optional[str] = None
+    bottom_text: Optional[str] = None
+    text_color: str = Field(default="white")
+    font_size: int = Field(default=40, ge=20, le=100)
+    provider: Optional[str] = Field(default="mock")
+
+
+class QrCodeRequest(BaseModel):
+    project_id: Optional[UUID] = None
+    data: str = Field(..., min_length=1, description="Data to encode in QR code")
+    size: int = Field(default=256, ge=100, le=1000, description="QR code size")
+    error_correction: str = Field(default="M", description="L, M, Q, H")
+    foreground_color: str = Field(default="#000000")
+    background_color: str = Field(default="#FFFFFF")
+    logo_image_id: Optional[UUID] = None
+    provider: Optional[str] = Field(default="mock")
 
 
 # Response Schemas

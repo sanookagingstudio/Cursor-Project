@@ -191,7 +191,7 @@ def edit_image_task(self, job_id: str):
         db.commit()
         
         # Publish events
-        EventBus().publish("ASSET_CREATED", {
+        publish_event("ASSET_CREATED", {
             "asset_id": str(asset.id),
             "type": "image",
             "job_id": job_id
@@ -278,7 +278,7 @@ def apply_template_task(self, job_id: str):
         db.commit()
         
         # Publish events
-        EventBus().publish("ASSET_CREATED", {
+        publish_event("ASSET_CREATED", {
             "asset_id": str(asset.id),
             "type": "image",
             "job_id": job_id

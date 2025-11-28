@@ -94,7 +94,7 @@ def upload_publication_task(self, job_id: str):
             publication.external_post_id = result.external_post_id
             publication.published_time = result.published_time
         
-        publication.metadata = {**publication.metadata, **result.metadata}
+        publication.meta_data = {**publication.meta_data, **result.metadata}
         db.commit()
         db.refresh(publication)
         

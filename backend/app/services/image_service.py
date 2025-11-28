@@ -22,6 +22,7 @@ from app.schemas.image import (
 from app.providers.image_provider_base import ImageProviderBase
 from app.providers.image_mock import MockImageProvider
 from app.core.events import publish_event
+from app.core.celery_app import celery_app
 
 
 class ImageService:
@@ -101,6 +102,12 @@ class ImageService:
             "project_id": str(project.id)
         })
         
+        # Dispatch to Celery worker
+        try:
+            celery_app.send_task("image.generate", args=[str(job.id)])
+        except Exception as e:
+            print(f"Failed to dispatch image.generate task: {e}")
+        
         return job
     
     def edit_image(
@@ -134,11 +141,17 @@ class ImageService:
         db.refresh(job)
         
         # Publish event
-        EventBus().publish("JOB_CREATED", {
+        publish_event("JOB_CREATED", {
             "job_id": str(job.id),
             "type": "image.edit",
             "asset_id": str(request.asset_id)
         })
+        
+        # Dispatch to Celery worker
+        try:
+            celery_app.send_task("image.edit", args=[str(job.id)])
+        except Exception as e:
+            print(f"Failed to dispatch image.edit task: {e}")
         
         return job
     
@@ -172,12 +185,18 @@ class ImageService:
         db.refresh(job)
         
         # Publish event
-        EventBus().publish("JOB_CREATED", {
+        publish_event("JOB_CREATED", {
             "job_id": str(job.id),
             "type": "image.batch",
             "project_id": str(project.id),
             "batch_count": request.batch_count
         })
+        
+        # Dispatch to Celery worker (batch uses generate task)
+        try:
+            celery_app.send_task("image.generate", args=[str(job.id)])
+        except Exception as e:
+            print(f"Failed to dispatch image.batch task: {e}")
         
         return job
     
@@ -210,7 +229,7 @@ class ImageService:
         db.refresh(job)
         
         # Publish event
-        EventBus().publish("JOB_CREATED", {
+        publish_event("JOB_CREATED", {
             "job_id": str(job.id),
             "type": "image.upscale",
             "asset_id": str(request.asset_id)
@@ -251,11 +270,17 @@ class ImageService:
         db.refresh(job)
         
         # Publish event
-        EventBus().publish("JOB_CREATED", {
+        publish_event("JOB_CREATED", {
             "job_id": str(job.id),
             "type": "image.template",
             "template_id": str(request.template_id)
         })
+        
+        # Dispatch to Celery worker
+        try:
+            celery_app.send_task("image.template", args=[str(job.id)])
+        except Exception as e:
+            print(f"Failed to dispatch image.template task: {e}")
         
         return job
     
@@ -265,21 +290,28 @@ class ImageService:
         request: SpecialFeatureRequest,
         user_id: Optional[UUID] = None
     ) -> Job:
-        """Generate special feature (coloring book, pattern, etc.)"""
+        """Generate special feature (coloring book, pattern, mosaic, pixel_art, line_sticker, gif, emoji, digital_card, meme, qr_code, etc.)"""
         # Create project if needed
         project = self.create_project_if_needed(db, request.project_id, user_id)
+        
+        # Prepare input payload
+        input_payload = {
+            "feature_type": request.feature_type,
+            "prompt": request.prompt,
+            "options": request.options,
+            "provider": request.provider or "mock"
+        }
+        
+        # Add source_image_ids if provided
+        if request.source_image_ids:
+            input_payload["source_image_ids"] = [str(id) for id in request.source_image_ids]
         
         # Create job
         job = Job(
             project_id=project.id,
             type="image.special",
             status="pending",
-            input_payload={
-                "feature_type": request.feature_type,
-                "prompt": request.prompt,
-                "options": request.options,
-                "provider": request.provider or "mock"
-            },
+            input_payload=input_payload,
             output_payload={}
         )
         db.add(job)
@@ -287,11 +319,17 @@ class ImageService:
         db.refresh(job)
         
         # Publish event
-        EventBus().publish("JOB_CREATED", {
+        publish_event("JOB_CREATED", {
             "job_id": str(job.id),
             "type": "image.special",
             "feature_type": request.feature_type
         })
+        
+        # Dispatch to Celery worker
+        try:
+            celery_app.send_task("image.special", args=[str(job.id)])
+        except Exception as e:
+            print(f"Failed to dispatch image.special task: {e}")
         
         return job
     

@@ -84,7 +84,7 @@ class PublishingService:
         db.refresh(job)
         
         # Update publication with job reference
-        publication.metadata = {**publication.metadata, "job_id": str(job.id)}
+        publication.meta_data = {**publication.meta_data, "job_id": str(job.id)}
         db.commit()
         
         # Publish event

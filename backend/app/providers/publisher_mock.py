@@ -44,7 +44,7 @@ class MockPlatformPublisher(PlatformPublisherBase):
                 "asset_path": asset_path,
                 "title": title,
                 "description": description,
-                **metadata or {}
+                **(metadata or {})
             }
         )
     

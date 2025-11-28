@@ -75,7 +75,7 @@ class InputBrainService:
             idea_id=version_data.idea_id,
             version_index=version_data.version_index,
             preview_asset_id=version_data.preview_asset_id,
-            metadata=version_data.metadata or {}
+            meta_data=version_data.metadata or {}
         )
         db.add(version)
         db.commit()
@@ -128,7 +128,7 @@ class InputBrainService:
         draft = WorkflowDraft(
             idea_id=draft_data.idea_id,
             steps=[step.model_dump() if hasattr(step, 'model_dump') else step.dict() for step in draft_data.steps],
-            metadata=draft_data.metadata or {},
+            meta_data=draft_data.metadata or {},
             status="draft"
         )
         db.add(draft)

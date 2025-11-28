@@ -128,3 +128,27 @@ class TabRecordResponse(BaseModel):
 
     model_config = {"from_attributes": True}
 
+
+# Enhanced Music Feature Schemas
+class KaraokeGeneratorRequest(BaseModel):
+    project_id: Optional[UUID] = None
+    source_audio_id: UUID = Field(..., description="Source audio asset ID")
+    vocal_removal_strength: str = Field(default="medium", description="low, medium, high")
+    lyrics_display_style: str = Field(default="classic", description="classic, modern")
+    provider: Optional[str] = Field(default="mock")
+
+
+class VoiceCloneRequest(BaseModel):
+    project_id: Optional[UUID] = None
+    source_audio_id: UUID = Field(..., description="Source audio for voice cloning")
+    text: str = Field(..., min_length=1, description="Text to generate speech")
+    language: str = Field(default="th", description="Language code")
+    provider: Optional[str] = Field(default="mock")
+
+
+class SoundEffectsRequest(BaseModel):
+    project_id: Optional[UUID] = None
+    effect_type: str = Field(..., description="Effect type: explosion, door, nature, etc.")
+    duration: float = Field(default=2.0, ge=0.1, le=10.0, description="Duration in seconds")
+    provider: Optional[str] = Field(default="mock")
+

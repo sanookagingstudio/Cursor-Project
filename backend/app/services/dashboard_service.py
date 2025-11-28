@@ -33,7 +33,7 @@ class DashboardService:
             owner_id=user_id,
             name=channel_data.name,
             description=channel_data.description,
-            metadata=channel_data.metadata or {}
+            meta_data=channel_data.metadata or {}
         )
         db.add(channel)
         db.commit()
@@ -154,9 +154,9 @@ class DashboardService:
         
         # Calculate totals
         total_views = sum(s.views for s in snapshots)
-        total_revenue = sum(r.amount for r in db.query(RevenueRecord).filter(
+        total_revenue = sum(r.amount for r in (db.query(RevenueRecord).filter(
             RevenueRecord.publication_id.in_(publication_ids)
-        ).all() if publication_ids else [])
+        ).all() if publication_ids else []))
         
         # Get recent episodes
         recent_episodes = db.query(Episode).filter(

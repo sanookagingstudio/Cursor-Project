@@ -17,7 +17,10 @@ from app.schemas.video import (
     VideoMultiExportResponse,
     VideoSubtitleRequest,
     VideoSubtitleResponse,
-    VideoDetailsResponse
+    VideoDetailsResponse,
+    ShortsGeneratorRequest,
+    MemeVideoRequest,
+    VideoToGifRequest
 )
 from app.services.video_service import VideoService
 from app.models.asset import Asset
@@ -152,4 +155,69 @@ def get_video_details(asset_id: UUID, db: Session = Depends(get_db)):
         metadata=metadata,
         created_at=asset.created_at
     )
+
+
+@router.post("/shorts", response_model=VideoGenerateResponse, status_code=status.HTTP_201_CREATED)
+def generate_shorts(
+    request: ShortsGeneratorRequest,
+    db: Session = Depends(get_db)
+):
+    """Generate shorts video (TikTok, YouTube Shorts, Reels)"""
+    try:
+        job = video_service.generate_shorts(db, request)
+        return VideoGenerateResponse(
+            job_id=job.id,
+            status=job.status,
+            estimated_time=120  # Mock estimate
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to generate shorts: {str(e)}"
+        )
+
+
+@router.post("/meme", response_model=VideoGenerateResponse, status_code=status.HTTP_201_CREATED)
+def generate_meme_video(
+    request: MemeVideoRequest,
+    db: Session = Depends(get_db)
+):
+    """Generate meme video"""
+    try:
+        job = video_service.generate_meme_video(db, request)
+        return VideoGenerateResponse(
+            job_id=job.id,
+            status=job.status,
+            estimated_time=90  # Mock estimate
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to generate meme video: {str(e)}"
+        )
+
+
+@router.post("/to-gif", response_model=VideoGenerateResponse, status_code=status.HTTP_201_CREATED)
+def convert_video_to_gif(
+    request: VideoToGifRequest,
+    db: Session = Depends(get_db)
+):
+    """Convert video to GIF"""
+    try:
+        job = video_service.convert_video_to_gif(db, request)
+        return VideoGenerateResponse(
+            job_id=job.id,
+            status=job.status,
+            estimated_time=60  # Mock estimate
+        )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to convert video to GIF: {str(e)}"
+        )
 

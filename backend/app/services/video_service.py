@@ -14,11 +14,15 @@ from app.schemas.video import (
     VideoEditRequest,
     VideoMultiExportRequest,
     VideoSubtitleRequest,
-    VideoEditOperation
+    VideoEditOperation,
+    ShortsGeneratorRequest,
+    MemeVideoRequest,
+    VideoToGifRequest
 )
 from app.providers.video_provider_base import VideoProviderBase
 from app.providers.video_mock import MockVideoProvider
 from app.core.events import publish_event
+from app.core.celery_app import celery_app
 
 
 class VideoService:
@@ -92,6 +96,12 @@ class VideoService:
             "project_id": str(project.id)
         })
         
+        # Dispatch to Celery worker
+        try:
+            celery_app.send_task("video.generate", args=[str(job.id)])
+        except Exception as e:
+            print(f"Failed to dispatch video.generate task: {e}")
+        
         return job
     
     def edit_video(
@@ -129,6 +139,12 @@ class VideoService:
             "type": "video.edit",
             "asset_id": str(request.asset_id)
         })
+        
+        # Dispatch to Celery worker
+        try:
+            celery_app.send_task("video.edit", args=[str(job.id)])
+        except Exception as e:
+            print(f"Failed to dispatch video.edit task: {e}")
         
         return job
     
@@ -168,6 +184,12 @@ class VideoService:
             "aspect_ratios": request.aspect_ratios
         })
         
+        # Dispatch to Celery worker
+        try:
+            celery_app.send_task("video.multi_export", args=[str(job.id)])
+        except Exception as e:
+            print(f"Failed to dispatch video.multi_export task: {e}")
+        
         return job
     
     def generate_subtitle(
@@ -206,6 +228,142 @@ class VideoService:
             "type": "video.subtitle",
             "asset_id": str(request.asset_id)
         })
+        
+        # Dispatch to Celery worker
+        try:
+            celery_app.send_task("video.subtitle", args=[str(job.id)])
+        except Exception as e:
+            print(f"Failed to dispatch video.subtitle task: {e}")
+        
+        return job
+    
+    def generate_shorts(
+        self,
+        db: Session,
+        request: ShortsGeneratorRequest,
+        user_id: Optional[UUID] = None
+    ) -> Job:
+        """Generate shorts video (TikTok, YouTube Shorts, Reels)"""
+        project = self.create_project_if_needed(db, request.project_id, user_id)
+        
+        # Create job
+        job = Job(
+            project_id=project.id,
+            type="video.shorts",
+            status="pending",
+            input_payload={
+                "source_video_id": str(request.source_video_id) if request.source_video_id else None,
+                "platform": request.platform,
+                "auto_features": request.auto_features,
+                "prompt": request.prompt,
+                "provider": request.provider or "mock"
+            },
+            output_payload={}
+        )
+        db.add(job)
+        db.commit()
+        db.refresh(job)
+        
+        # Publish event
+        publish_event("JOB_CREATED", {
+            "job_id": str(job.id),
+            "type": "video.shorts",
+            "platform": request.platform
+        })
+        
+        # Dispatch to Celery worker
+        try:
+            celery_app.send_task("video.shorts", args=[str(job.id)])
+        except Exception as e:
+            print(f"Failed to dispatch video.shorts task: {e}")
+        
+        return job
+    
+    def generate_meme_video(
+        self,
+        db: Session,
+        request: MemeVideoRequest,
+        user_id: Optional[UUID] = None
+    ) -> Job:
+        """Generate meme video"""
+        project = self.create_project_if_needed(db, request.project_id, user_id)
+        
+        # Create job
+        job = Job(
+            project_id=project.id,
+            type="video.meme",
+            status="pending",
+            input_payload={
+                "template_id": request.template_id,
+                "source_video_id": str(request.source_video_id) if request.source_video_id else None,
+                "top_text": request.top_text,
+                "bottom_text": request.bottom_text,
+                "effects": request.effects,
+                "provider": request.provider or "mock"
+            },
+            output_payload={}
+        )
+        db.add(job)
+        db.commit()
+        db.refresh(job)
+        
+        # Publish event
+        publish_event("JOB_CREATED", {
+            "job_id": str(job.id),
+            "type": "video.meme"
+        })
+        
+        # Dispatch to Celery worker
+        try:
+            celery_app.send_task("video.meme", args=[str(job.id)])
+        except Exception as e:
+            print(f"Failed to dispatch video.meme task: {e}")
+        
+        return job
+    
+    def convert_video_to_gif(
+        self,
+        db: Session,
+        request: VideoToGifRequest,
+        user_id: Optional[UUID] = None
+    ) -> Job:
+        """Convert video to GIF"""
+        # Get source asset
+        source_asset = db.query(Asset).filter(Asset.id == request.source_video_id).first()
+        if not source_asset:
+            raise ValueError("Source video asset not found")
+        
+        # Create job
+        job = Job(
+            project_id=request.project_id or source_asset.project_id,
+            type="video.to_gif",
+            status="pending",
+            input_payload={
+                "source_video_id": str(request.source_video_id),
+                "start_time": request.start_time,
+                "duration": request.duration,
+                "frame_rate": request.frame_rate,
+                "optimize_size": request.optimize_size,
+                "provider": request.provider or "mock"
+            },
+            output_payload={}
+        )
+        db.add(job)
+        db.commit()
+        db.refresh(job)
+        
+        # Publish event
+        publish_event("JOB_CREATED", {
+            "job_id": str(job.id),
+            "type": "video.to_gif",
+            "asset_id": str(request.source_video_id)
+        })
+        
+        # Dispatch to Celery worker
+        try:
+            celery_app.send_task("video.to_gif", args=[str(job.id)])
+        except Exception as e:
+            print(f"Failed to dispatch video.to_gif task: {e}")
         
         return job
 

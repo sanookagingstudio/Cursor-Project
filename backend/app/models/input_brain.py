@@ -44,7 +44,7 @@ class IdeaVersion(Base):
     idea_id = Column(UUID(as_uuid=True), ForeignKey("content_ideas.id", ondelete="CASCADE"), nullable=False)
     version_index = Column(Integer, nullable=False)
     preview_asset_id = Column(UUID(as_uuid=True), ForeignKey("assets.id", ondelete="SET NULL"), nullable=True)
-    metadata = Column(JSONB, default={})
+    meta_data = Column(JSONB, default={})
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
 
     # Relationships
@@ -62,7 +62,7 @@ class WorkflowDraft(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     idea_id = Column(UUID(as_uuid=True), ForeignKey("content_ideas.id", ondelete="CASCADE"), nullable=False)
     steps = Column(JSONB, nullable=False, default=[])
-    metadata = Column(JSONB, default={})
+    meta_data = Column(JSONB, default={})
     status = Column(String(50), nullable=False, default="draft")  # "draft" | "ready" | "started"
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(), onupdate=func.now())

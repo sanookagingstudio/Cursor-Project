@@ -21,6 +21,7 @@ from app.schemas.music import (
 from app.providers.audio_provider_base import AudioProviderBase
 from app.providers.audio_mock import MockAudioProvider
 from app.core.events import publish_event
+from app.core.celery_app import celery_app
 
 
 class MusicService:

@@ -22,7 +22,7 @@ class PlatformAccount(Base):
     external_id = Column(String(255), nullable=True)
     name = Column(String(255), nullable=True)
     handle = Column(String(255), nullable=True)
-    metadata = Column(JSONB, default={})
+    meta_data = Column(JSONB, default={})
     auth_config = Column(JSONB, default={})  # encrypted tokens
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(), onupdate=func.now())
@@ -43,7 +43,7 @@ class ContentChannel(Base):
     owner_id = Column(UUID(as_uuid=True), ForeignKey("auth.users(id)", ondelete="CASCADE"), nullable=False)
     name = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
-    metadata = Column(JSONB, default={})
+    meta_data = Column(JSONB, default={})
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(), onupdate=func.now())
 
@@ -77,7 +77,7 @@ class Series(Base):
     content_channel_id = Column(UUID(as_uuid=True), ForeignKey("content_channels(id)", ondelete="CASCADE"), nullable=False)
     name = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
-    metadata = Column(JSONB, default={})
+    meta_data = Column(JSONB, default={})
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(), onupdate=func.now())
 
@@ -99,7 +99,7 @@ class Episode(Base):
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
     status = Column(String(50), nullable=False, default="draft")  # "draft" | "ready" | "publishing" | "published"
-    metadata = Column(JSONB, default={})
+    meta_data = Column(JSONB, default={})
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(), onupdate=func.now())
 
@@ -123,7 +123,7 @@ class PublicationRecord(Base):
     scheduled_time = Column(TIMESTAMP(timezone=True), nullable=True)
     published_time = Column(TIMESTAMP(timezone=True), nullable=True)
     fail_reason = Column(Text, nullable=True)
-    metadata = Column(JSONB, default={})
+    meta_data = Column(JSONB, default={})
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(), onupdate=func.now())
 
@@ -150,7 +150,7 @@ class PerformanceSnapshot(Base):
     ctr = Column(Float, default=0)  # Click-through rate
     engagement_rate = Column(Float, default=0)
     estimated_revenue = Column(Float, default=0)
-    metadata = Column(JSONB, default={})
+    meta_data = Column(JSONB, default={})
 
     def __repr__(self):
         return f"<PerformanceSnapshot(id={self.id}, views={self.views}, timestamp={self.timestamp})>"
@@ -167,7 +167,7 @@ class RevenueRecord(Base):
     currency = Column(String(10), nullable=False, default="THB")
     period_start = Column(Date, nullable=True)
     period_end = Column(Date, nullable=True)
-    metadata = Column(JSONB, default={})
+    meta_data = Column(JSONB, default={})
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
 
     def __repr__(self):

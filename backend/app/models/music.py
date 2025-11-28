@@ -24,7 +24,7 @@ class AudioAnalysis(Base):
     sections = Column(JSONB, default=[])
     chord_progression = Column(JSONB, default=[])
     energy_curve = Column(JSONB, default={})
-    metadata = Column(JSONB, default={})
+    meta_data = Column(JSONB, default={})
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
 
     # Relationships

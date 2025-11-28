@@ -89,6 +89,36 @@ class VideoSubtitleResponse(BaseModel):
     estimated_time: Optional[int] = None
 
 
+# Enhanced Video Feature Schemas
+class ShortsGeneratorRequest(BaseModel):
+    project_id: Optional[UUID] = None
+    source_video_id: Optional[UUID] = Field(default=None, description="Source video asset ID")
+    platform: str = Field(default="tiktok", description="Platform: tiktok, youtube, instagram")
+    auto_features: List[str] = Field(default=["format", "caption", "cut", "music"], description="Auto features to apply")
+    prompt: Optional[str] = Field(default=None, description="Prompt for generating new video")
+    provider: Optional[str] = Field(default="mock")
+
+
+class MemeVideoRequest(BaseModel):
+    project_id: Optional[UUID] = None
+    template_id: Optional[str] = Field(default=None, description="Meme template ID")
+    source_video_id: Optional[UUID] = None
+    top_text: Optional[str] = None
+    bottom_text: Optional[str] = None
+    effects: Optional[List[str]] = Field(default=[], description="Effects to apply")
+    provider: Optional[str] = Field(default="mock")
+
+
+class VideoToGifRequest(BaseModel):
+    project_id: Optional[UUID] = None
+    source_video_id: UUID = Field(..., description="Source video asset ID")
+    start_time: float = Field(default=0, ge=0, description="Start time in seconds")
+    duration: float = Field(default=5, ge=0.5, le=30, description="Duration in seconds")
+    frame_rate: int = Field(default=10, ge=1, le=30, description="Frames per second")
+    optimize_size: bool = Field(default=True, description="Optimize GIF size")
+    provider: Optional[str] = Field(default="mock")
+
+
 class VideoDetailsResponse(BaseModel):
     asset_id: UUID
     project_id: Optional[UUID]
