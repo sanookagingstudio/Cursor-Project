@@ -12,20 +12,20 @@ export function MemberStatsCard({ totalMembers, newThisMonth, activeToday }: Mem
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">Members</CardTitle>
-        <Users className="h-4 w-4 text-muted-foreground" />
+        <CardTitle className="text-lg font-semibold">Members</CardTitle>
+        <Users className="h-6 w-6 text-muted-foreground" />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{totalMembers.toLocaleString()}</div>
+        <div className="text-4xl font-bold">{totalMembers.toLocaleString()}</div>
         <div className="flex items-center gap-4 mt-3">
           <div className="flex items-center gap-1">
-            <UserPlus className="h-3 w-3 text-accent" />
-            <span className="text-xs text-muted-foreground">
+            <UserPlus className="h-4 w-4 text-accent" />
+            <span className="text-base text-muted-foreground">
               +{newThisMonth} this month
             </span>
           </div>
-          <Badge variant="secondary" className="flex items-center gap-1">
-            <TrendingUp className="h-3 w-3" />
+          <Badge variant="secondary" className="flex items-center gap-1 text-base px-3 py-1">
+            <TrendingUp className="h-4 w-4" />
             {activeToday} active today
           </Badge>
         </div>

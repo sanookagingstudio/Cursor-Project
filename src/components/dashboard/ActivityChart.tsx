@@ -16,8 +16,8 @@ export function ActivityChart() {
   return (
     <Card className="col-span-full lg:col-span-1">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Activity className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-2xl">
+          <Activity className="h-6 w-6" />
           Activity Participation
         </CardTitle>
       </CardHeader>
@@ -25,8 +25,8 @@ export function ActivityChart() {
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-            <XAxis dataKey="day" className="text-xs" />
-            <YAxis className="text-xs" />
+            <XAxis dataKey="day" className="text-base" />
+            <YAxis className="text-base" />
             <Tooltip />
             <Legend />
             <Bar dataKey="morning" fill="hsl(var(--primary))" name="Morning" />

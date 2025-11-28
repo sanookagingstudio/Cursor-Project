@@ -40,13 +40,13 @@ export function PublicLayout({ children }: PublicLayoutProps) {
     <div className="min-h-screen flex flex-col bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-card shadow-sm">
-        <div className="container-padding flex h-20 items-center justify-between max-w-7xl mx-auto">
+        <div className="container-padding flex h-20 items-center justify-between w-full">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 hover:scale-105 transition-transform">
             <img src="/src/assets/fun-logo-2025.png" alt="FUN Logo" className="h-14 w-auto" />
             <div className="hidden md:block">
-              <div className="font-bold text-xl text-foreground">FunAging Studio</div>
-              <div className="text-xs text-muted-foreground">Active Aging Ecosystem</div>
+              <div className="font-bold text-2xl text-foreground">FunAging Studio</div>
+              <div className="text-sm text-muted-foreground">Active Aging Ecosystem</div>
             </div>
           </Link>
 
@@ -121,7 +121,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               className="flex flex-col items-center justify-center flex-1 click-target"
             >
               <item.icon className="h-6 w-6 mb-1" />
-              <span className="text-xs font-medium">{item.label}</span>
+              <span className="text-sm font-medium">{item.label}</span>
             </Link>
           ))}
         </div>
@@ -129,7 +129,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
 
       {/* Footer */}
       <footer className="hidden md:block border-t bg-card mt-auto">
-        <div className="container-padding max-w-7xl mx-auto py-12">
+        <div className="container-padding w-full py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="font-bold text-xl mb-4">FunAging Studio</div>

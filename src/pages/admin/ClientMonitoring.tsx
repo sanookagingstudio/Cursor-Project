@@ -68,7 +68,7 @@ export default function ClientMonitoring() {
       />
 
       <div className="mb-6">
-        <div className="relative max-w-md">
+        <div className="relative w-full max-w-2xl">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
           <Input placeholder="Search clients..." className="pl-10 text-lg" />
         </div>

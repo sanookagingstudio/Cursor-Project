@@ -14,8 +14,8 @@ export function QuickActions() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Plus className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-2xl">
+          <Plus className="h-6 w-6" />
           Quick Actions
         </CardTitle>
       </CardHeader>
@@ -26,8 +26,8 @@ export function QuickActions() {
             variant="outline"
             className="h-auto flex-col gap-2 py-4"
           >
-            <action.icon className={`h-6 w-6 ${action.color}`} />
-            <span className="text-xs">{action.label}</span>
+            <action.icon className={`h-7 w-7 ${action.color}`} />
+            <span className="text-base">{action.label}</span>
           </Button>
         ))}
       </CardContent>

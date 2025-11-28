@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -52,6 +53,14 @@ const MediaCenter = lazy(() => import("./pages/admin/MediaCenter"));
 const AIInsights = lazy(() => import("./pages/admin/AIInsights"));
 const Settings = lazy(() => import("./pages/admin/Settings"));
 const RoleManagement = lazy(() => import("./pages/admin/RoleManagement"));
+const CoreFoundation = lazy(() => import("./pages/admin/CoreFoundation"));
+const ProviderManagement = lazy(() => import("./pages/admin/ProviderManagement"));
+const InputBrain = lazy(() => import("./pages/admin/InputBrain"));
+const ImageEditor = lazy(() => import("./pages/admin/ImageEditor"));
+const VideoEditor = lazy(() => import("./pages/admin/VideoEditor"));
+const MusicLab = lazy(() => import("./pages/admin/MusicLab"));
+const DashboardPublishing = lazy(() => import("./pages/admin/DashboardPublishing"));
+const ThemeCustomization = lazy(() => import("./pages/admin/ThemeCustomization"));
 
 // Member Pages
 const MemberDashboard = lazy(() => import("./pages/member/Dashboard"));
@@ -65,12 +74,13 @@ const ProfileSettings = lazy(() => import("./pages/member/ProfileSettings"));
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <ThemeProvider>
+              <AuthProvider>
           <Suspense fallback={<div className="min-h-screen flex items-center justify-center">
             <div className="text-center">
               <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
@@ -124,6 +134,14 @@ const App = () => (
             <Route path="/admin/ai-insights" element={<ProtectedRoute requiredRole="admin"><AIInsights /></ProtectedRoute>} />
             <Route path="/admin/settings" element={<ProtectedRoute requiredRole="admin"><Settings /></ProtectedRoute>} />
             <Route path="/admin/role-management" element={<ProtectedRoute requiredRole="admin"><RoleManagement /></ProtectedRoute>} />
+            <Route path="/admin/core-foundation" element={<ProtectedRoute requiredRole="admin"><CoreFoundation /></ProtectedRoute>} />
+            <Route path="/admin/provider-management" element={<ProtectedRoute requiredRole="admin"><ProviderManagement /></ProtectedRoute>} />
+            <Route path="/admin/input-brain" element={<ProtectedRoute requiredRole="admin"><InputBrain /></ProtectedRoute>} />
+            <Route path="/admin/image-editor" element={<ProtectedRoute requiredRole="admin"><ImageEditor /></ProtectedRoute>} />
+            <Route path="/admin/video-editor" element={<ProtectedRoute requiredRole="admin"><VideoEditor /></ProtectedRoute>} />
+            <Route path="/admin/music-lab" element={<ProtectedRoute requiredRole="admin"><MusicLab /></ProtectedRoute>} />
+            <Route path="/admin/dashboard-publishing" element={<ProtectedRoute requiredRole="admin"><DashboardPublishing /></ProtectedRoute>} />
+            <Route path="/admin/theme-customization" element={<ProtectedRoute requiredRole="admin"><ThemeCustomization /></ProtectedRoute>} />
 
             {/* Member Routes */}
             <Route path="/member/dashboard" element={<ProtectedRoute requiredRole="member"><MemberDashboard /></ProtectedRoute>} />
@@ -138,10 +156,11 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+              </AuthProvider>
+            </ThemeProvider>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
 );
 
 export default App;

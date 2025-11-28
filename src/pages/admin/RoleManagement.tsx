@@ -177,7 +177,7 @@ export default function RoleManagement() {
         <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+              <CardTitle className="text-lg font-semibold">Total Users</CardTitle>
               <Shield className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -186,7 +186,7 @@ export default function RoleManagement() {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Admins</CardTitle>
+              <CardTitle className="text-lg font-semibold">Admins</CardTitle>
               <Shield className="h-4 w-4 text-destructive" />
             </CardHeader>
             <CardContent>
@@ -197,7 +197,7 @@ export default function RoleManagement() {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Staff</CardTitle>
+              <CardTitle className="text-lg font-semibold">Staff</CardTitle>
               <Shield className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent>
@@ -279,7 +279,7 @@ export default function RoleManagement() {
                   >
                     <div className="flex-1">
                       <p className="font-medium">{user.full_name}</p>
-                      <p className="text-sm text-muted-foreground">{user.email}</p>
+                      <p className="text-base text-muted-foreground">{user.email}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       {user.roles.length === 0 ? (

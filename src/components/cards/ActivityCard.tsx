@@ -43,22 +43,22 @@ export function ActivityCard({
       )}
       <div className="p-6 space-y-4">
         <div>
-          <h3 className="text-xl font-semibold mb-2">{title}</h3>
-          <p className="text-muted-foreground">{description}</p>
+          <h3 className="text-2xl font-semibold mb-2">{title}</h3>
+          <p className="text-lg text-muted-foreground">{description}</p>
         </div>
         
-        <div className="space-y-2 text-sm">
+        <div className="space-y-2 text-base">
           <div className="flex items-center text-muted-foreground">
-            <Calendar className="h-4 w-4 mr-2" />
+            <Calendar className="h-5 w-5 mr-2" />
             {time}
           </div>
           <div className="flex items-center text-muted-foreground">
-            <Clock className="h-4 w-4 mr-2" />
+            <Clock className="h-5 w-5 mr-2" />
             {duration}
           </div>
           {capacity && (
             <div className="flex items-center text-muted-foreground">
-              <Users className="h-4 w-4 mr-2" />
+              <Users className="h-5 w-5 mr-2" />
               Up to {capacity} people
             </div>
           )}

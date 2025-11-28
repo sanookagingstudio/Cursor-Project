@@ -11,8 +11,12 @@ import {
   UsersRound,
   MapPin,
   Image,
+  Video,
+  Music,
   Sparkles,
   Settings,
+  Brain,
+  Palette,
   ChevronDown,
   Menu,
   X,
@@ -48,12 +52,21 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     { label: t("admin.nav.roleManagement"), path: "/admin/role-management", icon: Users },
     { label: t("admin.nav.tripPlanner"), path: "/admin/trip-planner", icon: MapPin },
     { label: t("admin.nav.mediaCenter"), path: "/admin/media", icon: Image },
+    { label: "Core Foundation", path: "/admin/core-foundation", icon: Settings },
+    { label: "Input Brain", path: "/admin/input-brain", icon: Brain },
+    { label: "Image Editor", path: "/admin/image-editor", icon: Image },
+    { label: "Video Editor", path: "/admin/video-editor", icon: Video },
+    { label: "Music Lab", path: "/admin/music-lab", icon: Music },
+    { label: "Dashboard & Publishing", path: "/admin/dashboard-publishing", icon: LayoutDashboard },
+    { label: "Theme Customization", path: "/admin/theme-customization", icon: Palette },
     { label: t("admin.nav.aiInsights"), path: "/admin/ai-insights", icon: Sparkles },
     { label: "FUN Creator Basic", path: "/staff/fun-creator-basic", icon: Image },
     { label: "FUN Creator Pro", path: "/staff/fun-creator-pro", icon: Sparkles },
     { label: "FUN Health", path: "/staff/fun-health", icon: Users },
     { label: "FUN Sentinel", path: "/staff/fun-sentinel", icon: Sparkles },
     { label: t("admin.nav.settings"), path: "/admin/settings", icon: Settings },
+    { label: "Core Foundation", path: "/admin/core-foundation", icon: Settings },
+    { label: "Provider Management", path: "/admin/provider-management", icon: Settings },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -174,8 +187,10 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-6">
-          {children}
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 xl:p-10">
+          <div className="w-full">
+            {children}
+          </div>
         </main>
       </div>
     </div>

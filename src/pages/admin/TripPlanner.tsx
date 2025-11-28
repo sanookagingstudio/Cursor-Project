@@ -24,7 +24,7 @@ export default function TripPlanner() {
         description="Plan and organize new trips for members"
       />
 
-      <div className="max-w-4xl">
+      <div className="w-full">
         <Card className="mb-6">
           <CardContent className="pt-6">
             <Stepper steps={steps} currentStep={0} />

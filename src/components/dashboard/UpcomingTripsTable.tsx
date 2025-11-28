@@ -16,8 +16,8 @@ export function UpcomingTripsTable() {
   return (
     <Card className="col-span-full">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <MapPin className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-2xl">
+          <MapPin className="h-6 w-6" />
           Upcoming Trips
         </CardTitle>
       </CardHeader>
@@ -35,17 +35,17 @@ export function UpcomingTripsTable() {
           <TableBody>
             {trips.map((trip) => (
               <TableRow key={trip.id}>
-                <TableCell className="font-medium">{trip.destination}</TableCell>
-                <TableCell>{trip.date}</TableCell>
-                <TableCell>{trip.participants} members</TableCell>
+                <TableCell className="font-medium text-base">{trip.destination}</TableCell>
+                <TableCell className="text-base">{trip.date}</TableCell>
+                <TableCell className="text-base">{trip.participants} members</TableCell>
                 <TableCell>
-                  <Badge variant={trip.status === "confirmed" ? "default" : "secondary"}>
+                  <Badge variant={trip.status === "confirmed" ? "default" : "secondary"} className="text-base px-3 py-1">
                     {trip.status}
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
-                  <Button variant="ghost" size="sm">
-                    <Eye className="h-4 w-4" />
+                  <Button variant="ghost" size="lg">
+                    <Eye className="h-5 w-5" />
                   </Button>
                 </TableCell>
               </TableRow>

@@ -15,8 +15,8 @@ export function RevenueChart() {
   return (
     <Card className="col-span-full lg:col-span-2">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <TrendingUp className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-2xl">
+          <TrendingUp className="h-6 w-6" />
           Revenue Overview
         </CardTitle>
       </CardHeader>
@@ -24,8 +24,8 @@ export function RevenueChart() {
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-            <XAxis dataKey="month" className="text-xs" />
-            <YAxis className="text-xs" />
+            <XAxis dataKey="month" className="text-base" />
+            <YAxis className="text-base" />
             <Tooltip />
             <Legend />
             <Line

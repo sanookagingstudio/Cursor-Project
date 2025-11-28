@@ -31,12 +31,12 @@ export function FeatureGrid({
 
   return (
     <section className={cn("section-padding", className)}>
-      <div className="container-padding max-w-7xl mx-auto">
+      <div className="container-padding w-full">
         {(title || description) && (
           <div className="text-center mb-16 space-y-4">
-            {title && <h2 className="text-3xl md:text-4xl font-bold">{title}</h2>}
+            {title && <h2 className="text-5xl md:text-6xl font-bold">{title}</h2>}
             {description && (
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              <p className="text-2xl text-muted-foreground max-w-3xl mx-auto">
                 {description}
               </p>
             )}
@@ -48,11 +48,11 @@ export function FeatureGrid({
               key={index}
               className="p-6 rounded-xl bg-card border card-shadow hover:card-shadow-hover transition-shadow"
             >
-              <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <feature.icon className="h-7 w-7 text-primary" />
+              <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <feature.icon className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <h3 className="text-2xl font-semibold mb-3">{feature.title}</h3>
+              <p className="text-lg text-muted-foreground leading-relaxed">
                 {feature.description}
               </p>
             </div>

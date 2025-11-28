@@ -28,12 +28,12 @@ export function CTASection({
     outline: "bg-background border-2 border-primary"
   };
   return <section className={cn("section-padding", className)}>
-      <div className="container-padding max-w-7xl mx-auto">
+      <div className="container-padding w-full">
         <div className={cn("rounded-2xl p-12 text-center space-y-6", variants[variant])}>
-          <h2 className={cn("text-3xl md:text-4xl font-bold", variant === "gradient" && "text-white")}>
+          <h2 className={cn("text-5xl md:text-6xl font-bold", variant === "gradient" && "text-white")}>
             {title}
           </h2>
-          {description && <p className={cn("text-xl max-w-2xl mx-auto", variant === "gradient" ? "text-white/90" : "text-muted-foreground")}>
+          {description && <p className={cn("text-2xl max-w-2xl mx-auto", variant === "gradient" ? "text-white/90" : "text-muted-foreground")}>
               {description}
             </p>}
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">

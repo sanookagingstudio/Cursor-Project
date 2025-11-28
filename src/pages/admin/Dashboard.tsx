@@ -13,8 +13,8 @@ const Dashboard = () => {
     <AdminLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back! Here's your overview.</p>
+          <h1 className="text-5xl font-bold mb-4">Dashboard</h1>
+          <p className="text-lg text-muted-foreground">Welcome back! Here's your overview.</p>
         </div>
 
         {/* Stats Cards */}

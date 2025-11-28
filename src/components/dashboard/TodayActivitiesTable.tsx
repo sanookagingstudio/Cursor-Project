@@ -16,8 +16,8 @@ export function TodayActivitiesTable() {
   return (
     <Card className="col-span-full">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Calendar className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-2xl">
+          <Calendar className="h-6 w-6" />
           Today's Activities
         </CardTitle>
       </CardHeader>
@@ -35,21 +35,21 @@ export function TodayActivitiesTable() {
           <TableBody>
             {activities.map((activity) => (
               <TableRow key={activity.id}>
-                <TableCell className="font-medium">{activity.name}</TableCell>
-                <TableCell>{activity.time}</TableCell>
-                <TableCell>
+                <TableCell className="font-medium text-base">{activity.name}</TableCell>
+                <TableCell className="text-base">{activity.time}</TableCell>
+                <TableCell className="text-base">
                   <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4 text-muted-foreground" />
+                    <Users className="h-5 w-5 text-muted-foreground" />
                     {activity.participants}/{activity.capacity}
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge variant={activity.status === "ongoing" ? "default" : "secondary"}>
+                  <Badge variant={activity.status === "ongoing" ? "default" : "secondary"} className="text-base px-3 py-1">
                     {activity.status}
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
-                  <Button variant="ghost" size="sm">
+                  <Button variant="ghost" size="lg" className="text-base">
                     Check In
                   </Button>
                 </TableCell>

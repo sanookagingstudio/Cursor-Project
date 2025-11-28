@@ -25,12 +25,12 @@ export function TestimonialSection({
 }: TestimonialSectionProps) {
   return (
     <section className={cn("section-padding bg-muted/30", className)}>
-      <div className="container-padding max-w-7xl mx-auto">
+      <div className="container-padding w-full">
         {(title || description) && (
           <div className="text-center mb-16 space-y-4">
-            {title && <h2 className="text-3xl md:text-4xl font-bold">{title}</h2>}
+            {title && <h2 className="text-5xl md:text-6xl font-bold">{title}</h2>}
             {description && (
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              <p className="text-2xl text-muted-foreground max-w-3xl mx-auto">
                 {description}
               </p>
             )}
@@ -47,7 +47,7 @@ export function TestimonialSection({
                   <Star
                     key={i}
                     className={cn(
-                      "h-5 w-5",
+                      "h-6 w-6",
                       i < testimonial.rating
                         ? "fill-primary text-primary"
                         : "fill-muted text-muted"
@@ -55,7 +55,7 @@ export function TestimonialSection({
                   />
                 ))}
               </div>
-              <p className="text-muted-foreground mb-6 leading-relaxed">
+              <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
                 "{testimonial.content}"
               </p>
               <div className="flex items-center gap-3">
@@ -65,8 +65,8 @@ export function TestimonialSection({
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="font-semibold">{testimonial.name}</div>
-                  <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                  <div className="font-semibold text-lg">{testimonial.name}</div>
+                  <div className="text-base text-muted-foreground">{testimonial.role}</div>
                 </div>
               </div>
             </div>

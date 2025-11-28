@@ -75,7 +75,7 @@ export default function FinanceOverview() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+              <CardTitle className="text-lg font-semibold">Total Revenue</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -89,12 +89,12 @@ export default function FinanceOverview() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
+              <CardTitle className="text-lg font-semibold">Total Expenses</CardTitle>
               <CreditCard className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">฿110,000</div>
-              <div className="flex items-center gap-1 text-xs text-destructive">
+              <div className="flex items-center gap-1 text-sm text-destructive">
                 <TrendingUp className="h-3 w-3" />
                 +8.2% from last month
               </div>
