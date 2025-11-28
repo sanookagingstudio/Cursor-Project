@@ -61,6 +61,11 @@ const VideoEditor = lazy(() => import("./pages/admin/VideoEditor"));
 const MusicLab = lazy(() => import("./pages/admin/MusicLab"));
 const DashboardPublishing = lazy(() => import("./pages/admin/DashboardPublishing"));
 const ThemeCustomization = lazy(() => import("./pages/admin/ThemeCustomization"));
+const Monetization = lazy(() => import("./pages/admin/Monetization")); // Added for Phase 11
+const Analytics = lazy(() => import("./pages/admin/Analytics")); // Added for Phase 10
+const CostManagement = lazy(() => import("./pages/admin/CostManagement")); // Added for Phase 9
+const ExternalApps = lazy(() => import("./pages/admin/ExternalApps")); // Added for Phase 12
+const DiscountManagement = lazy(() => import("./pages/admin/DiscountManagement")); // Added for Phase 13
 
 // Member Pages
 const MemberDashboard = lazy(() => import("./pages/member/Dashboard"));
@@ -70,6 +75,7 @@ const MemberMyTrips = lazy(() => import("./pages/member/MyTrips"));
 const MemberDocuments = lazy(() => import("./pages/member/Documents"));
 const Notifications = lazy(() => import("./pages/member/Notifications"));
 const ProfileSettings = lazy(() => import("./pages/member/ProfileSettings"));
+const MediaCreator = lazy(() => import("./pages/member/MediaCreator"));
 
 const queryClient = new QueryClient();
 
@@ -142,9 +148,15 @@ const App = () => (
             <Route path="/admin/music-lab" element={<ProtectedRoute requiredRole="admin"><MusicLab /></ProtectedRoute>} />
             <Route path="/admin/dashboard-publishing" element={<ProtectedRoute requiredRole="admin"><DashboardPublishing /></ProtectedRoute>} />
             <Route path="/admin/theme-customization" element={<ProtectedRoute requiredRole="admin"><ThemeCustomization /></ProtectedRoute>} />
+            <Route path="/admin/monetization" element={<ProtectedRoute requiredRole="admin"><Monetization /></ProtectedRoute>} /> {/* Added for Phase 11 */}
+            <Route path="/admin/analytics" element={<ProtectedRoute requiredRole="admin"><Analytics /></ProtectedRoute>} /> {/* Added for Phase 10 */}
+            <Route path="/admin/cost-management" element={<ProtectedRoute requiredRole="admin"><CostManagement /></ProtectedRoute>} /> {/* Added for Phase 9 */}
+            <Route path="/admin/external-apps" element={<ProtectedRoute requiredRole="admin"><ExternalApps /></ProtectedRoute>} /> {/* Added for Phase 12 */}
+            <Route path="/admin/discount-management" element={<ProtectedRoute requiredRole="admin"><DiscountManagement /></ProtectedRoute>} /> {/* Added for Phase 13 */}
 
             {/* Member Routes */}
             <Route path="/member/dashboard" element={<ProtectedRoute requiredRole="member"><MemberDashboard /></ProtectedRoute>} />
+            <Route path="/member/media-creator" element={<ProtectedRoute requiredRole="member"><MediaCreator /></ProtectedRoute>} />
             <Route path="/member/profile" element={<ProtectedRoute requiredRole="member"><MemberProfile /></ProtectedRoute>} />
             <Route path="/member/activities" element={<ProtectedRoute requiredRole="member"><MemberMyActivities /></ProtectedRoute>} />
             <Route path="/member/trips" element={<ProtectedRoute requiredRole="member"><MemberMyTrips /></ProtectedRoute>} />

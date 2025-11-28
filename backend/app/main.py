@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.routers import health, projects, assets, jobs, workflows, modules, input_brain, image, video, music, dashboard, publishing, integration, theme
+from app.routers import health, projects, assets, jobs, workflows, modules, input_brain, image, video, music, dashboard, publishing, integration, theme, monetization, analytics, cost, external_app, discount
 
 # Create FastAPI app
 app = FastAPI(
@@ -36,6 +36,11 @@ app.include_router(dashboard.router, prefix="/api", tags=["dashboard"])
 app.include_router(publishing.router, prefix="/api", tags=["publishing"])
 app.include_router(integration.router, prefix="/api", tags=["integration"])
 app.include_router(theme.router, prefix="/api", tags=["themes"])
+app.include_router(monetization.router, prefix="/api/monetization", tags=["monetization"])
+app.include_router(analytics.router, prefix="/api/analytics", tags=["analytics"])
+app.include_router(cost.router, prefix="/api/cost", tags=["cost"])
+app.include_router(external_app.router, prefix="/api/external-apps", tags=["external-apps"])
+app.include_router(discount.router, prefix="/api/discount", tags=["discount"])
 
 
 @app.get("/")

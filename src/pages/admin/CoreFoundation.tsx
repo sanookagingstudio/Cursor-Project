@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, XCircle, Clock, Database, Server, MessageSquare, Settings } from "lucide-react";
 import { useState, useEffect } from "react";
+import { getApiUrl } from "@/lib/api";
 
 interface SystemStatus {
   api: "ok" | "error" | "checking";
@@ -34,7 +35,7 @@ export default function CoreFoundation() {
     const checkSystem = async () => {
       try {
         // Check API
-        const healthRes = await fetch("http://localhost:8000/health");
+        const healthRes = await fetch(getApiUrl("/health"));
         if (healthRes.ok) {
           const healthData = await healthRes.json();
           setStatus(prev => ({
@@ -55,7 +56,7 @@ export default function CoreFoundation() {
 
         // Fetch stats
         try {
-          const projectsRes = await fetch("http://localhost:8000/projects");
+          const projectsRes = await fetch(getApiUrl("/projects"));
           if (projectsRes.ok) {
             const projects = await projectsRes.json();
             setStats(prev => ({ ...prev, projects: projects.length || 0 }));
@@ -242,7 +243,7 @@ export default function CoreFoundation() {
             </div>
             <div className="mt-6">
               <Button asChild className="text-base px-6 py-3">
-                <a href="http://localhost:8000/docs" target="_blank" rel="noopener noreferrer">
+                <a href={`${getApiUrl("/docs")}`} target="_blank" rel="noopener noreferrer">
                   Open API Documentation
                 </a>
               </Button>
@@ -303,7 +304,7 @@ export default function CoreFoundation() {
             <div>
               <h4 className="font-semibold text-lg mb-3">2. Test API</h4>
               <code className="block p-4 bg-muted rounded text-base font-mono">
-                Visit: http://localhost:8000/docs
+                Visit: {getApiUrl("/docs")}
               </code>
             </div>
             <div>

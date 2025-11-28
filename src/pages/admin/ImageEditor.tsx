@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { getApiUrl } from "@/lib/api";
 
 export default function ImageEditor() {
   const { toast } = useToast();
@@ -47,7 +48,7 @@ export default function ImageEditor() {
 
     setIsGenerating(true);
     try {
-      const response = await fetch("http://localhost:8000/api/image/generate", {
+      const response = await fetch(getApiUrl("/image/generate"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -90,7 +91,7 @@ export default function ImageEditor() {
 
     setIsGenerating(true);
     try {
-      const response = await fetch("http://localhost:8000/api/image/batch", {
+      const response = await fetch(getApiUrl("/image/batch"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -289,32 +290,122 @@ export default function ImageEditor() {
               <CardHeader>
                 <CardTitle className="text-2xl font-bold">Special Features</CardTitle>
                 <CardDescription className="text-lg">
-                  Generate specialized content for elderly users
+                  Generate specialized content - Mosaic, Pixel Art, Stickers, GIFs, and more!
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {[
-                    { name: "Coloring Book", icon: Palette, type: "coloring_book" },
-                    { name: "Pattern", icon: Sparkles, type: "pattern" },
-                    { name: "Origami", icon: ImageIcon, type: "origami" },
-                    { name: "Card Game", icon: ImageIcon, type: "card_game" },
-                    { name: "Playing Cards", icon: ImageIcon, type: "playing_cards" },
-                    { name: "Board Game", icon: ImageIcon, type: "board_game" },
-                    { name: "Emoji & Sticker", icon: Sparkles, type: "emoji" },
-                    { name: "Quote 90s", icon: ImageIcon, type: "quote_90s" },
-                    { name: "Caption", icon: ImageIcon, type: "caption" },
-                  ].map((feature) => (
-                    <Card
-                      key={feature.type}
-                      className="cursor-pointer hover:border-primary"
-                    >
-                      <CardContent className="p-4">
-                        <feature.icon className="h-8 w-8 mb-2 text-primary" />
-                        <p className="text-base font-semibold">{feature.name}</p>
-                      </CardContent>
-                    </Card>
-                  ))}
+                <div className="space-y-6">
+                  {/* Popular Features */}
+                  <div>
+                    <h3 className="text-xl font-bold mb-4">🌟 Popular Features</h3>
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                      {[
+                        { name: "Mosaic Generator", icon: ImageIcon, type: "mosaic", badge: "NEW" },
+                        { name: "8-bit / 16-bit Pixel Art", icon: Sparkles, type: "pixel_art", badge: "NEW" },
+                        { name: "LINE Sticker Creator", icon: Sparkles, type: "line_sticker", badge: "NEW" },
+                        { name: "GIF Generator", icon: ImageIcon, type: "gif", badge: "NEW" },
+                        { name: "Emoji Generator", icon: Sparkles, type: "emoji", badge: "NEW" },
+                        { name: "Digital Card Creator", icon: ImageIcon, type: "digital_card", badge: "NEW" },
+                        { name: "Meme Generator", icon: ImageIcon, type: "meme", badge: "NEW" },
+                        { name: "QR Code Generator", icon: ImageIcon, type: "qr_code", badge: "NEW" },
+                      ].map((feature) => (
+                        <Card
+                          key={feature.type}
+                          className="cursor-pointer hover:border-primary hover:shadow-lg transition-all"
+                        >
+                          <CardContent className="p-4">
+                            <div className="flex items-center justify-between mb-2">
+                              <feature.icon className="h-8 w-8 text-primary" />
+                              {feature.badge && (
+                                <Badge className="bg-primary text-primary-foreground text-xs">{feature.badge}</Badge>
+                              )}
+                            </div>
+                            <p className="text-base font-semibold">{feature.name}</p>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Creative Tools */}
+                  <div>
+                    <h3 className="text-xl font-bold mb-4">🎨 Creative Tools</h3>
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                      {[
+                        { name: "Collage Maker", icon: ImageIcon, type: "collage" },
+                        { name: "Watermark Generator", icon: ImageIcon, type: "watermark" },
+                        { name: "Face Swap", icon: ImageIcon, type: "face_swap", badge: "NEW" },
+                        { name: "Style Transfer", icon: Sparkles, type: "style_transfer", badge: "NEW" },
+                        { name: "Color Palette Generator", icon: Palette, type: "color_palette" },
+                        { name: "Image to Text (OCR)", icon: ImageIcon, type: "ocr", badge: "NEW" },
+                      ].map((feature) => (
+                        <Card
+                          key={feature.type}
+                          className="cursor-pointer hover:border-primary hover:shadow-lg transition-all"
+                        >
+                          <CardContent className="p-4">
+                            <div className="flex items-center justify-between mb-2">
+                              <feature.icon className="h-8 w-8 text-primary" />
+                              {feature.badge && (
+                                <Badge className="bg-primary text-primary-foreground text-xs">{feature.badge}</Badge>
+                              )}
+                            </div>
+                            <p className="text-base font-semibold">{feature.name}</p>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Elderly-Friendly Features */}
+                  <div>
+                    <h3 className="text-xl font-bold mb-4">👴 Elderly-Friendly Features</h3>
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                      {[
+                        { name: "Coloring Book", icon: Palette, type: "coloring_book" },
+                        { name: "Pattern", icon: Sparkles, type: "pattern" },
+                        { name: "Origami", icon: ImageIcon, type: "origami" },
+                        { name: "Card Game", icon: ImageIcon, type: "card_game" },
+                        { name: "Playing Cards", icon: ImageIcon, type: "playing_cards" },
+                        { name: "Board Game", icon: ImageIcon, type: "board_game" },
+                        { name: "Quote 90s", icon: ImageIcon, type: "quote_90s" },
+                        { name: "Caption", icon: ImageIcon, type: "caption" },
+                      ].map((feature) => (
+                        <Card
+                          key={feature.type}
+                          className="cursor-pointer hover:border-primary hover:shadow-lg transition-all"
+                        >
+                          <CardContent className="p-4">
+                            <feature.icon className="h-8 w-8 mb-2 text-primary" />
+                            <p className="text-base font-semibold">{feature.name}</p>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Utility Tools */}
+                  <div>
+                    <h3 className="text-xl font-bold mb-4">🔧 Utility Tools</h3>
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                      {[
+                        { name: "Image Compression", icon: ImageIcon, type: "compression" },
+                        { name: "Format Converter", icon: ImageIcon, type: "converter" },
+                        { name: "Resize Image", icon: ImageIcon, type: "resize" },
+                        { name: "Crop Image", icon: Crop, type: "crop" },
+                      ].map((feature) => (
+                        <Card
+                          key={feature.type}
+                          className="cursor-pointer hover:border-primary hover:shadow-lg transition-all"
+                        >
+                          <CardContent className="p-4">
+                            <feature.icon className="h-8 w-8 mb-2 text-primary" />
+                            <p className="text-base font-semibold">{feature.name}</p>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>

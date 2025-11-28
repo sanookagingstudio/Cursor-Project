@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { getApiUrl } from "@/lib/api";
 
 interface IdeaVersion {
   id: string;
@@ -61,7 +62,7 @@ export default function InputBrain() {
     setIsGenerating(true);
     try {
       // Mock API call - will connect to real API later
-      const response = await fetch("http://localhost:8000/api/input-brain/ideas", {
+      const response = await fetch(getApiUrl("/input-brain/ideas"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -98,7 +99,7 @@ export default function InputBrain() {
     setIsGenerating(true);
     try {
       const response = await fetch(
-        `http://localhost:8000/api/input-brain/ideas/${ideaId}/generate-suggestions?num_versions=4`,
+        `${getApiUrl(`/input-brain/ideas/${ideaId}/generate-suggestions`)}?num_versions=4`,
         { method: "POST" }
       );
 
@@ -127,7 +128,7 @@ export default function InputBrain() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/api/input-brain/ideas/${currentIdeaId}/select-version?version_index=${versionIndex}`,
+        `${getApiUrl(`/input-brain/ideas/${currentIdeaId}/select-version`)}?version_index=${versionIndex}`,
         { method: "POST" }
       );
 
@@ -154,7 +155,7 @@ export default function InputBrain() {
     setIsGenerating(true);
     try {
       const response = await fetch(
-        `http://localhost:8000/api/input-brain/ideas/${currentIdeaId}/generate-workflow-draft?version_index=${selectedVersion}`,
+        `${getApiUrl(`/input-brain/ideas/${currentIdeaId}/generate-workflow-draft`)}?version_index=${selectedVersion}`,
         { method: "POST" }
       );
 
@@ -185,7 +186,7 @@ export default function InputBrain() {
     setIsGenerating(true);
     try {
       const response = await fetch(
-        `http://localhost:8000/api/input-brain/workflow-drafts/${workflowDraftId}/start`,
+        getApiUrl(`/input-brain/workflow-drafts/${workflowDraftId}/start`),
         { method: "POST" }
       );
 

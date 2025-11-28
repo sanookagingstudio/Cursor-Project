@@ -208,6 +208,18 @@ export default function MemberDashboard() {
           {/* Quick Actions */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card className="p-6 card-shadow hover:card-shadow-hover transition-all cursor-pointer group">
+              <Link to="/member/media-creator" className="block space-y-4">
+                <div className="w-12 h-12 rounded-lg premium-gradient flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Sparkles className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold">🎨 Media Creator</h3>
+                  <p className="text-sm text-muted-foreground">สร้างภาพ, วิดีโอ, และเพลงด้วย AI</p>
+                </div>
+              </Link>
+            </Card>
+
+            <Card className="p-6 card-shadow hover:card-shadow-hover transition-all cursor-pointer group">
               <Link to="/media-library" className="block space-y-4">
                 <div className="w-12 h-12 rounded-lg premium-gradient flex items-center justify-center group-hover:scale-110 transition-transform">
                   <Camera className="h-6 w-6 text-white" />

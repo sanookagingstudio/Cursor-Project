@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { getApiUrl } from "@/lib/api";
 
 export default function MusicLab() {
   const { toast } = useToast();
@@ -44,7 +45,7 @@ export default function MusicLab() {
 
     setIsGenerating(true);
     try {
-      const response = await fetch("http://localhost:8000/api/music/generate", {
+      const response = await fetch(getApiUrl("/music/generate"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -89,12 +90,14 @@ export default function MusicLab() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 text-base">
+          <TabsList className="grid w-full grid-cols-7 text-base">
             <TabsTrigger value="generate" className="text-base">Generate</TabsTrigger>
             <TabsTrigger value="stems" className="text-base">Stems</TabsTrigger>
             <TabsTrigger value="analyze" className="text-base">Analyze</TabsTrigger>
             <TabsTrigger value="tab" className="text-base">Tab</TabsTrigger>
             <TabsTrigger value="remaster" className="text-base">Remaster</TabsTrigger>
+            <TabsTrigger value="karaoke" className="text-base">Karaoke</TabsTrigger>
+            <TabsTrigger value="special" className="text-base">Special</TabsTrigger>
           </TabsList>
 
           {/* Generate Tab */}
@@ -385,6 +388,142 @@ export default function MusicLab() {
                   <Wand2 className="mr-2 h-5 w-5" />
                   Remaster Audio
                 </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Karaoke Generator Tab */}
+          <TabsContent value="karaoke" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold">Karaoke Generator</CardTitle>
+                <CardDescription className="text-lg">
+                  Create karaoke videos with lyrics display
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-lg font-semibold">Upload Audio</Label>
+                  <div className="border-2 border-dashed rounded-lg p-8 text-center">
+                    <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                    <p className="text-base text-muted-foreground">
+                      Drag and drop an audio file here, or click to browse
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-lg font-semibold">Lyrics (Optional)</Label>
+                  <Textarea
+                    placeholder="Paste lyrics here... (Leave empty for auto-detection)"
+                    className="text-base min-h-[150px]"
+                  />
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label className="text-lg font-semibold">Remove Vocals</Label>
+                    <Select defaultValue="yes">
+                      <SelectTrigger className="text-base h-12">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="yes" className="text-base">Yes (Remove Vocals)</SelectItem>
+                        <SelectItem value="no" className="text-base">No (Keep Vocals)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-lg font-semibold">Lyrics Style</Label>
+                    <Select defaultValue="default">
+                      <SelectTrigger className="text-base h-12">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="default" className="text-base">Default</SelectItem>
+                        <SelectItem value="karaoke" className="text-base">Karaoke Style</SelectItem>
+                        <SelectItem value="subtitles" className="text-base">Subtitle Style</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <Button size="lg" className="text-base px-6 py-3 w-full">
+                  <Mic className="mr-2 h-5 w-5" />
+                  Generate Karaoke
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Special Features Tab */}
+          <TabsContent value="special" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold">Special Features</CardTitle>
+                <CardDescription className="text-lg">
+                  Advanced audio tools - Voice Clone, Podcast Generator, Sound Effects, and more!
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* Popular Features */}
+                  <div>
+                    <h3 className="text-xl font-bold mb-4">🌟 Popular Features</h3>
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                      {[
+                        { name: "Voice Clone", icon: Mic, type: "voice_clone", badge: "NEW" },
+                        { name: "Podcast Generator", icon: Mic, type: "podcast", badge: "NEW" },
+                        { name: "Sound Effects Library", icon: Volume2, type: "sound_effects", badge: "NEW" },
+                        { name: "Music Remix", icon: Music, type: "remix", badge: "NEW" },
+                        { name: "Beat Maker", icon: Music, type: "beat_maker", badge: "NEW" },
+                        { name: "Audio Mixer", icon: Waves, type: "mixer", badge: "NEW" },
+                      ].map((feature) => (
+                        <Card
+                          key={feature.type}
+                          className="cursor-pointer hover:border-primary hover:shadow-lg transition-all"
+                        >
+                          <CardContent className="p-4">
+                            <div className="flex items-center justify-between mb-2">
+                              <feature.icon className="h-8 w-8 text-primary" />
+                              {feature.badge && (
+                                <Badge className="bg-primary text-primary-foreground text-xs">{feature.badge}</Badge>
+                              )}
+                            </div>
+                            <p className="text-base font-semibold">{feature.name}</p>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Utility Tools */}
+                  <div>
+                    <h3 className="text-xl font-bold mb-4">🔧 Utility Tools</h3>
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                      {[
+                        { name: "Audio Trimmer", icon: Waves, type: "trimmer" },
+                        { name: "Audio Converter", icon: Waves, type: "converter" },
+                        { name: "Audio Normalizer", icon: Volume2, type: "normalizer" },
+                        { name: "Audio Reverser", icon: Waves, type: "reverser" },
+                        { name: "Audio Pitch Shifter", icon: Music, type: "pitch_shift" },
+                        { name: "Audio Fade", icon: Waves, type: "fade" },
+                        { name: "Audio Duplicator", icon: Waves, type: "duplicator" },
+                        { name: "Audio Splitter", icon: Waves, type: "splitter" },
+                      ].map((feature) => (
+                        <Card
+                          key={feature.type}
+                          className="cursor-pointer hover:border-primary hover:shadow-lg transition-all"
+                        >
+                          <CardContent className="p-4">
+                            <feature.icon className="h-8 w-8 mb-2 text-primary" />
+                            <p className="text-base font-semibold">{feature.name}</p>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

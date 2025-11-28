@@ -15,7 +15,9 @@ import {
   Download,
   Upload,
   Eye,
-  Loader2
+  Loader2,
+  Video,
+  Image as ImageIcon
 } from "lucide-react";
 import { useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -184,7 +186,7 @@ export default function ThemeCustomization() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 text-base">
+          <TabsList className="grid w-full grid-cols-6 text-base">
             <TabsTrigger value="colors" className="text-base">
               <Palette className="mr-2 h-4 w-4" />
               Colors
@@ -204,6 +206,10 @@ export default function ThemeCustomization() {
             <TabsTrigger value="components" className="text-base">
               <Sparkles className="mr-2 h-4 w-4" />
               Components
+            </TabsTrigger>
+            <TabsTrigger value="banner" className="text-base">
+              <Video className="mr-2 h-4 w-4" />
+              Banner
             </TabsTrigger>
           </TabsList>
 
@@ -379,6 +385,289 @@ export default function ThemeCustomization() {
                     ))}
                   </div>
                 ))}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Banner Tab */}
+          <TabsContent value="banner" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold">Banner Settings</CardTitle>
+                <CardDescription className="text-lg">Configure Hero Section banner (Image or Video)</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="banner-enabled"
+                      checked={settings?.banner.enabled || false}
+                      onChange={(e) =>
+                        updateSettings({
+                          banner: {
+                            ...settings!.banner,
+                            enabled: e.target.checked,
+                          },
+                        })
+                      }
+                      className="w-5 h-5"
+                    />
+                    <Label htmlFor="banner-enabled" className="text-base font-semibold cursor-pointer">
+                      Enable Banner
+                    </Label>
+                  </div>
+                </div>
+
+                {settings?.banner.enabled && (
+                  <>
+                    <div className="space-y-2">
+                      <Label className="text-base font-semibold">Banner Type</Label>
+                      <Select
+                        value={settings.banner.type}
+                        onValueChange={(v) =>
+                          updateSettings({
+                            banner: {
+                              ...settings.banner,
+                              type: v,
+                            },
+                          })
+                        }
+                      >
+                        <SelectTrigger className="text-base h-12">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="image" className="text-base">
+                            <div className="flex items-center gap-2">
+                              <ImageIcon className="h-4 w-4" />
+                              Image
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="video" className="text-base">
+                            <div className="flex items-center gap-2">
+                              <Video className="h-4 w-4" />
+                              Video
+                            </div>
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {settings.banner.type === "image" && (
+                      <div className="space-y-2">
+                        <Label className="text-base font-semibold">Image URL</Label>
+                        <Input
+                          type="url"
+                          value={settings.banner.imageUrl || ""}
+                          onChange={(e) =>
+                            updateSettings({
+                              banner: {
+                                ...settings.banner,
+                                imageUrl: e.target.value,
+                              },
+                            })
+                          }
+                          placeholder="https://example.com/image.jpg"
+                          className="text-base h-12"
+                        />
+                      </div>
+                    )}
+
+                    {settings.banner.type === "video" && (
+                      <>
+                        <div className="space-y-2">
+                          <Label className="text-base font-semibold">Video URL</Label>
+                          <Input
+                            type="url"
+                            value={settings.banner.videoUrl || ""}
+                            onChange={(e) =>
+                              updateSettings({
+                                banner: {
+                                  ...settings.banner,
+                                  videoUrl: e.target.value,
+                                },
+                              })
+                            }
+                            placeholder="https://example.com/video.mp4"
+                            className="text-base h-12"
+                          />
+                          <p className="text-sm text-muted-foreground">
+                            รองรับ MP4, WebM, OGG
+                          </p>
+                        </div>
+
+                        <div className="space-y-4 border p-4 rounded-lg">
+                          <Label className="text-base font-semibold">Video Settings</Label>
+                          
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              id="video-autoplay"
+                              checked={settings.banner.videoAutoplay}
+                              onChange={(e) =>
+                                updateSettings({
+                                  banner: {
+                                    ...settings.banner,
+                                    videoAutoplay: e.target.checked,
+                                  },
+                                })
+                              }
+                              className="w-5 h-5"
+                            />
+                            <Label htmlFor="video-autoplay" className="text-base cursor-pointer">
+                              Autoplay (เล่นอัตโนมัติ)
+                            </Label>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              id="video-loop"
+                              checked={settings.banner.videoLoop}
+                              onChange={(e) =>
+                                updateSettings({
+                                  banner: {
+                                    ...settings.banner,
+                                    videoLoop: e.target.checked,
+                                  },
+                                })
+                              }
+                              className="w-5 h-5"
+                            />
+                            <Label htmlFor="video-loop" className="text-base cursor-pointer">
+                              Loop (วนซ้ำ)
+                            </Label>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              id="video-muted"
+                              checked={settings.banner.videoMuted}
+                              onChange={(e) =>
+                                updateSettings({
+                                  banner: {
+                                    ...settings.banner,
+                                    videoMuted: e.target.checked,
+                                  },
+                                })
+                              }
+                              className="w-5 h-5"
+                            />
+                            <Label htmlFor="video-muted" className="text-base cursor-pointer">
+                              Muted (ปิดเสียง)
+                            </Label>
+                          </div>
+                        </div>
+                      </>
+                    )}
+
+                    <div className="space-y-2">
+                      <Label className="text-base font-semibold">Overlay Color</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          type="color"
+                          value={settings.banner.overlayColor}
+                          onChange={(e) =>
+                            updateSettings({
+                              banner: {
+                                ...settings.banner,
+                                overlayColor: e.target.value,
+                              },
+                            })
+                          }
+                          className="w-20 h-12"
+                        />
+                        <Input
+                          type="text"
+                          value={settings.banner.overlayColor}
+                          onChange={(e) =>
+                            updateSettings({
+                              banner: {
+                                ...settings.banner,
+                                overlayColor: e.target.value,
+                              },
+                            })
+                          }
+                          className="text-base h-12 flex-1"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-base font-semibold">
+                        Overlay Opacity: {Math.round((settings.banner.overlayOpacity || 0) * 100)}%
+                      </Label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={settings.banner.overlayOpacity || 0}
+                        onChange={(e) =>
+                          updateSettings({
+                            banner: {
+                              ...settings.banner,
+                              overlayOpacity: parseFloat(e.target.value),
+                            },
+                          })
+                        }
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-base font-semibold">Banner Height</Label>
+                      <Select
+                        value={settings.banner.height}
+                        onValueChange={(v) =>
+                          updateSettings({
+                            banner: {
+                              ...settings.banner,
+                              height: v,
+                            },
+                          })
+                        }
+                      >
+                        <SelectTrigger className="text-base h-12">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="auto" className="text-base">Auto</SelectItem>
+                          <SelectItem value="400px" className="text-base">400px</SelectItem>
+                          <SelectItem value="600px" className="text-base">600px</SelectItem>
+                          <SelectItem value="800px" className="text-base">800px</SelectItem>
+                          <SelectItem value="100vh" className="text-base">Full Screen (100vh)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-base font-semibold">Content Position</Label>
+                      <Select
+                        value={settings.banner.position}
+                        onValueChange={(v) =>
+                          updateSettings({
+                            banner: {
+                              ...settings.banner,
+                              position: v,
+                            },
+                          })
+                        }
+                      >
+                        <SelectTrigger className="text-base h-12">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="top" className="text-base">Top</SelectItem>
+                          <SelectItem value="center" className="text-base">Center</SelectItem>
+                          <SelectItem value="bottom" className="text-base">Bottom</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

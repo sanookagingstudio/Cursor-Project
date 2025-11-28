@@ -76,6 +76,21 @@ class ThemeEffects(BaseModel):
     hoverEffect: str = Field(default="scale(1.02)", description="Hover effect")
 
 
+class ThemeBanner(BaseModel):
+    """Banner settings for Hero Section"""
+    enabled: bool = Field(default=False, description="Enable banner")
+    type: str = Field(default="image", description="Banner type: image, video")
+    imageUrl: Optional[str] = Field(default=None, description="Image URL for banner")
+    videoUrl: Optional[str] = Field(default=None, description="Video URL for banner")
+    videoAutoplay: bool = Field(default=True, description="Video autoplay")
+    videoLoop: bool = Field(default=True, description="Video loop")
+    videoMuted: bool = Field(default=True, description="Video muted")
+    overlayColor: str = Field(default="#000000", description="Overlay color")
+    overlayOpacity: float = Field(default=0.3, ge=0, le=1, description="Overlay opacity (0-1)")
+    height: str = Field(default="auto", description="Banner height (auto, 400px, 600px, 100vh)")
+    position: str = Field(default="center", description="Content position: top, center, bottom")
+
+
 class ThemeSettings(BaseModel):
     """Complete theme settings"""
     colors: ThemeColors = Field(default_factory=ThemeColors)
@@ -84,6 +99,7 @@ class ThemeSettings(BaseModel):
     layout: ThemeLayout = Field(default_factory=ThemeLayout)
     components: ThemeComponents = Field(default_factory=ThemeComponents)
     effects: ThemeEffects = Field(default_factory=ThemeEffects)
+    banner: ThemeBanner = Field(default_factory=ThemeBanner)
 
 
 # Request/Response Schemas

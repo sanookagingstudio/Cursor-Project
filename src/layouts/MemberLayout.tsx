@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { User, Calendar, MapPin, FileText, LogOut, Settings } from "lucide-react";
+import { User, Calendar, MapPin, FileText, LogOut, Settings, Image, Video, Music, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,6 +25,7 @@ export function MemberLayout({ children }: MemberLayoutProps) {
     { label: "My Activities", path: "/member/activities", icon: Calendar },
     { label: "My Trips", path: "/member/trips", icon: MapPin },
     { label: "Media Center", path: "/media", icon: FileText },
+    { label: "🎨 Media Creator", path: "/member/media-creator", icon: Sparkles },
     { label: "Documents", path: "/member/documents", icon: FileText },
     { label: "Settings", path: "/member/settings", icon: Settings },
   ];

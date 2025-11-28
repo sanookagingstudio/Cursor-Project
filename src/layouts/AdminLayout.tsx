@@ -17,6 +17,9 @@ import {
   Settings,
   Brain,
   Palette,
+  BarChart3,
+  Globe,
+  Tag,
   ChevronDown,
   Menu,
   X,
@@ -52,21 +55,65 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     { label: t("admin.nav.roleManagement"), path: "/admin/role-management", icon: Users },
     { label: t("admin.nav.tripPlanner"), path: "/admin/trip-planner", icon: MapPin },
     { label: t("admin.nav.mediaCenter"), path: "/admin/media", icon: Image },
-    { label: "Core Foundation", path: "/admin/core-foundation", icon: Settings },
-    { label: "Input Brain", path: "/admin/input-brain", icon: Brain },
-    { label: "Image Editor", path: "/admin/image-editor", icon: Image },
-    { label: "Video Editor", path: "/admin/video-editor", icon: Video },
-    { label: "Music Lab", path: "/admin/music-lab", icon: Music },
-    { label: "Dashboard & Publishing", path: "/admin/dashboard-publishing", icon: LayoutDashboard },
-    { label: "Theme Customization", path: "/admin/theme-customization", icon: Palette },
-    { label: t("admin.nav.aiInsights"), path: "/admin/ai-insights", icon: Sparkles },
-    { label: "FUN Creator Basic", path: "/staff/fun-creator-basic", icon: Image },
-    { label: "FUN Creator Pro", path: "/staff/fun-creator-pro", icon: Sparkles },
-    { label: "FUN Health", path: "/staff/fun-health", icon: Users },
-    { label: "FUN Sentinel", path: "/staff/fun-sentinel", icon: Sparkles },
-    { label: t("admin.nav.settings"), path: "/admin/settings", icon: Settings },
-    { label: "Core Foundation", path: "/admin/core-foundation", icon: Settings },
-    { label: "Provider Management", path: "/admin/provider-management", icon: Settings },
+    
+    // Media Creator Group (Highlighted) - Always Open
+    {
+      label: "🎨 Media Creator",
+      icon: Sparkles,
+      children: [
+        { label: "Image Editor", path: "/admin/image-editor", icon: Image },
+        { label: "Video Editor", path: "/admin/video-editor", icon: Video },
+        { label: "Music Lab", path: "/admin/music-lab", icon: Music },
+        { label: "Input Brain", path: "/admin/input-brain", icon: Brain },
+        { label: "Dashboard & Publishing", path: "/admin/dashboard-publishing", icon: LayoutDashboard },
+      ],
+    },
+    
+    // System Management
+    {
+      label: "⚙️ System Management",
+      icon: Settings,
+      children: [
+        { label: "Core Foundation", path: "/admin/core-foundation", icon: Settings },
+        { label: "Provider Management", path: "/admin/provider-management", icon: Settings },
+        { label: "Theme Customization", path: "/admin/theme-customization", icon: Palette },
+        { label: t("admin.nav.settings"), path: "/admin/settings", icon: Settings },
+      ],
+    },
+    
+    // Business & Analytics
+    {
+      label: "📊 Business & Analytics",
+      icon: BarChart3,
+      children: [
+        { label: "Monetization & Payment", path: "/admin/monetization", icon: DollarSign },
+        { label: "Discount & Promotion", path: "/admin/discount-management", icon: Tag },
+        { label: "Analytics & Statistics", path: "/admin/analytics", icon: BarChart3 },
+        { label: "Cost & Infrastructure", path: "/admin/cost-management", icon: DollarSign },
+      ],
+    },
+    
+    // Integration
+    {
+      label: "🔗 Integration",
+      icon: Globe,
+      children: [
+        { label: "External Apps", path: "/admin/external-apps", icon: Globe },
+        { label: t("admin.nav.aiInsights"), path: "/admin/ai-insights", icon: Sparkles },
+      ],
+    },
+    
+    // Staff Tools (for reference)
+    {
+      label: "👥 Staff Tools",
+      icon: Users,
+      children: [
+        { label: "FUN Creator Basic", path: "/staff/fun-creator-basic", icon: Image },
+        { label: "FUN Creator Pro", path: "/staff/fun-creator-pro", icon: Sparkles },
+        { label: "FUN Health", path: "/staff/fun-health", icon: Users },
+        { label: "FUN Sentinel", path: "/staff/fun-sentinel", icon: Sparkles },
+      ],
+    },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -88,7 +135,13 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       <nav className="flex-1 overflow-y-auto p-4 space-y-2">
         {menuItems.map((item) =>
           item.children ? (
-            <Collapsible key={item.label} defaultOpen={item.children.some((child) => isActive(child.path))}>
+            <Collapsible 
+              key={item.label} 
+              defaultOpen={
+                item.label.includes("Media Creator") || 
+                item.children.some((child) => isActive(child.path))
+              }
+            >
               <CollapsibleTrigger asChild>
                 <Button
                   variant="ghost"

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { getApiUrl } from "@/lib/api";
 
 interface ThemeSettings {
   colors: {
@@ -53,6 +54,19 @@ interface ThemeSettings {
     shadow: string;
     transition: string;
     hoverEffect: string;
+  };
+  banner: {
+    enabled: boolean;
+    type: string;
+    imageUrl?: string;
+    videoUrl?: string;
+    videoAutoplay: boolean;
+    videoLoop: boolean;
+    videoMuted: boolean;
+    overlayColor: string;
+    overlayOpacity: number;
+    height: string;
+    position: string;
   };
 }
 
@@ -132,6 +146,19 @@ const defaultSettings: ThemeSettings = {
     transition: "0.2s ease",
     hoverEffect: "scale(1.02)",
   },
+  banner: {
+    enabled: false,
+    type: "image",
+    imageUrl: undefined,
+    videoUrl: undefined,
+    videoAutoplay: true,
+    videoLoop: true,
+    videoMuted: true,
+    overlayColor: "#000000",
+    overlayOpacity: 0.3,
+    height: "auto",
+    position: "center",
+  },
 };
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
@@ -151,7 +178,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const loadActiveTheme = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/themes/active");
+      const response = await fetch(getApiUrl("/themes/active"));
       if (response.ok) {
         const theme = await response.json();
         setCurrentTheme(theme);
@@ -198,11 +225,29 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     root.style.setProperty("--border-radius", themeSettings.effects.borderRadius);
     root.style.setProperty("--shadow", themeSettings.effects.shadow);
     root.style.setProperty("--transition", themeSettings.effects.transition);
+
+    // Banner
+    if (themeSettings.banner.enabled) {
+      root.style.setProperty("--banner-enabled", "1");
+      root.style.setProperty("--banner-type", themeSettings.banner.type);
+      if (themeSettings.banner.imageUrl) {
+        root.style.setProperty("--banner-image", `url(${themeSettings.banner.imageUrl})`);
+      }
+      if (themeSettings.banner.videoUrl) {
+        root.style.setProperty("--banner-video", themeSettings.banner.videoUrl);
+      }
+      root.style.setProperty("--banner-overlay-color", themeSettings.banner.overlayColor);
+      root.style.setProperty("--banner-overlay-opacity", String(themeSettings.banner.overlayOpacity));
+      root.style.setProperty("--banner-height", themeSettings.banner.height);
+      root.style.setProperty("--banner-position", themeSettings.banner.position);
+    } else {
+      root.style.setProperty("--banner-enabled", "0");
+    }
   };
 
   const applyTheme = async (themeId: string) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/themes/${themeId}/apply`, {
+      const response = await fetch(getApiUrl(`/themes/${themeId}/apply`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ preview: false }),
@@ -225,7 +270,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const saveTheme = async (name: string, description?: string) => {
     try {
-      const response = await fetch("http://localhost:8000/api/themes", {
+      const response = await fetch(getApiUrl("/themes"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
