@@ -1,0 +1,124 @@
+import { PublicLayout } from "@/layouts/PublicLayout";
+import { HeroSection } from "@/components/sections/HeroSection";
+import { FeatureGrid } from "@/components/sections/FeatureGrid";
+import { TestimonialSection } from "@/components/sections/TestimonialSection";
+import { CTASection } from "@/components/sections/CTASection";
+import { Heart, Shield, Users } from "lucide-react";
+import { ActivityCard } from "@/components/cards/ActivityCard";
+import { useTranslation } from "react-i18next";
+
+const Index = () => {
+  const { t } = useTranslation();
+  const features = [
+    {
+      icon: Heart,
+      title: t('features.health.title'),
+      description: t('features.health.description'),
+    },
+    {
+      icon: Shield,
+      title: t('features.safety.title'),
+      description: t('features.safety.description'),
+    },
+    {
+      icon: Users,
+      title: t('features.social.title'),
+      description: t('features.social.description'),
+    },
+  ];
+
+  const testimonials = [
+    {
+      name: t('testimonials.member1.name'),
+      role: t('testimonials.member1.role'),
+      content: t('testimonials.member1.content'),
+      rating: 5,
+    },
+    {
+      name: t('testimonials.member2.name'),
+      role: t('testimonials.member2.role'),
+      content: t('testimonials.member2.content'),
+      rating: 5,
+    },
+    {
+      name: t('testimonials.member3.name'),
+      role: t('testimonials.member3.role'),
+      content: t('testimonials.member3.content'),
+      rating: 5,
+    },
+  ];
+
+  return (
+    <PublicLayout>
+      <HeroSection
+        subtitle={t('hero.subtitle')}
+        title={t('hero.title')}
+        description={t('hero.description')}
+        primaryCTA={{ label: t('hero.primaryCTA'), href: "/join-now" }}
+        secondaryCTA={{ label: t('hero.secondaryCTA'), href: "/about" }}
+        image="/placeholder.svg"
+      />
+
+      <FeatureGrid
+        title={t('features.title')}
+        description={t('features.description')}
+        features={features}
+      />
+
+      <section className="section-padding">
+        <div className="container-padding max-w-7xl mx-auto">
+          <div className="text-center mb-12 space-y-4">
+            <h2 className="text-3xl md:text-4xl font-bold">{t('activities.title')}</h2>
+            <p className="text-xl text-muted-foreground">{t('activities.description')}</p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <ActivityCard
+              title={t('activities.morning.title')}
+              description={t('activities.morning.description')}
+              time={t('activities.morning.time')}
+              duration={t('activities.morning.duration')}
+              capacity={20}
+              intensity="Low"
+              tags={[t('activities.morning.tag')]}
+              image="/placeholder.svg"
+            />
+            <ActivityCard
+              title={t('activities.art.title')}
+              description={t('activities.art.description')}
+              time={t('activities.art.time')}
+              duration={t('activities.art.duration')}
+              capacity={15}
+              intensity="Low"
+              tags={[t('activities.art.tag')]}
+              image="/placeholder.svg"
+            />
+            <ActivityCard
+              title={t('activities.brain.title')}
+              description={t('activities.brain.description')}
+              time={t('activities.brain.time')}
+              duration={t('activities.brain.duration')}
+              capacity={25}
+              intensity="Medium"
+              tags={[t('activities.brain.tag')]}
+              image="/placeholder.svg"
+            />
+          </div>
+        </div>
+      </section>
+
+      <TestimonialSection
+        title={t('testimonials.title')}
+        testimonials={testimonials}
+      />
+
+      <CTASection
+        title={t('cta.title')}
+        description={t('cta.description')}
+        primaryCTA={{ label: t('cta.primaryCTA'), href: "/join-now" }}
+        secondaryCTA={{ label: t('cta.secondaryCTA'), href: "/contact" }}
+      />
+    </PublicLayout>
+  );
+};
+
+export default Index;

@@ -1,0 +1,50 @@
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+interface CTASectionProps {
+  title: string;
+  description?: string;
+  primaryCTA?: {
+    label: string;
+    href: string;
+  };
+  secondaryCTA?: {
+    label: string;
+    href: string;
+  };
+  variant?: "default" | "gradient" | "outline";
+  className?: string;
+}
+export function CTASection({
+  title,
+  description,
+  primaryCTA,
+  secondaryCTA,
+  variant = "gradient",
+  className
+}: CTASectionProps) {
+  const variants = {
+    default: "bg-card border",
+    gradient: "gradient-primary text-white",
+    outline: "bg-background border-2 border-primary"
+  };
+  return <section className={cn("section-padding", className)}>
+      <div className="container-padding max-w-7xl mx-auto">
+        <div className={cn("rounded-2xl p-12 text-center space-y-6", variants[variant])}>
+          <h2 className={cn("text-3xl md:text-4xl font-bold", variant === "gradient" && "text-white")}>
+            {title}
+          </h2>
+          {description && <p className={cn("text-xl max-w-2xl mx-auto", variant === "gradient" ? "text-white/90" : "text-muted-foreground")}>
+              {description}
+            </p>}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            {primaryCTA && <Button size="lg" className="btn-elderly text-lg" variant={variant === "gradient" ? "secondary" : "default"} asChild>
+                <a href={primaryCTA.href}>{primaryCTA.label}</a>
+              </Button>}
+            {secondaryCTA && <Button size="lg" variant="outline" className={cn("btn-elderly text-lg", variant === "gradient" && "border-white text-white hover:bg-white/10")} asChild>
+                <a href={secondaryCTA.href} className="bg-slate-500">{secondaryCTA.label}</a>
+              </Button>}
+          </div>
+        </div>
+      </div>
+    </section>;
+}

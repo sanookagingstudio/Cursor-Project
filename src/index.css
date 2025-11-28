@@ -1,0 +1,330 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* FUN Brand Colors */
+    --primary: 20 90% 48%; /* FUN Orange #F36F21 */
+    --primary-foreground: 33 100% 96%;
+    --primary-glow: 18 89% 64%;
+    --primary-deep: 18 78% 47%; /* Deep FUN Orange #D85F1A */
+
+    --secondary: 0 0% 32%; /* FUN Red Pin #D2142C */
+    --secondary-foreground: 0 0% 98%;
+
+    --accent: 47 100% 96%; /* Safe Green #4CAF50 */
+    --accent-foreground: 37 92% 50%;
+
+    --background: 0 0% 96%; /* Soft Beige #FAF5EF */
+    --foreground: 0 0% 9%; /* Rich Black #0D0D0D */
+
+    --card: 0 0% 98%;
+    --card-foreground: 0 0% 9%;
+
+    --muted: 0 0% 63%;
+    --muted-foreground: 0 0% 9%; /* Deep Graphite #3D3D3D */
+
+    --popover: 0 0% 89%;
+    --popover-foreground: 0 0% 9%;
+
+    --border: 0 0% 83%;
+    --input: 0 0% 83%;
+    --ring: 20 90% 48%;
+
+    --destructive: 0 72% 50%; /* Care Red #D32F2F */
+    --destructive-foreground: 0 85% 97%;
+
+    --sand: 36 50% 91%; /* Premium Sand #F4E9D8 */
+    --sand-foreground: 0 0% 5%;
+
+    --radius: 0.75rem;
+
+    /* FUN Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(18 89% 54%), hsl(18 89% 64%));
+    --gradient-secondary: linear-gradient(135deg, hsl(353 82% 45%), hsl(353 82% 55%));
+    --gradient-warm: linear-gradient(180deg, hsl(36 50% 95%), hsl(36 50% 91%));
+    --gradient-premium: linear-gradient(135deg, hsl(18 89% 54%), hsl(18 78% 47%));
+
+    /* FUN Shadows */
+    --shadow-soft: 0 2px 8px -2px hsl(0 0% 5% / 0.08);
+    --shadow-medium: 0 4px 16px -4px hsl(0 0% 5% / 0.12);
+    --shadow-large: 0 8px 32px -8px hsl(0 0% 5% / 0.16);
+    --shadow-glow: 0 0 24px hsl(18 89% 54% / 0.3);
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 9%;
+    --sidebar-primary: 20 90% 48%;
+    --sidebar-primary-foreground: 33 100% 96%;
+    --sidebar-accent: 0 0% 32%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 83%;
+    --sidebar-ring: 20 90% 48%;
+    --chart-1: 27 95% 60%;
+    --chart-2: 43 96% 56%;
+    --chart-3: 47 95% 53%;
+    --chart-4: 24 94% 53%;
+    --chart-5: 0 0% 45%;
+    --sidebar: 0 0% 98%;
+    --font-sans: 'Noto Serif Thai', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+    --font-serif: 'Noto Serif Thai', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+    --font-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
+    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
+    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+    --tracking-normal: 0em;
+    --spacing: 0.25rem;
+  }
+
+  .dark {
+    --background: 0 0% 9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 14%;
+    --card-foreground: 0 0% 98%;
+    --muted: 0 0% 45%;
+    --muted-foreground: 0 0% 98%;
+    --popover: 0 0% 25%;
+    --popover-foreground: 0 0% 98%;
+    --border: 0 0% 32%;
+    --input: 0 0% 32%;
+    --sidebar-background: 0 0% 10%;
+    --sidebar-accent: 43 96% 56%;
+    --primary: 27 95% 60%;
+    --primary-foreground: 12 81% 14%;
+    --secondary: 0 0% 45%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 20 91% 14%;
+    --accent-foreground: 43 96% 56%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 85% 97%;
+    --ring: 27 95% 60%;
+    --chart-1: 30 97% 72%;
+    --chart-2: 45 96% 64%;
+    --chart-3: 48 96% 76%;
+    --chart-4: 27 95% 60%;
+    --chart-5: 0 0% 45%;
+    --sidebar: 0 0% 14%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 27 95% 60%;
+    --sidebar-primary-foreground: 12 81% 14%;
+    --sidebar-accent-foreground: 20 91% 14%;
+    --sidebar-border: 0 0% 32%;
+    --sidebar-ring: 27 95% 60%;
+    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
+    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
+    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-size: 18px; /* Elderly-friendly base size */
+    line-height: 1.6;
+  }
+
+  /* Elderly-friendly typography */
+  h1 {
+    @apply text-4xl font-bold tracking-tight;
+  }
+
+  h2 {
+    @apply text-3xl font-semibold tracking-tight;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold;
+  }
+
+  h4 {
+    @apply text-xl font-semibold;
+  }
+
+  h5 {
+    @apply text-lg font-semibold;
+  }
+
+  h6 {
+    @apply text-base font-semibold;
+  }
+
+  p {
+    @apply text-base leading-relaxed;
+  }
+
+  /* Smooth transitions */
+  * {
+    @apply transition-colors duration-200;
+  }
+}
+
+@layer utilities {
+  /* Elder-friendly click targets */
+  .btn-elderly {
+    @apply min-h-[48px] px-6 text-lg;
+  }
+
+  .click-target {
+    @apply min-h-[48px] min-w-[48px];
+  }
+
+  /* Spacing utilities */
+  .section-padding {
+    @apply py-12 md:py-16 lg:py-20;
+  }
+
+  .container-padding {
+    @apply px-4 md:px-6 lg:px-8;
+  }
+
+  /* Card shadows */
+  .card-shadow {
+    box-shadow: var(--shadow-elegant);
+  }
+
+  .card-shadow-hover {
+    box-shadow: var(--shadow-hover);
+  }
+  
+  .premium-card {
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-premium);
+  }
+  
+  .premium-gradient {
+    background: var(--gradient-primary);
+  }
+
+  /* Gradients */
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+
+  .gradient-warm {
+    background: var(--gradient-warm);
+  }
+}
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Premium FUN Brand Colors - Refined */
+    --background: 30 20% 98%;
+    --foreground: 25 15% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 25 15% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 25 15% 15%;
+    --primary: 18 88% 54%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 25% 92%;
+    --secondary-foreground: 25 15% 20%;
+    --muted: 30 20% 95%;
+    --muted-foreground: 25 10% 45%;
+    --accent: 28 80% 65%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 30 15% 88%;
+    --input: 30 15% 88%;
+    --ring: 18 88% 54%;
+    --radius: 0.75rem;
+    
+    /* Premium Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(18 88% 54%), hsl(28 80% 65%));
+    --gradient-premium: linear-gradient(180deg, hsl(30 20% 98%), hsl(30 25% 95%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(30 20% 98%));
+    
+    /* Premium Shadows */
+    --shadow-elegant: 0 4px 20px -4px hsla(18 88% 54% / 0.15);
+    --shadow-hover: 0 8px 30px -6px hsla(18 88% 54% / 0.25);
+    --shadow-premium: 0 10px 40px -10px hsla(25 15% 15% / 0.12);
+
+    --sidebar-background: 30 22% 97%;
+    --sidebar-foreground: 25 15% 20%;
+    --sidebar-primary: 18 88% 54%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 30 25% 92%;
+    --sidebar-accent-foreground: 25 15% 20%;
+    --sidebar-border: 30 15% 90%;
+    --sidebar-ring: 18 88% 54%;
+    --chart-1: 18 88% 54%;
+    --chart-2: 28 80% 65%;
+    --chart-3: 35 70% 55%;
+    --chart-4: 42 75% 60%;
+    --chart-5: 15 85% 48%;
+    --sidebar: 30 22% 97%;
+  }
+
+  .dark {
+    --background: 25 20% 8%;
+    --foreground: 30 15% 95%;
+    --card: 25 18% 12%;
+    --card-foreground: 30 15% 95%;
+    --popover: 25 18% 12%;
+    --popover-foreground: 30 15% 95%;
+    --primary: 18 88% 54%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 25 15% 18%;
+    --secondary-foreground: 30 15% 95%;
+    --muted: 25 12% 16%;
+    --muted-foreground: 30 10% 60%;
+    --accent: 28 80% 65%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 25 12% 20%;
+    --input: 25 12% 20%;
+    --ring: 18 88% 54%;
+    
+    /* Premium Gradients - Dark Mode */
+    --gradient-primary: linear-gradient(135deg, hsl(18 88% 54%), hsl(28 80% 65%));
+    --gradient-premium: linear-gradient(180deg, hsl(25 18% 12%), hsl(25 15% 10%));
+    --gradient-card: linear-gradient(145deg, hsl(25 18% 12%), hsl(25 15% 10%));
+    
+    /* Premium Shadows - Dark Mode */
+    --shadow-elegant: 0 4px 20px -4px hsla(18 88% 54% / 0.3);
+    --shadow-hover: 0 8px 30px -6px hsla(18 88% 54% / 0.4);
+    --shadow-premium: 0 10px 40px -10px hsla(0 0% 0% / 0.5);
+    
+    --chart-1: 18 88% 54%;
+    --chart-2: 28 80% 65%;
+    --chart-3: 35 70% 55%;
+    --chart-4: 42 75% 60%;
+    --chart-5: 15 85% 48%;
+    --sidebar-background: 25 18% 10%;
+    --sidebar-foreground: 30 15% 92%;
+    --sidebar-primary: 18 88% 54%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 25 15% 18%;
+    --sidebar-accent-foreground: 30 15% 92%;
+    --sidebar-border: 25 12% 18%;
+    --sidebar-ring: 18 88% 54%;
+    --sidebar: 25 18% 10%;
+  }
+}
