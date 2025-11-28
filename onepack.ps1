@@ -112,7 +112,7 @@ function Backup-ToGitHub {
         Write-Success "📦 Changes pushed to: $GitHubRepo"
     } catch {
         Write-Error "❌ Failed to push to GitHub: $_"
-        Write-Warning "💡 You may need to set up GitHub credentials or SSH keys."
+            Write-Warning "You may need to set up GitHub credentials or SSH keys."
     }
 }
 
@@ -188,7 +188,7 @@ function Main {
             Write-Info "Available actions: backup, restore, status"
             Write-Info ""
             Write-Info "Usage:"
-            Write-Info "  .\onepack.ps1 -Action backup -Message 'Your commit message'"
+            Write-Info "  .\onepack.ps1 -Action backup -Message `"Your commit message`""
             Write-Info "  .\onepack.ps1 -Action restore"
             Write-Info "  .\onepack.ps1 -Action status"
         }
