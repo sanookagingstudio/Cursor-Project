@@ -7,6 +7,8 @@ import { lazy, Suspense } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ConnectionError } from "@/components/ConnectionError";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -80,20 +82,22 @@ const MediaCreator = lazy(() => import("./pages/member/MediaCreator"));
 const queryClient = new QueryClient();
 
 const App = () => (
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <ThemeProvider>
-              <AuthProvider>
-          <Suspense fallback={<div className="min-h-screen flex items-center justify-center">
-            <div className="text-center">
-              <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-muted-foreground">Loading...</p>
-            </div>
-          </div>}>
-            <Routes>
+      <ErrorBoundary>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <ConnectionError />
+            <BrowserRouter>
+              <ThemeProvider>
+                <AuthProvider>
+            <Suspense fallback={<div className="min-h-screen flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-muted-foreground">Loading...</p>
+              </div>
+            </div>}>
+              <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<About />} />
@@ -166,13 +170,14 @@ const App = () => (
 
             {/* Fallback */}
             <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-              </AuthProvider>
-            </ThemeProvider>
-          </BrowserRouter>
-        </TooltipProvider>
-      </QueryClientProvider>
+              </Routes>
+            </Suspense>
+                  </AuthProvider>
+                </ThemeProvider>
+              </BrowserRouter>
+            </TooltipProvider>
+          </QueryClientProvider>
+        </ErrorBoundary>
 );
 
 export default App;

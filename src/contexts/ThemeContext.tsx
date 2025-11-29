@@ -164,7 +164,7 @@ const defaultSettings: ThemeSettings = {
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [currentTheme, setCurrentTheme] = useState<Theme | null>(null);
   const [settings, setSettings] = useState<ThemeSettings>(defaultSettings);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Start as false to show content immediately
 
   // Load active theme on mount
   useEffect(() => {
@@ -178,15 +178,31 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const loadActiveTheme = async () => {
     try {
-      const response = await fetch(getApiUrl("/themes/active"));
+      // Set timeout to prevent hanging
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+      
+      const response = await fetch(getApiUrl("/themes/active"), {
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
       if (response.ok) {
         const theme = await response.json();
         setCurrentTheme(theme);
         setSettings(theme.settings || defaultSettings);
+      } else {
+        // If API returns error, use default settings
+        console.warn("Theme API not available, using default theme");
       }
     } catch (error) {
-      console.error("Failed to load active theme:", error);
+      // Silently fail and use default theme
+      if (error.name !== 'AbortError') {
+        console.warn("Failed to load active theme, using default:", error);
+      }
     } finally {
+      // Always set loading to false, even if API fails
       setLoading(false);
     }
   };

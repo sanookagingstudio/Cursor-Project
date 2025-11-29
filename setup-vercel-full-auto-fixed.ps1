@@ -1,4 +1,4 @@
-# Sanook Master V2 - Full Automation Setup for Vercel
+﻿# Sanook Master V2 - Full Automation Setup for Vercel
 # ตั้งค่าทุกอย่างอัตโนมัติ (รวม Environment Variables)
 
 param(
@@ -130,3 +130,4 @@ Write-Host '💡 หลังจากนี้:' -ForegroundColor Yellow
 Write-Host '   - Push code -> Auto-deploy' -ForegroundColor White
 Write-Host '   - ไม่ต้องทำอะไรเพิ่ม' -ForegroundColor White
 Write-Host ""
+

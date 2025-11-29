@@ -26,8 +26,8 @@ cd "d:\SanookAgingStudio\shadow project\sanook-master-v2-main"
 ### Step 2: รันคำสั่ง OnePack
 
 **Backup (เมื่อหยุดทำงาน):**
-```powershell
-.\onepack.ps1 -Action backup -Message "Work in progress"
+```powershell.\onepack.ps1 -Action backup -Message "Work in progress"
+
 ```
 
 **Restore (เมื่อกลับมาทำงาน):**

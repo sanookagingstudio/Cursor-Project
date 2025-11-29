@@ -169,3 +169,4 @@ Write-Host "   2. Copy values ไปตั้งค่าใน Vercel Dashboard
 Write-Host "   3. Redeploy ใน Vercel" -ForegroundColor White
 Write-Host ""
 
+

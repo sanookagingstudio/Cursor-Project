@@ -156,3 +156,4 @@ notepad .env
 **Last Updated:** 2025-12-02  
 **Status:** ✅ Semi-Automated (ตั้งค่า Environment Variables ครั้งเดียว)
 
+

@@ -5,13 +5,50 @@ import type { Database } from './types';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
+// Check if environment variables are set
+if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+  console.error('❌ Supabase configuration missing!');
+  console.error('Please set the following environment variables:');
+  console.error('  - VITE_SUPABASE_URL');
+  console.error('  - VITE_SUPABASE_PUBLISHABLE_KEY');
+  console.error('');
+  console.error('Create a .env file in the root directory with:');
+  console.error('  VITE_SUPABASE_URL=your_supabase_url');
+  console.error('  VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_key');
+}
+
+// Create a dummy client if env vars are missing to prevent crashes
+const createSupabaseClient = () => {
+  if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+    // Return a mock client that will fail gracefully
+    return createClient<Database>(
+      'https://placeholder.supabase.co',
+      'placeholder-key',
+      {
+        auth: {
+          storage: localStorage,
+          persistSession: false,
+          autoRefreshToken: false,
+        }
+      }
+    );
+  }
+  
+  return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+    auth: {
+      storage: localStorage,
+      persistSession: true,
+      autoRefreshToken: true,
+    }
+  });
+};
+
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-  auth: {
-    storage: localStorage,
-    persistSession: true,
-    autoRefreshToken: true,
-  }
-});
+export const supabase = createSupabaseClient();
+
+// Export a function to check if Supabase is properly configured
+export const isSupabaseConfigured = () => {
+  return !!(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY);
+};
