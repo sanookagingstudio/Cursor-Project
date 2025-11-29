@@ -1,11 +1,18 @@
 # Deploy Now - One Command
+# Run this in Cursor Terminal after vercel login completes
 $ErrorActionPreference = "Continue"
 
 Write-Host "Checking Vercel login..." -ForegroundColor Cyan
 $whoami = vercel whoami 2>&1
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "Please login first: vercel login" -ForegroundColor Yellow
-    Write-Host "Then run this script again" -ForegroundColor Yellow
+    Write-Host "❌ Not logged in" -ForegroundColor Red
+    Write-Host ""
+    Write-Host "Steps:" -ForegroundColor Yellow
+    Write-Host "1. Run: vercel login" -ForegroundColor White
+    Write-Host "2. Complete authentication in browser" -ForegroundColor White
+    Write-Host "3. Run this script again: .\DEPLOY_NOW.ps1" -ForegroundColor White
+    Write-Host ""
+    Write-Host "Or use: .\wait-and-deploy.ps1 (auto-wait for login)" -ForegroundColor Cyan
     exit 1
 }
 

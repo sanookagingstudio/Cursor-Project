@@ -71,3 +71,6 @@ backup/
 
 # Supabase
 .supabase/
+
+.vercel
+.env*.local
