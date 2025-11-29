@@ -14,7 +14,7 @@ import {
   Download,
   Film,
   Subtitles,
-  AspectRatio,
+  Maximize,
   Loader2,
   Sparkles,
   Play,
@@ -274,7 +274,7 @@ export default function VideoEditor() {
                   <div className="grid gap-2 md:grid-cols-2">
                     {["16:9 (YouTube)", "9:16 (TikTok/Reels)", "4:5 (Facebook)", "1:1 (Square)"].map((format) => (
                       <div key={format} className="flex items-center gap-2 p-3 border rounded-lg">
-                        <AspectRatio className="h-5 w-5 text-primary" />
+                        <Maximize className="h-5 w-5 text-primary" />
                         <span className="text-base">{format}</span>
                       </div>
                     ))}
