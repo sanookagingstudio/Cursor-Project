@@ -158,16 +158,21 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 {item.children.map((child) => (
                   <Link key={child.path} to={child.path}>
                     <Button
-                      variant={isActive(child.path) ? "secondary" : "ghost"}
+                      variant={isActive(child.path) ? "default" : "ghost"}
                       className={cn(
                         "w-full justify-start text-base transition-all",
                         isActive(child.path) 
-                          ? "bg-primary text-primary-foreground font-bold shadow-lg border-2 border-primary-foreground/20" 
+                          ? "!bg-primary !text-white font-bold shadow-xl border-2 border-primary-foreground/30 scale-105" 
                           : "hover:bg-accent hover:text-accent-foreground"
                       )}
+                      style={isActive(child.path) ? { 
+                        backgroundColor: 'var(--primary)', 
+                        color: 'white',
+                        fontWeight: 'bold'
+                      } : {}}
                     >
-                      <child.icon className={cn("mr-3 h-4 w-4", isActive(child.path) && "text-primary-foreground")} />
-                      <span className={isActive(child.path) ? "font-bold" : ""}>{child.label}</span>
+                      <child.icon className={cn("mr-3 h-4 w-4", isActive(child.path) && "!text-white")} />
+                      <span className={isActive(child.path) ? "font-bold !text-white" : ""}>{child.label}</span>
                     </Button>
                   </Link>
                 ))}
@@ -176,16 +181,21 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           ) : (
             <Link key={item.path} to={item.path}>
               <Button
-                variant={isActive(item.path) ? "secondary" : "ghost"}
+                variant={isActive(item.path) ? "default" : "ghost"}
                 className={cn(
                   "w-full justify-start text-base transition-all",
                   isActive(item.path) 
-                    ? "bg-primary text-primary-foreground font-bold shadow-lg border-2 border-primary-foreground/20" 
+                    ? "!bg-primary !text-white font-bold shadow-xl border-2 border-primary-foreground/30 scale-105" 
                     : "hover:bg-accent hover:text-accent-foreground"
                 )}
+                style={isActive(item.path) ? { 
+                  backgroundColor: 'var(--primary)', 
+                  color: 'white',
+                  fontWeight: 'bold'
+                } : {}}
               >
-                <item.icon className={cn("mr-3 h-5 w-5", isActive(item.path) && "text-primary-foreground")} />
-                <span className={isActive(item.path) ? "font-bold" : ""}>{item.label}</span>
+                <item.icon className={cn("mr-3 h-5 w-5", isActive(item.path) && "!text-white")} />
+                <span className={isActive(item.path) ? "font-bold !text-white" : ""}>{item.label}</span>
               </Button>
             </Link>
           )
