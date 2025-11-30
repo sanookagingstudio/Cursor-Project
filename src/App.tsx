@@ -63,6 +63,7 @@ const VideoEditor = lazy(() => import("./pages/admin/VideoEditor"));
 const MusicLab = lazy(() => import("./pages/admin/MusicLab"));
 const DashboardPublishing = lazy(() => import("./pages/admin/DashboardPublishing"));
 const ThemeCustomization = lazy(() => import("./pages/admin/ThemeCustomization"));
+const VisualThemeEditor = lazy(() => import("./pages/admin/VisualThemeEditor"));
 const Monetization = lazy(() => import("./pages/admin/Monetization")); // Added for Phase 11
 const Analytics = lazy(() => import("./pages/admin/Analytics")); // Added for Phase 10
 const CostManagement = lazy(() => import("./pages/admin/CostManagement")); // Added for Phase 9
@@ -152,6 +153,7 @@ const App = () => (
             <Route path="/admin/music-lab" element={<ProtectedRoute requiredRole="admin"><MusicLab /></ProtectedRoute>} />
             <Route path="/admin/dashboard-publishing" element={<ProtectedRoute requiredRole="admin"><DashboardPublishing /></ProtectedRoute>} />
             <Route path="/admin/theme-customization" element={<ProtectedRoute requiredRole="admin"><ThemeCustomization /></ProtectedRoute>} />
+            <Route path="/admin/visual-theme-editor" element={<ProtectedRoute requiredRole="admin"><VisualThemeEditor /></ProtectedRoute>} />
             <Route path="/admin/monetization" element={<ProtectedRoute requiredRole="admin"><Monetization /></ProtectedRoute>} /> {/* Added for Phase 11 */}
             <Route path="/admin/analytics" element={<ProtectedRoute requiredRole="admin"><Analytics /></ProtectedRoute>} /> {/* Added for Phase 10 */}
             <Route path="/admin/cost-management" element={<ProtectedRoute requiredRole="admin"><CostManagement /></ProtectedRoute>} /> {/* Added for Phase 9 */}

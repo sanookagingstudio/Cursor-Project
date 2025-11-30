@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
@@ -23,6 +23,7 @@ import {
   ChevronDown,
   Menu,
   X,
+  MousePointer2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -37,9 +38,9 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   const { signOut, user } = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  const menuItems = [
+  const menuItems = useMemo(() => [
     { label: t("admin.nav.dashboard"), path: "/admin/dashboard", icon: LayoutDashboard },
     {
       label: t("admin.nav.sasOffice"),
@@ -77,6 +78,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         { label: "Core Foundation", path: "/admin/core-foundation", icon: Settings },
         { label: "Provider Management", path: "/admin/provider-management", icon: Settings },
         { label: "Theme Customization", path: "/admin/theme-customization", icon: Palette },
+        { label: "Visual Theme Editor", path: "/admin/visual-theme-editor", icon: MousePointer2 },
         { label: t("admin.nav.settings"), path: "/admin/settings", icon: Settings },
       ],
     },
@@ -114,7 +116,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         { label: "FUN Sentinel", path: "/staff/fun-sentinel", icon: Sparkles },
       ],
     },
-  ];
+  ], [t, i18n.language]);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -159,7 +161,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                       variant={isActive(child.path) ? "secondary" : "ghost"}
                       className={cn(
                         "w-full justify-start text-base",
-                        isActive(child.path) && "bg-primary/10 text-primary font-medium"
+                        isActive(child.path) && "bg-primary text-primary-foreground font-semibold shadow-md"
                       )}
                     >
                       <child.icon className="mr-3 h-4 w-4" />
@@ -175,7 +177,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 variant={isActive(item.path) ? "secondary" : "ghost"}
                 className={cn(
                   "w-full justify-start text-base",
-                  isActive(item.path) && "bg-primary/10 text-primary font-medium"
+                  isActive(item.path) && "bg-primary text-primary-foreground font-semibold shadow-md"
                 )}
               >
                 <item.icon className="mr-3 h-5 w-5" />

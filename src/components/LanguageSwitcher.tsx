@@ -9,13 +9,13 @@ import {
 import { useTranslation } from "react-i18next";
 
 const languages = [
-  { code: "th", name: "ไทย", flag: "🇹🇭", region: "Popular" },
-  { code: "en", name: "English", flag: "🇬🇧", region: "Popular" },
-  { code: "zh", name: "中文", flag: "🇨🇳", region: "Popular" },
-  { code: "ja", name: "日本語", flag: "🇯🇵", region: "Popular" },
-  { code: "ko", name: "한국어", flag: "🇰🇷", region: "Popular" },
-  { code: "ru", name: "Русский", flag: "🇷🇺", region: "Other" },
-  { code: "fr", name: "Français", flag: "🇫🇷", region: "Other" },
+  { code: "th", name: "ไทย", shortName: "TH", flag: "🇹🇭", region: "Popular" },
+  { code: "en", name: "English", shortName: "EN", flag: "🇬🇧", region: "Popular" },
+  { code: "zh", name: "中文", shortName: "ZH", flag: "🇨🇳", region: "Popular" },
+  { code: "ja", name: "日本語", shortName: "JA", flag: "🇯🇵", region: "Popular" },
+  { code: "ko", name: "한국어", shortName: "KO", flag: "🇰🇷", region: "Popular" },
+  { code: "ru", name: "Русский", shortName: "RU", flag: "🇷🇺", region: "Other" },
+  { code: "fr", name: "Français", shortName: "FR", flag: "🇫🇷", region: "Other" },
 ];
 
 export function LanguageSwitcher() {
@@ -30,14 +30,22 @@ export function LanguageSwitcher() {
     return current?.flag || "🇹🇭";
   };
 
+  const getCurrentLanguage = () => {
+    const current = languages.find(lang => lang.code === i18n.language);
+    return current || languages[0];
+  };
+
+  const currentLang = getCurrentLanguage();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative text-2xl hover:scale-110 transition-transform">
-          <span>{getCurrentFlag()}</span>
+        <Button variant="ghost" size="sm" className="relative gap-2 hover:scale-105 transition-transform min-w-[60px]">
+          <span className="text-2xl leading-none">{currentLang.flag}</span>
+          <span className="font-medium text-sm">{currentLang.shortName}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
+      <DropdownMenuContent align="end" className="w-56">
         {languages.filter(lang => lang.region === "Popular").map((lang) => (
           <DropdownMenuItem 
             key={lang.code}
@@ -45,7 +53,8 @@ export function LanguageSwitcher() {
             className={i18n.language === lang.code ? "bg-accent" : ""}
           >
             <span className="mr-3 text-xl">{lang.flag}</span>
-            <span className="font-medium">{lang.name}</span>
+            <span className="font-medium flex-1">{lang.name}</span>
+            <span className="text-xs text-muted-foreground ml-2">{lang.shortName}</span>
           </DropdownMenuItem>
         ))}
         <DropdownMenuSeparator />
@@ -56,7 +65,8 @@ export function LanguageSwitcher() {
             className={i18n.language === lang.code ? "bg-accent" : ""}
           >
             <span className="mr-3 text-xl">{lang.flag}</span>
-            <span className="font-medium">{lang.name}</span>
+            <span className="font-medium flex-1">{lang.name}</span>
+            <span className="text-xs text-muted-foreground ml-2">{lang.shortName}</span>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

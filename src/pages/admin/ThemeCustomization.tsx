@@ -17,14 +17,18 @@ import {
   Eye,
   Loader2,
   Video,
-  Image as ImageIcon
+  Image as ImageIcon,
+  MousePointer2,
+  ExternalLink
 } from "lucide-react";
 import { useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function ThemeCustomization() {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const { settings, updateSettings, saveTheme, resetTheme, applyTheme, loading } = useTheme();
   const [activeTab, setActiveTab] = useState("colors");
   const [themeName, setThemeName] = useState("");
@@ -89,15 +93,49 @@ export default function ThemeCustomization() {
   return (
     <AdminLayout>
       <div className="space-y-8 w-full">
-        <div>
-          <h1 className="text-5xl font-bold mb-4 flex items-center gap-3">
-            <Palette className="h-10 w-10 text-primary" />
-            Theme Customization (เทพช้อป)
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            Customize the appearance of your website. Adjust colors, typography, spacing, and layout.
-          </p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-5xl font-bold mb-4 flex items-center gap-3">
+              <Palette className="h-10 w-10 text-primary" />
+              Theme Customization (เทพช้อป)
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              Customize the appearance of your website. Adjust colors, typography, spacing, and layout.
+            </p>
+          </div>
+          <Button
+            onClick={() => navigate("/admin/visual-theme-editor")}
+            size="lg"
+            className="gap-2"
+          >
+            <MousePointer2 className="h-5 w-5" />
+            Visual Editor
+            <ExternalLink className="h-4 w-4" />
+          </Button>
         </div>
+
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <Sparkles className="h-5 w-5 text-primary" />
+              <div>
+                <div className="font-semibold">Try Visual Theme Editor</div>
+                <div className="text-sm text-muted-foreground">
+                  Click elements to edit • Real-time preview • Drag to reposition
+                </div>
+              </div>
+              <Button
+                onClick={() => navigate("/admin/visual-theme-editor")}
+                variant="outline"
+                size="sm"
+                className="ml-auto gap-2"
+              >
+                Open Visual Editor
+                <ExternalLink className="h-4 w-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         <div className="grid gap-4 md:grid-cols-3">
           <Card>
