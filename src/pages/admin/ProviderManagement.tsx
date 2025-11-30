@@ -229,7 +229,7 @@ export default function ProviderManagement() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {getCategoryProviders("image").map(provider => (
+                    {getCategoryProviders("image").filter(p => p.id && p.id !== "").map(provider => (
                       <SelectItem key={provider.id} value={provider.id} className="text-base">
                         {provider.name}
                       </SelectItem>
@@ -251,7 +251,7 @@ export default function ProviderManagement() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {getCategoryProviders("video").map(provider => (
+                    {getCategoryProviders("video").filter(p => p.id && p.id !== "").map(provider => (
                       <SelectItem key={provider.id} value={provider.id} className="text-base">
                         {provider.name}
                       </SelectItem>
@@ -273,7 +273,7 @@ export default function ProviderManagement() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {getCategoryProviders("audio").map(provider => (
+                    {getCategoryProviders("audio").filter(p => p.id && p.id !== "").map(provider => (
                       <SelectItem key={provider.id} value={provider.id} className="text-base">
                         {provider.name}
                       </SelectItem>
@@ -295,7 +295,7 @@ export default function ProviderManagement() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {getCategoryProviders("music").map(provider => (
+                    {getCategoryProviders("music").filter(p => p.id && p.id !== "").map(provider => (
                       <SelectItem key={provider.id} value={provider.id} className="text-base">
                         {provider.name}
                       </SelectItem>

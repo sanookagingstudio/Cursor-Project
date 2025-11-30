@@ -63,7 +63,7 @@ export function FormSection({
                   <SelectValue placeholder={field.placeholder} />
                 </SelectTrigger>
                 <SelectContent>
-                  {field.options?.map((option) => (
+                  {field.options?.filter(option => option.value && option.value !== "").map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>

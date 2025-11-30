@@ -222,7 +222,7 @@ export default function RoleManagement() {
                     <SelectValue placeholder="Choose user" />
                   </SelectTrigger>
                   <SelectContent>
-                    {users.map((user) => (
+                    {users.filter(u => u.id && u.id !== "").map((user) => (
                       <SelectItem key={user.id} value={user.id}>
                         {user.email} - {user.full_name}
                       </SelectItem>

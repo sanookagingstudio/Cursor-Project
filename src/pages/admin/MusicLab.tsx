@@ -151,7 +151,7 @@ export default function MusicLab() {
                         <SelectValue placeholder="Auto" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="" className="text-base">Auto</SelectItem>
+                        <SelectItem value="auto" className="text-base">Auto</SelectItem>
                         <SelectItem value="C:maj" className="text-base">C Major</SelectItem>
                         <SelectItem value="A:min" className="text-base">A Minor</SelectItem>
                         <SelectItem value="G:maj" className="text-base">G Major</SelectItem>
