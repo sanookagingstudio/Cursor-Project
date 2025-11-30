@@ -121,6 +121,10 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   const isActive = (path: string) => {
     const currentPath = location.pathname;
     const active = currentPath === path || currentPath.startsWith(path + '/');
+    // Debug: log active state
+    if (active) {
+      console.log('✅ Active menu:', path, 'Current:', currentPath);
+    }
     return active;
   };
 
@@ -164,6 +168,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                   return (
                     <Link key={child.path} to={child.path}>
                       <button
+                        type="button"
+                        data-active={active}
                         className={cn(
                           "w-full justify-start text-base transition-all relative rounded-md px-3 py-2 flex items-center",
                           active 
@@ -171,23 +177,33 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                             : "hover:bg-accent hover:text-accent-foreground text-foreground bg-transparent border-0"
                         )}
                         style={active ? { 
-                          backgroundColor: '#F36F21',
-                          color: '#FFFFFF',
-                          fontWeight: '700',
-                          borderColor: '#E55A10',
-                          borderWidth: '4px',
-                          borderStyle: 'solid',
-                          boxShadow: '0 4px 12px rgba(243, 111, 33, 0.5)'
-                        } : {}}
+                          backgroundColor: '#F36F21 !important',
+                          color: '#FFFFFF !important',
+                          fontWeight: '700 !important',
+                          borderColor: '#E55A10 !important',
+                          borderWidth: '4px !important',
+                          borderStyle: 'solid !important',
+                          boxShadow: '0 4px 12px rgba(243, 111, 33, 0.5) !important'
+                        } : { 
+                          color: 'inherit',
+                          backgroundColor: 'transparent'
+                        }}
                       >
                         <child.icon 
                           className="mr-3 h-4 w-4"
-                          style={active ? { color: '#FFFFFF' } : {}}
+                          style={active ? { color: '#FFFFFF !important' } : {}}
                         />
-                        <span style={active ? { 
-                          color: '#FFFFFF', 
-                          fontWeight: '700'
-                        } : {}}>
+                        <span 
+                          className={active ? "font-bold" : ""}
+                          style={active ? { 
+                            color: '#FFFFFF !important', 
+                            fontWeight: '700 !important',
+                            display: 'block',
+                            width: '100%'
+                          } : { 
+                            color: 'inherit'
+                          }}
+                        >
                           {child.label}
                         </span>
                       </button>
@@ -202,6 +218,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 const active = isActive(item.path);
                 return (
                   <button
+                    type="button"
+                    data-active={active}
                     className={cn(
                       "w-full justify-start text-base transition-all relative rounded-md px-3 py-2 flex items-center",
                       active 
@@ -209,23 +227,33 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                         : "hover:bg-accent hover:text-accent-foreground text-foreground bg-transparent border-0"
                     )}
                     style={active ? { 
-                      backgroundColor: '#F36F21',
-                      color: '#FFFFFF',
-                      fontWeight: '700',
-                      borderColor: '#E55A10',
-                      borderWidth: '4px',
-                      borderStyle: 'solid',
-                      boxShadow: '0 4px 12px rgba(243, 111, 33, 0.5)'
-                    } : {}}
+                      backgroundColor: '#F36F21 !important',
+                      color: '#FFFFFF !important',
+                      fontWeight: '700 !important',
+                      borderColor: '#E55A10 !important',
+                      borderWidth: '4px !important',
+                      borderStyle: 'solid !important',
+                      boxShadow: '0 4px 12px rgba(243, 111, 33, 0.5) !important'
+                    } : { 
+                      color: 'inherit',
+                      backgroundColor: 'transparent'
+                    }}
                   >
                     <item.icon 
                       className="mr-3 h-5 w-5"
-                      style={active ? { color: '#FFFFFF' } : {}}
+                      style={active ? { color: '#FFFFFF !important' } : {}}
                     />
-                    <span style={active ? { 
-                      color: '#FFFFFF', 
-                      fontWeight: '700'
-                    } : {}}>
+                    <span 
+                      className={active ? "font-bold" : ""}
+                      style={active ? { 
+                        color: '#FFFFFF !important', 
+                        fontWeight: '700 !important',
+                        display: 'block',
+                        width: '100%'
+                      } : { 
+                        color: 'inherit'
+                      }}
+                    >
                       {item.label}
                     </span>
                   </button>
