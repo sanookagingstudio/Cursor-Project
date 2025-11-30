@@ -160,12 +160,14 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                     <Button
                       variant={isActive(child.path) ? "secondary" : "ghost"}
                       className={cn(
-                        "w-full justify-start text-base",
-                        isActive(child.path) && "bg-primary text-primary-foreground font-semibold shadow-md"
+                        "w-full justify-start text-base transition-all",
+                        isActive(child.path) 
+                          ? "bg-primary text-primary-foreground font-bold shadow-lg border-2 border-primary-foreground/20" 
+                          : "hover:bg-accent hover:text-accent-foreground"
                       )}
                     >
-                      <child.icon className="mr-3 h-4 w-4" />
-                      {child.label}
+                      <child.icon className={cn("mr-3 h-4 w-4", isActive(child.path) && "text-primary-foreground")} />
+                      <span className={isActive(child.path) ? "font-bold" : ""}>{child.label}</span>
                     </Button>
                   </Link>
                 ))}
@@ -176,12 +178,14 @@ export function AdminLayout({ children }: AdminLayoutProps) {
               <Button
                 variant={isActive(item.path) ? "secondary" : "ghost"}
                 className={cn(
-                  "w-full justify-start text-base",
-                  isActive(item.path) && "bg-primary text-primary-foreground font-semibold shadow-md"
+                  "w-full justify-start text-base transition-all",
+                  isActive(item.path) 
+                    ? "bg-primary text-primary-foreground font-bold shadow-lg border-2 border-primary-foreground/20" 
+                    : "hover:bg-accent hover:text-accent-foreground"
                 )}
               >
-                <item.icon className="mr-3 h-5 w-5" />
-                {item.label}
+                <item.icon className={cn("mr-3 h-5 w-5", isActive(item.path) && "text-primary-foreground")} />
+                <span className={isActive(item.path) ? "font-bold" : ""}>{item.label}</span>
               </Button>
             </Link>
           )
