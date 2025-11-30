@@ -1,5 +1,5 @@
 import { ReactNode, useState, useMemo } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
 import {
@@ -164,102 +164,100 @@ export function AdminLayout({ children }: AdminLayoutProps) {
               </CollapsibleTrigger>
               <CollapsibleContent className="ml-8 mt-2 space-y-2">
                 {item.children.map((child) => {
-                  const active = isActive(child.path);
                   return (
-                    <Link key={child.path} to={child.path}>
-                      <button
-                        type="button"
-                        data-active={active}
-                        className={cn(
-                          "w-full justify-start text-base transition-all relative rounded-md px-3 py-2 flex items-center",
-                          active 
-                            ? "bg-[#F36F21] text-white font-bold shadow-2xl border-4 border-[#E55A10]" 
-                            : "hover:bg-accent hover:text-accent-foreground text-foreground bg-transparent border-0"
-                        )}
-                        style={active ? { 
-                          backgroundColor: '#F36F21 !important',
-                          color: '#FFFFFF !important',
-                          fontWeight: '700 !important',
-                          borderColor: '#E55A10 !important',
-                          borderWidth: '4px !important',
-                          borderStyle: 'solid !important',
-                          boxShadow: '0 4px 12px rgba(243, 111, 33, 0.5) !important'
-                        } : { 
-                          color: 'inherit',
-                          backgroundColor: 'transparent'
-                        }}
-                      >
-                        <child.icon 
-                          className="mr-3 h-4 w-4"
-                          style={active ? { color: '#FFFFFF !important' } : {}}
-                        />
-                        <span 
-                          className={active ? "font-bold" : ""}
-                          style={active ? { 
-                            color: '#FFFFFF !important', 
-                            fontWeight: '700 !important',
-                            display: 'block',
-                            width: '100%'
-                          } : { 
-                            color: 'inherit'
-                          }}
-                        >
-                          {child.label}
-                        </span>
-                      </button>
-                    </Link>
+                    <NavLink 
+                      key={child.path} 
+                      to={child.path}
+                      className={({ isActive }) => cn(
+                        "w-full justify-start text-base transition-all relative rounded-md px-3 py-2 flex items-center block",
+                        isActive 
+                          ? "bg-[#F36F21] text-white font-bold shadow-2xl border-4 border-[#E55A10]" 
+                          : "hover:bg-accent hover:text-accent-foreground text-foreground bg-transparent border-0"
+                      )}
+                      style={({ isActive }) => isActive ? { 
+                        backgroundColor: '#F36F21',
+                        color: '#FFFFFF',
+                        fontWeight: '700',
+                        borderColor: '#E55A10',
+                        borderWidth: '4px',
+                        borderStyle: 'solid',
+                        boxShadow: '0 4px 12px rgba(243, 111, 33, 0.5)'
+                      } : { 
+                        color: 'inherit',
+                        backgroundColor: 'transparent'
+                      }}
+                    >
+                      {({ isActive }) => (
+                        <>
+                          <child.icon 
+                            className="mr-3 h-4 w-4"
+                            style={isActive ? { color: '#FFFFFF' } : {}}
+                          />
+                          <span 
+                            className={isActive ? "font-bold" : ""}
+                            style={isActive ? { 
+                              color: '#FFFFFF', 
+                              fontWeight: '700',
+                              display: 'block',
+                              width: '100%'
+                            } : { 
+                              color: 'inherit'
+                            }}
+                          >
+                            {child.label}
+                          </span>
+                        </>
+                      )}
+                    </NavLink>
                   );
                 })}
               </CollapsibleContent>
             </Collapsible>
           ) : (
-            <Link key={item.path} to={item.path}>
-              {(() => {
-                const active = isActive(item.path);
-                return (
-                  <button
-                    type="button"
-                    data-active={active}
-                    className={cn(
-                      "w-full justify-start text-base transition-all relative rounded-md px-3 py-2 flex items-center",
-                      active 
-                        ? "bg-[#F36F21] text-white font-bold shadow-2xl border-4 border-[#E55A10]" 
-                        : "hover:bg-accent hover:text-accent-foreground text-foreground bg-transparent border-0"
-                    )}
-                    style={active ? { 
-                      backgroundColor: '#F36F21 !important',
-                      color: '#FFFFFF !important',
-                      fontWeight: '700 !important',
-                      borderColor: '#E55A10 !important',
-                      borderWidth: '4px !important',
-                      borderStyle: 'solid !important',
-                      boxShadow: '0 4px 12px rgba(243, 111, 33, 0.5) !important'
+            <NavLink 
+              key={item.path} 
+              to={item.path}
+              className={({ isActive }) => cn(
+                "w-full justify-start text-base transition-all relative rounded-md px-3 py-2 flex items-center block",
+                isActive 
+                  ? "bg-[#F36F21] text-white font-bold shadow-2xl border-4 border-[#E55A10]" 
+                  : "hover:bg-accent hover:text-accent-foreground text-foreground bg-transparent border-0"
+              )}
+              style={({ isActive }) => isActive ? { 
+                backgroundColor: '#F36F21',
+                color: '#FFFFFF',
+                fontWeight: '700',
+                borderColor: '#E55A10',
+                borderWidth: '4px',
+                borderStyle: 'solid',
+                boxShadow: '0 4px 12px rgba(243, 111, 33, 0.5)'
+              } : { 
+                color: 'inherit',
+                backgroundColor: 'transparent'
+              }}
+            >
+              {({ isActive }) => (
+                <>
+                  <item.icon 
+                    className="mr-3 h-5 w-5"
+                    style={isActive ? { color: '#FFFFFF' } : {}}
+                  />
+                  <span 
+                    className={isActive ? "font-bold" : ""}
+                    style={isActive ? { 
+                      color: '#FFFFFF', 
+                      fontWeight: '700',
+                      display: 'block',
+                      width: '100%'
                     } : { 
-                      color: 'inherit',
-                      backgroundColor: 'transparent'
+                      color: 'inherit'
                     }}
                   >
-                    <item.icon 
-                      className="mr-3 h-5 w-5"
-                      style={active ? { color: '#FFFFFF !important' } : {}}
-                    />
-                    <span 
-                      className={active ? "font-bold" : ""}
-                      style={active ? { 
-                        color: '#FFFFFF !important', 
-                        fontWeight: '700 !important',
-                        display: 'block',
-                        width: '100%'
-                      } : { 
-                        color: 'inherit'
-                      }}
-                    >
-                      {item.label}
-                    </span>
-                  </button>
-                );
-              })()}
-            </Link>
+                    {item.label}
+                  </span>
+                </>
+              )}
+            </NavLink>
           )
         )}
       </nav>
