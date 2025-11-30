@@ -163,39 +163,34 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                   const active = isActive(child.path);
                   return (
                     <Link key={child.path} to={child.path}>
-                      <Button
-                        variant={active ? "default" : "ghost"}
+                      <button
                         className={cn(
-                          "w-full justify-start text-base transition-all relative",
+                          "w-full justify-start text-base transition-all relative rounded-md px-3 py-2 flex items-center",
                           active 
-                            ? "!bg-[#F36F21] !text-white font-bold shadow-2xl !border-4 !border-[#E55A10]" 
-                            : "hover:bg-accent hover:text-accent-foreground text-foreground"
+                            ? "bg-[#F36F21] text-white font-bold shadow-2xl border-4 border-[#E55A10]" 
+                            : "hover:bg-accent hover:text-accent-foreground text-foreground bg-transparent border-0"
                         )}
                         style={active ? { 
-                          backgroundColor: '#F36F21 !important',
-                          color: '#FFFFFF !important',
+                          backgroundColor: '#F36F21',
+                          color: '#FFFFFF',
                           fontWeight: '700',
                           borderColor: '#E55A10',
                           borderWidth: '4px',
                           borderStyle: 'solid',
                           boxShadow: '0 4px 12px rgba(243, 111, 33, 0.5)'
-                        } : { color: 'inherit' }}
+                        } : {}}
                       >
                         <child.icon 
-                          className={cn("mr-3 h-4 w-4", active && "!text-white")} 
-                          style={active ? { color: '#FFFFFF !important' } : {}}
+                          className="mr-3 h-4 w-4"
+                          style={active ? { color: '#FFFFFF' } : {}}
                         />
-                        <span 
-                          style={active ? { 
-                            color: '#FFFFFF !important', 
-                            fontWeight: '700',
-                            display: 'inline-block',
-                            width: '100%'
-                          } : { color: 'inherit' }}
-                        >
+                        <span style={active ? { 
+                          color: '#FFFFFF', 
+                          fontWeight: '700'
+                        } : {}}>
                           {child.label}
                         </span>
-                      </Button>
+                      </button>
                     </Link>
                   );
                 })}
@@ -206,39 +201,34 @@ export function AdminLayout({ children }: AdminLayoutProps) {
               {(() => {
                 const active = isActive(item.path);
                 return (
-                  <Button
-                    variant={active ? "default" : "ghost"}
+                  <button
                     className={cn(
-                      "w-full justify-start text-base transition-all relative",
+                      "w-full justify-start text-base transition-all relative rounded-md px-3 py-2 flex items-center",
                       active 
-                        ? "!bg-[#F36F21] !text-white font-bold shadow-2xl !border-4 !border-[#E55A10]" 
-                        : "hover:bg-accent hover:text-accent-foreground text-foreground"
+                        ? "bg-[#F36F21] text-white font-bold shadow-2xl border-4 border-[#E55A10]" 
+                        : "hover:bg-accent hover:text-accent-foreground text-foreground bg-transparent border-0"
                     )}
                     style={active ? { 
-                      backgroundColor: '#F36F21 !important',
-                      color: '#FFFFFF !important',
+                      backgroundColor: '#F36F21',
+                      color: '#FFFFFF',
                       fontWeight: '700',
                       borderColor: '#E55A10',
                       borderWidth: '4px',
                       borderStyle: 'solid',
                       boxShadow: '0 4px 12px rgba(243, 111, 33, 0.5)'
-                    } : { color: 'inherit' }}
+                    } : {}}
                   >
                     <item.icon 
-                      className={cn("mr-3 h-5 w-5", active && "!text-white")}
-                      style={active ? { color: '#FFFFFF !important' } : {}}
+                      className="mr-3 h-5 w-5"
+                      style={active ? { color: '#FFFFFF' } : {}}
                     />
-                    <span 
-                      style={active ? { 
-                        color: '#FFFFFF !important', 
-                        fontWeight: '700',
-                        display: 'inline-block',
-                        width: '100%'
-                      } : { color: 'inherit' }}
-                    >
+                    <span style={active ? { 
+                      color: '#FFFFFF', 
+                      fontWeight: '700'
+                    } : {}}>
                       {item.label}
                     </span>
-                  </Button>
+                  </button>
                 );
               })()}
             </Link>
