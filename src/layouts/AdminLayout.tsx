@@ -119,9 +119,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   ], [t, i18n.language]);
 
   const isActive = (path: string) => {
-    const active = location.pathname === path;
-    // Debug: uncomment to see which paths are being checked
-    // if (active) console.log('Active path:', path, 'Current:', location.pathname);
+    const currentPath = location.pathname;
+    const active = currentPath === path || currentPath.startsWith(path + '/');
     return active;
   };
 
@@ -160,74 +159,88 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 </Button>
               </CollapsibleTrigger>
               <CollapsibleContent className="ml-8 mt-2 space-y-2">
-                {item.children.map((child) => (
-                  <Link key={child.path} to={child.path}>
-                    <Button
-                      variant="ghost"
-                      className={cn(
-                        "w-full justify-start text-base transition-all relative",
-                        isActive(child.path) 
-                          ? "bg-orange-500 text-white font-bold shadow-2xl border-4 border-orange-600" 
-                          : "hover:bg-accent hover:text-accent-foreground text-foreground"
-                      )}
-                      style={isActive(child.path) ? { 
-                        backgroundColor: '#F36F21',
-                        color: '#FFFFFF',
-                        fontWeight: '700',
-                        borderColor: '#E55A10',
-                        boxShadow: '0 4px 12px rgba(243, 111, 33, 0.5)'
-                      } : {}}
-                    >
-                      <child.icon 
+                {item.children.map((child) => {
+                  const active = isActive(child.path);
+                  return (
+                    <Link key={child.path} to={child.path}>
+                      <Button
+                        variant={active ? "default" : "ghost"}
                         className={cn(
-                          "mr-3 h-4 w-4",
-                          isActive(child.path) ? "text-white" : "text-foreground"
-                        )} 
-                        style={isActive(child.path) ? { color: '#FFFFFF' } : {}}
-                      />
-                      <span 
-                        className={isActive(child.path) ? "font-bold" : ""}
-                        style={isActive(child.path) ? { color: '#FFFFFF', fontWeight: '700' } : {}}
+                          "w-full justify-start text-base transition-all relative",
+                          active 
+                            ? "!bg-[#F36F21] !text-white font-bold shadow-2xl !border-4 !border-[#E55A10]" 
+                            : "hover:bg-accent hover:text-accent-foreground text-foreground"
+                        )}
+                        style={active ? { 
+                          backgroundColor: '#F36F21 !important',
+                          color: '#FFFFFF !important',
+                          fontWeight: '700',
+                          borderColor: '#E55A10',
+                          borderWidth: '4px',
+                          borderStyle: 'solid',
+                          boxShadow: '0 4px 12px rgba(243, 111, 33, 0.5)'
+                        } : { color: 'inherit' }}
                       >
-                        {child.label}
-                      </span>
-                    </Button>
-                  </Link>
-                ))}
+                        <child.icon 
+                          className={cn("mr-3 h-4 w-4", active && "!text-white")} 
+                          style={active ? { color: '#FFFFFF !important' } : {}}
+                        />
+                        <span 
+                          style={active ? { 
+                            color: '#FFFFFF !important', 
+                            fontWeight: '700',
+                            display: 'inline-block',
+                            width: '100%'
+                          } : { color: 'inherit' }}
+                        >
+                          {child.label}
+                        </span>
+                      </Button>
+                    </Link>
+                  );
+                })}
               </CollapsibleContent>
             </Collapsible>
           ) : (
             <Link key={item.path} to={item.path}>
-              <Button
-                variant="ghost"
-                className={cn(
-                  "w-full justify-start text-base transition-all relative",
-                  isActive(item.path) 
-                    ? "bg-orange-500 text-white font-bold shadow-2xl border-4 border-orange-600" 
-                    : "hover:bg-accent hover:text-accent-foreground text-foreground"
-                )}
-                style={isActive(item.path) ? { 
-                  backgroundColor: '#F36F21',
-                  color: '#FFFFFF',
-                  fontWeight: '700',
-                  borderColor: '#E55A10',
-                  boxShadow: '0 4px 12px rgba(243, 111, 33, 0.5)'
-                } : {}}
-              >
-                <item.icon 
-                  className={cn(
-                    "mr-3 h-5 w-5",
-                    isActive(item.path) ? "text-white" : "text-foreground"
-                  )}
-                  style={isActive(item.path) ? { color: '#FFFFFF' } : {}}
-                />
-                <span 
-                  className={isActive(item.path) ? "font-bold" : ""}
-                  style={isActive(item.path) ? { color: '#FFFFFF', fontWeight: '700' } : {}}
-                >
-                  {item.label}
-                </span>
-              </Button>
+              {(() => {
+                const active = isActive(item.path);
+                return (
+                  <Button
+                    variant={active ? "default" : "ghost"}
+                    className={cn(
+                      "w-full justify-start text-base transition-all relative",
+                      active 
+                        ? "!bg-[#F36F21] !text-white font-bold shadow-2xl !border-4 !border-[#E55A10]" 
+                        : "hover:bg-accent hover:text-accent-foreground text-foreground"
+                    )}
+                    style={active ? { 
+                      backgroundColor: '#F36F21 !important',
+                      color: '#FFFFFF !important',
+                      fontWeight: '700',
+                      borderColor: '#E55A10',
+                      borderWidth: '4px',
+                      borderStyle: 'solid',
+                      boxShadow: '0 4px 12px rgba(243, 111, 33, 0.5)'
+                    } : { color: 'inherit' }}
+                  >
+                    <item.icon 
+                      className={cn("mr-3 h-5 w-5", active && "!text-white")}
+                      style={active ? { color: '#FFFFFF !important' } : {}}
+                    />
+                    <span 
+                      style={active ? { 
+                        color: '#FFFFFF !important', 
+                        fontWeight: '700',
+                        display: 'inline-block',
+                        width: '100%'
+                      } : { color: 'inherit' }}
+                    >
+                      {item.label}
+                    </span>
+                  </Button>
+                );
+              })()}
             </Link>
           )
         )}
