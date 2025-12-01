@@ -1,6 +1,58 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { getApiUrl } from "@/lib/api";
 
+// Helper to convert Hex to HSL
+const hexToHsl = (hex: string): string => {
+  // Remove hash if present
+  hex = hex.replace(/^#/, '');
+
+  // Parse r, g, b
+  let r = parseInt(hex.substring(0, 2), 16);
+  let g = parseInt(hex.substring(2, 4), 16);
+  let b = parseInt(hex.substring(4, 6), 16);
+
+  // Normalize
+  r /= 255;
+  g /= 255;
+  b /= 255;
+
+  // Find greatest and smallest channel values
+  let cmin = Math.min(r, g, b),
+      cmax = Math.max(r, g, b),
+      delta = cmax - cmin,
+      h = 0,
+      s = 0,
+      l = 0;
+
+  // Calculate hue
+  if (delta === 0)
+    h = 0;
+  else if (cmax === r)
+    h = ((g - b) / delta) % 6;
+  else if (cmax === g)
+    h = (b - r) / delta + 2;
+  else
+    h = (r - g) / delta + 4;
+
+  h = Math.round(h * 60);
+
+  // Make negative hues positive behind 360°
+  if (h < 0)
+    h += 360;
+
+  // Calculate lightness
+  l = (cmax + cmin) / 2;
+
+  // Calculate saturation
+  s = delta === 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+
+  // Multiply l and s by 100
+  s = +(s * 100).toFixed(1);
+  l = +(l * 100).toFixed(1);
+
+  return `${h} ${s}% ${l}%`;
+};
+
 interface ThemeSettings {
   colors: {
     primary: string;
@@ -24,6 +76,7 @@ interface ThemeSettings {
       h4: string;
       h5: string;
       h6: string;
+      h7: string;
     };
     lineHeight: string;
     letterSpacing: string;
@@ -68,6 +121,7 @@ interface ThemeSettings {
     height: string;
     position: string;
   };
+  content: Record<string, string>;
 }
 
 interface Theme {
@@ -115,6 +169,7 @@ const defaultSettings: ThemeSettings = {
       h4: "1.5rem",
       h5: "1.25rem",
       h6: "1rem",
+      h7: "0.875rem",
     },
     lineHeight: "1.6",
     letterSpacing: "0em",
@@ -159,12 +214,13 @@ const defaultSettings: ThemeSettings = {
     height: "auto",
     position: "center",
   },
+  content: {},
 };
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [currentTheme, setCurrentTheme] = useState<Theme | null>(null);
   const [settings, setSettings] = useState<ThemeSettings>(defaultSettings);
-  const [loading, setLoading] = useState(false); // Start as false to show content immediately
+  const [loading, setLoading] = useState(false);
 
   // Load active theme on mount
   useEffect(() => {
@@ -178,9 +234,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const loadActiveTheme = async () => {
     try {
-      // Set timeout to prevent hanging
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
       
       const response = await fetch(getApiUrl("/themes/active"), {
         signal: controller.signal
@@ -193,16 +248,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         setCurrentTheme(theme);
         setSettings(theme.settings || defaultSettings);
       } else {
-        // If API returns error, use default settings
         console.warn("Theme API not available, using default theme");
       }
     } catch (error) {
-      // Silently fail and use default theme
       if (error.name !== 'AbortError') {
         console.warn("Failed to load active theme, using default:", error);
       }
     } finally {
-      // Always set loading to false, even if API fails
       setLoading(false);
     }
   };
@@ -212,7 +264,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     // Colors
     Object.entries(themeSettings.colors).forEach(([key, value]) => {
-      root.style.setProperty(`--${key}`, value);
+      // If value is hex, convert to HSL for Tailwind
+      let cssValue = value;
+      if (value.startsWith('#')) {
+        cssValue = hexToHsl(value);
+      }
+      root.style.setProperty(`--${key}`, cssValue);
     });
 
     // Typography
@@ -303,7 +360,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error("Failed to save theme:", error);
-      throw error;
+      // throw error; // Don't throw, just log, so UI doesn't break if offline
     }
   };
 
@@ -340,4 +397,3 @@ export function useTheme() {
   }
   return context;
 }
-

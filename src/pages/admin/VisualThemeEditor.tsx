@@ -14,8 +14,11 @@ import {
   Image as ImageIcon,
   X,
   Check,
-  Move,
-  Maximize2
+  Upload,
+  RotateCcw,
+  Smartphone,
+  Tablet,
+  Monitor
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HeroSection } from "@/components/sections/HeroSection";
@@ -27,56 +30,62 @@ interface EditableElement {
   label: string;
   value: any;
   previewSelector?: string;
+  settingsKey?: string; // Path to setting in ThemeSettings
 }
 
 export default function VisualThemeEditor() {
-  const { settings, updateSettings, saveTheme } = useTheme();
+  const { settings, updateSettings, saveTheme, resetTheme } = useTheme();
   const { toast } = useToast();
   const { t } = useTranslation();
   const [editMode, setEditMode] = useState(true);
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
   const [hoveredElement, setHoveredElement] = useState<string | null>(null);
   const [previewMode, setPreviewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Get current values from settings
+  // Get current values from settings, with fallbacks to translations
   const editableElements: EditableElement[] = [
     { 
       id: 'hero-title', 
       type: 'text', 
       label: 'Hero Title', 
-      value: t('hero.title') || 'Welcome to FunAging Studio',
-      previewSelector: '.hero-title'
+      value: settings?.content?.['hero.title'] ?? t('hero.title') ?? 'Welcome to FunAging Studio',
+      settingsKey: 'hero.title'
     },
     { 
       id: 'hero-subtitle', 
       type: 'text', 
       label: 'Hero Subtitle', 
-      value: t('hero.subtitle') || 'Active Aging Ecosystem',
-      previewSelector: '.hero-subtitle'
+      value: settings?.content?.['hero.subtitle'] ?? t('hero.subtitle') ?? 'Active Aging Ecosystem',
+      settingsKey: 'hero.subtitle'
     },
     { 
       id: 'primary-color', 
       type: 'color', 
       label: 'Primary Color', 
-      value: settings?.colors?.primary || '#F36F21'
+      value: settings?.colors?.primary || '#F36F21',
+      settingsKey: 'colors.primary'
     },
     { 
       id: 'secondary-color', 
       type: 'color', 
       label: 'Secondary Color', 
-      value: settings?.colors?.secondary || '#8B4513'
+      value: settings?.colors?.secondary || '#8B4513',
+      settingsKey: 'colors.secondary'
     },
     { 
       id: 'banner-image', 
       type: 'image', 
       label: 'Hero Banner Image', 
-      value: settings?.banner?.imageUrl || '/placeholder.svg'
+      value: settings?.banner?.imageUrl || '/placeholder.svg',
+      settingsKey: 'banner.imageUrl'
     },
     { 
       id: 'font-family', 
       type: 'font', 
       label: 'Font Family', 
-      value: settings?.typography?.fontFamily || 'Noto Serif Thai'
+      value: settings?.typography?.fontFamily || 'Noto Serif Thai',
+      settingsKey: 'typography.fontFamily'
     },
   ];
 
@@ -89,65 +98,74 @@ export default function VisualThemeEditor() {
     const element = editableElements.find(e => e.id === elementId);
     if (!element) return;
 
-    switch (element.type) {
-      case 'color':
-        if (elementId === 'primary-color') {
-          updateSettings({
-            colors: {
-              ...settings!.colors,
-              primary: newValue,
-            },
-          });
-        } else if (elementId === 'secondary-color') {
-          updateSettings({
-            colors: {
-              ...settings!.colors,
-              secondary: newValue,
-            },
-          });
-        }
-        break;
-      case 'image':
+    // Update settings based on element type/id
+    if (element.type === 'text') {
         updateSettings({
-          banner: {
-            ...settings!.banner,
-            imageUrl: newValue,
-            enabled: true,
-          },
+            content: {
+                ...settings!.content,
+                [element.settingsKey!]: newValue
+            }
         });
-        break;
-      case 'font':
+    } else if (elementId === 'primary-color') {
         updateSettings({
-          typography: {
-            ...settings!.typography,
-            fontFamily: newValue,
-          },
+            colors: { ...settings!.colors, primary: newValue }
         });
-        break;
-      case 'text':
-        // For text, we'd need to update translations or create a custom override
-        // For now, just show a toast
-        toast({
-          title: "Text Editing",
-          description: "Text editing requires translation updates. Use the Theme Customization page for text changes.",
+    } else if (elementId === 'secondary-color') {
+        updateSettings({
+            colors: { ...settings!.colors, secondary: newValue }
         });
-        break;
+    } else if (elementId === 'banner-image') {
+        updateSettings({
+            banner: { ...settings!.banner, imageUrl: newValue, enabled: true }
+        });
+    } else if (elementId === 'font-family') {
+        updateSettings({
+            typography: { ...settings!.typography, fontFamily: newValue }
+        });
     }
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const result = e.target?.result as string;
+        if (selectedElement === 'banner-image') {
+            handleValueChange('banner-image', result);
+        }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const triggerFileUpload = () => {
+    fileInputRef.current?.click();
   };
 
   const handleSave = async () => {
     try {
-      await saveTheme("Visual Theme");
+      await saveTheme("Visual Theme Custom");
       toast({
         title: "Success",
-        description: "Theme saved successfully",
+        description: "Theme saved successfully! Changes are now live.",
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to save theme",
+        description: "Failed to save theme. Please try again.",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleReset = () => {
+    if (confirm("Are you sure you want to reset all changes to default?")) {
+        resetTheme();
+        toast({
+            title: "Reset Complete",
+            description: "Theme has been reset to defaults.",
+        });
     }
   };
 
@@ -157,114 +175,116 @@ export default function VisualThemeEditor() {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
+      <div className="space-y-6 h-[calc(100vh-100px)] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between shrink-0">
           <div>
-            <h1 className="text-5xl font-bold mb-2">Visual Theme Editor</h1>
-            <p className="text-lg text-muted-foreground">
-              Click elements to edit • Real-time preview • Drag to reposition
+            <h1 className="text-4xl font-bold mb-1">Visual Theme Editor</h1>
+            <p className="text-muted-foreground">
+              Customize your site's look and feel in real-time.
             </p>
           </div>
           <div className="flex gap-2">
             <Button
               onClick={() => setEditMode(!editMode)}
-              variant={editMode ? "default" : "outline"}
+              variant={editMode ? "secondary" : "outline"}
               className="gap-2"
             >
               <MousePointer2 className="h-4 w-4" />
-              {editMode ? "Edit Mode ON" : "Edit Mode OFF"}
+              {editMode ? "Editing ON" : "Preview Mode"}
             </Button>
-            <Button onClick={handleSave} className="gap-2">
+            <Button onClick={handleReset} variant="outline" className="gap-2">
+              <RotateCcw className="h-4 w-4" />
+              Reset
+            </Button>
+            <Button onClick={handleSave} className="gap-2 bg-primary text-white hover:bg-primary/90">
               <Save className="h-4 w-4" />
-              Save Theme
+              Save Changes
             </Button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Preview Area - Takes 3 columns */}
-          <div className="lg:col-span-3">
-            <Card className="relative">
-              <div className="p-4 border-b flex items-center justify-between">
-                <div className="flex gap-2">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 flex-1 overflow-hidden">
+          {/* Preview Area */}
+          <div className="lg:col-span-3 flex flex-col h-full">
+            <Card className="flex-1 flex flex-col overflow-hidden border-2 border-muted/20 shadow-sm">
+              <div className="p-2 border-b bg-muted/10 flex items-center justify-center gap-4">
                   <Button
-                    variant={previewMode === 'desktop' ? 'default' : 'outline'}
-                    size="sm"
+                    variant={previewMode === 'desktop' ? 'default' : 'ghost'}
+                    size="icon"
                     onClick={() => setPreviewMode('desktop')}
+                    title="Desktop View"
                   >
-                    Desktop
+                    <Monitor className="h-4 w-4" />
                   </Button>
                   <Button
-                    variant={previewMode === 'tablet' ? 'default' : 'outline'}
-                    size="sm"
+                    variant={previewMode === 'tablet' ? 'default' : 'ghost'}
+                    size="icon"
                     onClick={() => setPreviewMode('tablet')}
+                    title="Tablet View"
                   >
-                    Tablet
+                    <Tablet className="h-4 w-4" />
                   </Button>
                   <Button
-                    variant={previewMode === 'mobile' ? 'default' : 'outline'}
-                    size="sm"
+                    variant={previewMode === 'mobile' ? 'default' : 'ghost'}
+                    size="icon"
                     onClick={() => setPreviewMode('mobile')}
+                    title="Mobile View"
                   >
-                    Mobile
+                    <Smartphone className="h-4 w-4" />
                   </Button>
-                </div>
-                {editMode && (
-                  <div className="text-sm text-muted-foreground">
-                    Click elements to edit
-                  </div>
-                )}
               </div>
-              <CardContent className="p-0">
+              <div className="flex-1 bg-muted/5 overflow-auto p-4 relative">
                 <div 
                   className={cn(
-                    "relative bg-background overflow-auto transition-all",
+                    "bg-background shadow-2xl transition-all mx-auto relative min-h-full",
                     previewMode === 'desktop' && "w-full",
-                    previewMode === 'tablet' && "max-w-3xl mx-auto",
-                    previewMode === 'mobile' && "max-w-sm mx-auto"
+                    previewMode === 'tablet' && "w-[768px]",
+                    previewMode === 'mobile' && "w-[375px]"
                   )}
-                  style={{ 
-                    minHeight: '600px',
-                    maxHeight: '800px'
-                  }}
                 >
-                  {/* Real-time Preview */}
-                  <div className="relative">
-                    <HeroSection
-                      subtitle={editableElements.find(e => e.id === 'hero-subtitle')?.value || ''}
-                      title={editableElements.find(e => e.id === 'hero-title')?.value || ''}
-                      description={t('hero.description')}
-                      primaryCTA={{ label: t('hero.primaryCTA'), href: "/join-now" }}
-                      secondaryCTA={{ label: t('hero.secondaryCTA'), href: "/about" }}
-                      image={editableElements.find(e => e.id === 'banner-image')?.value || '/placeholder.svg'}
-                    />
-                    
-                    {/* Overlay for edit mode */}
-                    {editMode && (
-                      <div className="absolute inset-0 pointer-events-none">
-                        {/* Highlight hovered elements */}
-                        {hoveredElement && (
-                          <div className="absolute inset-0 border-4 border-primary border-dashed rounded-lg m-2 pointer-events-none animate-pulse" />
-                        )}
-                      </div>
-                    )}
-                  </div>
+                  {/* Real-time Preview Component */}
+                  <HeroSection
+                    subtitle={editableElements.find(e => e.id === 'hero-subtitle')?.value}
+                    title={editableElements.find(e => e.id === 'hero-title')?.value}
+                    description={t('hero.description')} // Note: Description editing not exposed yet for simplicity
+                    primaryCTA={{ label: t('hero.primaryCTA'), href: "/join-now" }}
+                    secondaryCTA={{ label: t('hero.secondaryCTA'), href: "/about" }}
+                    image={editableElements.find(e => e.id === 'banner-image')?.value}
+                  />
+                  
+                  {/* Interactive Overlay */}
+                  {editMode && (
+                    <div className="absolute inset-0 pointer-events-none">
+                       {/* Title Overlay */}
+                       <div 
+                         className="absolute top-[20%] left-[10%] w-[40%] h-[100px] cursor-pointer pointer-events-auto hover:border-2 hover:border-primary hover:bg-primary/5 transition-colors rounded-lg"
+                         onClick={() => handleElementClick('hero-title')}
+                         title="Click to edit Title"
+                       />
+                       {/* Image Overlay */}
+                       <div 
+                         className="absolute top-0 right-0 w-[50%] h-full cursor-pointer pointer-events-auto hover:border-2 hover:border-primary hover:bg-primary/5 transition-colors"
+                         onClick={() => handleElementClick('banner-image')}
+                         title="Click to edit Image"
+                       />
+                    </div>
+                  )}
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </div>
 
-          {/* Editor Panel - Takes 1 column */}
-          <div className="space-y-4">
-            {/* Element List */}
-            <Card>
-              <CardContent className="p-4">
-                <h3 className="font-semibold mb-4 flex items-center gap-2">
-                  <MousePointer2 className="h-4 w-4" />
-                  Editable Elements
+          {/* Sidebar */}
+          <div className="flex flex-col gap-4 h-full overflow-hidden">
+            <Card className="flex-1 flex flex-col overflow-hidden">
+              <CardContent className="p-4 flex-1 overflow-y-auto">
+                <h3 className="font-semibold mb-4 flex items-center gap-2 text-lg">
+                  <Palette className="h-5 w-5" />
+                  Theme Controls
                 </h3>
-                <div className="space-y-2">
+                
+                <div className="space-y-3">
                   {editableElements.map((element) => (
                     <div
                       key={element.id}
@@ -272,38 +292,31 @@ export default function VisualThemeEditor() {
                       onMouseEnter={() => setHoveredElement(element.id)}
                       onMouseLeave={() => setHoveredElement(null)}
                       className={cn(
-                        "p-3 rounded-lg border cursor-pointer transition-all",
+                        "p-3 rounded-lg border cursor-pointer transition-all hover:shadow-md group",
                         selectedElement === element.id
-                          ? "border-primary bg-primary text-primary-foreground shadow-md"
-                          : hoveredElement === element.id
-                          ? "border-primary/50 bg-primary/5"
-                          : "border-border hover:border-primary/30"
+                          ? "border-primary bg-primary/5 shadow-sm"
+                          : "border-border hover:border-primary/50"
                       )}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          {element.type === 'color' && <Palette className="h-4 w-4" />}
-                          {element.type === 'text' && <Type className="h-4 w-4" />}
-                          {element.type === 'image' && <ImageIcon className="h-4 w-4" />}
-                          {element.type === 'font' && <Type className="h-4 w-4" />}
+                        <div className="flex items-center gap-3">
+                          <div className={cn(
+                            "p-2 rounded-full bg-muted group-hover:bg-background transition-colors",
+                            element.type === 'color' && "p-1"
+                          )}>
+                             {element.type === 'color' && (
+                               <div className="w-6 h-6 rounded-full border" style={{ backgroundColor: element.value }} />
+                             )}
+                             {element.type === 'text' && <Type className="h-4 w-4" />}
+                             {element.type === 'image' && <ImageIcon className="h-4 w-4" />}
+                             {element.type === 'font' && <Type className="h-4 w-4" />}
+                          </div>
                           <div>
-                            <div className={cn(
-                              "font-medium text-sm",
-                              selectedElement === element.id && "text-primary-foreground"
-                            )}>
-                              {element.label}
-                            </div>
-                            <div className={cn(
-                              "text-xs",
-                              selectedElement === element.id ? "text-primary-foreground/80" : "text-muted-foreground"
-                            )}>
-                              {element.type}
-                            </div>
+                            <div className="font-medium text-sm">{element.label}</div>
+                            <div className="text-xs text-muted-foreground capitalize">{element.type}</div>
                           </div>
                         </div>
-                        {selectedElement === element.id && (
-                          <Check className="h-4 w-4" />
-                        )}
+                        {selectedElement === element.id && <Check className="h-4 w-4 text-primary" />}
                       </div>
                     </div>
                   ))}
@@ -311,17 +324,13 @@ export default function VisualThemeEditor() {
               </CardContent>
             </Card>
 
-            {/* Property Editor */}
+            {/* Edit Panel (Slide up/in or Conditional) */}
             {selectedElement && getCurrentElement() && (
-              <Card>
+              <Card className="border-primary/20 shadow-lg animate-in slide-in-from-bottom-10 fade-in">
                 <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold">Edit Properties</h3>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setSelectedElement(null)}
-                    >
+                  <div className="flex items-center justify-between mb-4 pb-2 border-b">
+                    <h3 className="font-semibold">Edit {getCurrentElement()?.label}</h3>
+                    <Button variant="ghost" size="icon" onClick={() => setSelectedElement(null)} className="h-8 w-8">
                       <X className="h-4 w-4" />
                     </Button>
                   </div>
@@ -333,49 +342,49 @@ export default function VisualThemeEditor() {
                       case 'color':
                         return (
                           <div className="space-y-3">
-                            <Label>Color Value</Label>
+                            <Label>Pick Color</Label>
                             <div className="flex gap-2">
-                              <input
-                                type="color"
-                                value={element.value}
-                                onChange={(e) => handleValueChange(selectedElement, e.target.value)}
-                                className="w-16 h-10 rounded border cursor-pointer"
-                              />
+                              <div className="relative overflow-hidden w-10 h-10 rounded-full border shadow-sm">
+                                <input
+                                  type="color"
+                                  value={element.value}
+                                  onChange={(e) => handleValueChange(selectedElement, e.target.value)}
+                                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] p-0 border-0 cursor-pointer"
+                                />
+                              </div>
                               <Input
                                 type="text"
                                 value={element.value}
                                 onChange={(e) => handleValueChange(selectedElement, e.target.value)}
-                                placeholder="#F36F21"
+                                className="font-mono"
                               />
                             </div>
-                            <div 
-                              className="w-full h-20 rounded border-2"
-                              style={{ backgroundColor: element.value }}
-                            />
                           </div>
                         );
                       case 'image':
                         return (
                           <div className="space-y-3">
-                            <Label>Image URL</Label>
-                            <Input
-                              type="url"
-                              value={element.value}
-                              onChange={(e) => handleValueChange(selectedElement, e.target.value)}
-                              placeholder="https://example.com/image.jpg"
-                            />
-                            {element.value && (
-                              <div className="w-full h-32 rounded border overflow-hidden">
-                                <img 
-                                  src={element.value} 
-                                  alt="Preview" 
-                                  className="w-full h-full object-cover"
-                                  onError={(e) => {
-                                    (e.target as HTMLImageElement).src = '/placeholder.svg';
-                                  }}
+                            <Label>Image Source</Label>
+                            <div className="flex gap-2">
+                                <Input
+                                  value={element.value}
+                                  onChange={(e) => handleValueChange(selectedElement, e.target.value)}
+                                  placeholder="https://..."
                                 />
-                              </div>
-                            )}
+                                <Button size="icon" variant="outline" onClick={triggerFileUpload} title="Upload Image">
+                                    <Upload className="h-4 w-4" />
+                                </Button>
+                                <input 
+                                    type="file" 
+                                    ref={fileInputRef} 
+                                    className="hidden" 
+                                    accept="image/*" 
+                                    onChange={handleFileUpload}
+                                />
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                                Enter URL or upload a file.
+                            </div>
                           </div>
                         );
                       case 'font':
@@ -385,34 +394,27 @@ export default function VisualThemeEditor() {
                             <select
                               value={element.value}
                               onChange={(e) => handleValueChange(selectedElement, e.target.value)}
-                              className="w-full px-3 py-2 border rounded bg-background"
+                              className="w-full px-3 py-2 border rounded-md bg-background"
                             >
-                              <option value="Noto Serif Thai">Noto Serif Thai</option>
+                              <option value="Noto Serif Thai">Noto Serif Thai (Default)</option>
                               <option value="Prompt">Prompt</option>
                               <option value="Kanit">Kanit</option>
                               <option value="Sarabun">Sarabun</option>
-                              <option value="Sarabun">Mitr</option>
+                              <option value="Mitr">Mitr</option>
                             </select>
-                            <div 
-                              className="p-4 border rounded"
-                              style={{ fontFamily: element.value }}
-                            >
-                              Preview: The quick brown fox jumps over the lazy dog
-                            </div>
                           </div>
                         );
                       case 'text':
                         return (
                           <div className="space-y-3">
-                            <Label>Text Content</Label>
+                            <Label>Content</Label>
                             <Input
-                              type="text"
                               value={element.value}
                               onChange={(e) => handleValueChange(selectedElement, e.target.value)}
-                              disabled
+                              className="text-lg"
                             />
                             <p className="text-xs text-muted-foreground">
-                              Text editing requires translation updates. Use Theme Customization for text changes.
+                              Changes apply instantly to preview. Save to persist.
                             </p>
                           </div>
                         );

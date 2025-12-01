@@ -6,9 +6,25 @@ import { CTASection } from "@/components/sections/CTASection";
 import { Heart, Shield, Users } from "lucide-react";
 import { ActivityCard } from "@/components/cards/ActivityCard";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const Index = () => {
   const { t } = useTranslation();
+  const { settings } = useTheme();
+
+  // Helper to check for theme override content
+  const getContent = (key: string) => {
+    return settings?.content?.[key] || t(key);
+  };
+
+  // Helper to check for banner image override
+  const getBannerImage = () => {
+    if (settings?.banner?.enabled && settings?.banner?.imageUrl) {
+      return settings.banner.imageUrl;
+    }
+    return "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2940&auto=format&fit=crop";
+  };
+
   const features = [
     {
       icon: Heart,
@@ -51,12 +67,12 @@ const Index = () => {
   return (
     <PublicLayout>
       <HeroSection
-        subtitle={t('hero.subtitle')}
-        title={t('hero.title')}
+        subtitle={getContent('hero.subtitle')}
+        title={getContent('hero.title')}
         description={t('hero.description')}
         primaryCTA={{ label: t('hero.primaryCTA'), href: "/join-now" }}
         secondaryCTA={{ label: t('hero.secondaryCTA'), href: "/about" }}
-        image="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2940&auto=format&fit=crop"
+        image={getBannerImage()}
       />
 
       <FeatureGrid
