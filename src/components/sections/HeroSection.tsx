@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useTheme } from "@/contexts/ThemeContext";
+import { EditableText, EditableImage } from "@/components/editor/Editable";
 
 interface HeroSectionProps {
   title: string;
@@ -24,10 +24,6 @@ export function HeroSection({
   className,
   children,
 }: HeroSectionProps) {
-  const { settings } = useTheme();
-  
-  // Get banner settings from CSS variables - Simplified for React Context usage if available
-  // But stick to CSS vars for consistency with global theme application
   
   return (
     <section className={cn("section-padding gradient-warm relative overflow-hidden", className)}>
@@ -35,23 +31,26 @@ export function HeroSection({
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             {subtitle && (
-              <div 
-                className="hero-subtitle inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-base font-medium"
-                data-theme-key="hero.subtitle"
-              >
-                {subtitle}
-              </div>
+              <EditableText 
+                id="hero.subtitle" 
+                as="div" 
+                className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-base font-medium"
+                text={subtitle}
+              />
             )}
-            <h1 
-                className="hero-title text-5xl md:text-6xl lg:text-7xl font-bold leading-tight"
-                data-theme-key="hero.title"
-            >
-              {title}
-            </h1>
+            <EditableText 
+                id="hero.title"
+                as="h1"
+                className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight"
+                text={title}
+            />
             {description && (
-              <p className="text-2xl text-muted-foreground leading-relaxed">
-                {description}
-              </p>
+              <EditableText
+                id="hero.description"
+                as="p"
+                className="text-2xl text-muted-foreground leading-relaxed"
+                text={description}
+              />
             )}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               {primaryCTA && (
@@ -69,11 +68,11 @@ export function HeroSection({
           </div>
           {image && (
             <div className="relative aspect-square lg:aspect-auto lg:h-[500px] rounded-2xl overflow-hidden shadow-large">
-              <img
+              <EditableImage
+                id="hero.image"
                 src={image}
                 alt={title}
-                className="w-full h-full object-cover"
-                data-theme-key="banner.imageUrl"
+                className="w-full h-full object-cover rounded-2xl"
               />
             </div>
           )}

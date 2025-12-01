@@ -142,6 +142,10 @@ interface ThemeContextType {
   resetTheme: () => void;
   previewTheme: (settings: ThemeSettings) => void;
   loading: boolean;
+  editMode: boolean;
+  setEditMode: (mode: boolean) => void;
+  selectedElementId: string | null;
+  setSelectedElementId: (id: string | null) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -221,6 +225,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [currentTheme, setCurrentTheme] = useState<Theme | null>(null);
   const [settings, setSettings] = useState<ThemeSettings>(defaultSettings);
   const [loading, setLoading] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [selectedElementId, setSelectedElementId] = useState<string | null>(null);
 
   // Load active theme on mount
   useEffect(() => {
@@ -383,6 +389,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         resetTheme,
         previewTheme,
         loading,
+        editMode,
+        setEditMode,
+        selectedElementId,
+        setSelectedElementId,
       }}
     >
       {children}
