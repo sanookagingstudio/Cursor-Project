@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { 
   Save, 
   MousePointer2, 
@@ -20,15 +23,32 @@ import {
   Tablet,
   Monitor,
   Sparkles,
-  Eye
+  Eye,
+  Layout,
+  Move,
+  Bold,
+  Italic,
+  Underline,
+  AlignLeft,
+  AlignCenter,
+  AlignRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Index from "@/pages/Index"; // Import the actual page
 import { useTranslation } from "react-i18next";
 
-// Note: In a real app, this would be dynamic or configured
-const EDITABLE_PAGES = [
-    { id: 'home', name: 'Home Page', component: Index }
+// Import Pages for preview
+import Index from "@/pages/Index";
+import About from "@/pages/About";
+import Activities from "@/pages/Activities";
+import Trips from "@/pages/Trips";
+import Contact from "@/pages/Contact";
+
+const PAGES = [
+    { id: 'home', name: 'Home Page', component: Index },
+    { id: 'about', name: 'About Us', component: About },
+    { id: 'activities', name: 'Activities', component: Activities },
+    { id: 'trips', name: 'Trips', component: Trips },
+    { id: 'contact', name: 'Contact', component: Contact },
 ];
 
 const THEME_PRESETS = [
@@ -64,20 +84,16 @@ export default function VisualThemeEditor() {
   const { t } = useTranslation();
   const [isEditActive, setIsEditActive] = useState(true);
   const [previewMode, setPreviewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+  const [selectedPageId, setSelectedPageId] = useState('home');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Sync local state with context
   useEffect(() => {
     setEditMode(isEditActive);
-    return () => setEditMode(false); // Cleanup on unmount
+    return () => setEditMode(false);
   }, [isEditActive, setEditMode]);
 
-  const handleValueChange = (newValue: any) => {
+  const handleContentChange = (newValue: any) => {
     if (!selectedElementId) return;
-
-    // Determine type based on ID or usage
-    const isImage = selectedElementId.includes('image') || selectedElementId.includes('banner');
-    
     updateSettings({
         content: {
             ...settings!.content,
@@ -86,16 +102,26 @@ export default function VisualThemeEditor() {
     });
   };
 
+  const handleStyleChange = (property: keyof React.CSSProperties, value: any) => {
+    if (!selectedElementId) return;
+    const currentStyles = settings?.styles?.[selectedElementId] || {};
+    updateSettings({
+        styles: {
+            ...settings!.styles,
+            [selectedElementId]: {
+                ...currentStyles,
+                [property]: value
+            }
+        }
+    });
+  };
+
   const applyPreset = (preset: typeof THEME_PRESETS[0]) => {
-      if (confirm(`Apply "${preset.name}" theme? This will overwrite current settings.`)) {
+      if (confirm(`Apply "${preset.name}" theme?`)) {
           updateSettings({
               colors: { ...settings!.colors, ...preset.colors },
               typography: { ...settings!.typography, fontFamily: preset.font },
               content: { ...settings!.content, ...preset.content }
-          });
-          toast({
-              title: "Theme Applied",
-              description: `${preset.name} theme active.`,
           });
       }
   };
@@ -103,54 +129,24 @@ export default function VisualThemeEditor() {
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = (e) => {
-        const result = e.target?.result as string;
-        handleValueChange(result);
+        handleContentChange(e.target?.result as string);
     };
     reader.readAsDataURL(file);
   };
 
-  const triggerFileUpload = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleSave = async () => {
-    try {
-      await saveTheme("Visual Theme Custom");
-      toast({
-        title: "Success",
-        description: "Theme saved successfully! Changes are now live.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to save theme. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleReset = () => {
-    if (confirm("Are you sure you want to reset all changes to default?")) {
-        resetTheme();
-        toast({
-            title: "Reset Complete",
-            description: "Theme has been reset to defaults.",
-        });
-    }
-  };
-
-  // Helper to determine editor type based on selected ID
   const getEditorType = () => {
       if (!selectedElementId) return null;
-      if (selectedElementId.includes('image') || selectedElementId.includes('banner')) return 'image';
+      // Simple heuristic: check if it's an image ID or look at the data attribute in DOM if available
+      // For now, based on ID convention
+      if (selectedElementId.includes('image') || selectedElementId.includes('banner') || selectedElementId.includes('logo')) return 'image';
       return 'text';
   };
 
   const editorType = getEditorType();
-  const currentValue = selectedElementId ? (settings?.content?.[selectedElementId] || "") : "";
+  const currentStyles = selectedElementId ? settings?.styles?.[selectedElementId] || {} : {};
+  const SelectedPageComponent = PAGES.find(p => p.id === selectedPageId)?.component || Index;
 
   return (
     <AdminLayout>
@@ -163,6 +159,22 @@ export default function VisualThemeEditor() {
                 Visual Editor
             </h1>
             <div className="h-6 w-px bg-border mx-2" />
+            
+            {/* Page Selector */}
+            <Select value={selectedPageId} onValueChange={setSelectedPageId}>
+                <SelectTrigger className="w-[180px] h-8">
+                    <SelectValue placeholder="Select Page" />
+                </SelectTrigger>
+                <SelectContent>
+                    {PAGES.map(page => (
+                        <SelectItem key={page.id} value={page.id}>{page.name}</SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
+
+            <div className="h-6 w-px bg-border mx-2" />
+
+            {/* Device Toggles */}
             <div className="flex items-center bg-muted rounded-lg p-1">
                 <Button
                     variant={previewMode === 'desktop' ? 'default' : 'ghost'}
@@ -200,10 +212,10 @@ export default function VisualThemeEditor() {
               {isEditActive ? <MousePointer2 className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               {isEditActive ? "Editing" : "Previewing"}
             </Button>
-            <Button onClick={handleReset} variant="ghost" size="icon">
+            <Button onClick={() => { if(confirm('Reset all?')) resetTheme() }} variant="ghost" size="icon">
               <RotateCcw className="h-4 w-4" />
             </Button>
-            <Button onClick={handleSave} className="gap-2 min-w-[100px]">
+            <Button onClick={saveTheme} className="gap-2 min-w-[100px]">
               <Save className="h-4 w-4" />
               Save
             </Button>
@@ -221,148 +233,216 @@ export default function VisualThemeEditor() {
                 previewMode === 'mobile' && "w-[375px]"
               )}
             >
-                {/* 
-                    Here we render the actual Index page.
-                    Because we set `editMode` in context, the Editable components inside Index 
-                    will become interactive.
-                */}
                 <div className={cn(isEditActive ? "pointer-events-auto" : "pointer-events-none")}>
-                    <Index />
+                    <SelectedPageComponent />
                 </div>
             </div>
           </div>
 
           {/* Right Sidebar - Controls */}
           <div className="w-80 bg-card border-l flex flex-col shadow-xl z-20">
-            
-            {/* Contextual Editor (When something is selected) */}
             {selectedElementId ? (
-                <div className="p-4 border-b bg-accent/5">
-                    <div className="flex items-center justify-between mb-4">
+                <div className="flex flex-col h-full">
+                    <div className="p-4 border-b bg-accent/5 flex items-center justify-between">
                         <h3 className="font-semibold text-sm flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                            Editing: <span className="font-mono text-xs bg-muted px-1 rounded">{selectedElementId}</span>
+                            Editing: <span className="font-mono text-xs bg-muted px-1 rounded truncate max-w-[120px]">{selectedElementId}</span>
                         </h3>
                         <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setSelectedElementId(null)}>
                             <X className="h-3 w-3" />
                         </Button>
                     </div>
 
-                    <div className="space-y-4 animate-in slide-in-from-right-5 fade-in duration-200">
-                        {editorType === 'text' && (
-                            <div className="space-y-2">
-                                <Label>Text Content</Label>
-                                <Input 
-                                    value={settings?.content?.[selectedElementId] || ""} 
-                                    placeholder="Start typing..."
-                                    onChange={(e) => handleValueChange(e.target.value)}
-                                    autoFocus
-                                />
-                            </div>
-                        )}
+                    <Tabs defaultValue="content" className="flex-1 flex flex-col">
+                        <TabsList className="w-full justify-start rounded-none border-b px-4 h-12">
+                            <TabsTrigger value="content" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">Content</TabsTrigger>
+                            <TabsTrigger value="style" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">Style</TabsTrigger>
+                        </TabsList>
 
-                        {editorType === 'image' && (
-                            <div className="space-y-2">
-                                <Label>Image Source</Label>
-                                <div className="flex gap-2">
+                        <TabsContent value="content" className="flex-1 p-4 overflow-y-auto space-y-4">
+                            {editorType === 'text' && (
+                                <div className="space-y-2">
+                                    <Label>Text</Label>
                                     <Input 
                                         value={settings?.content?.[selectedElementId] || ""} 
-                                        placeholder="https://..."
-                                        onChange={(e) => handleValueChange(e.target.value)}
-                                    />
-                                    <Button size="icon" variant="outline" onClick={triggerFileUpload}>
-                                        <Upload className="h-4 w-4" />
-                                    </Button>
-                                    <input 
-                                        type="file" 
-                                        ref={fileInputRef} 
-                                        className="hidden" 
-                                        accept="image/*" 
-                                        onChange={handleFileUpload}
+                                        placeholder="Type here..."
+                                        onChange={(e) => handleContentChange(e.target.value)}
                                     />
                                 </div>
-                                {settings?.content?.[selectedElementId] && (
-                                    <img 
-                                        src={settings.content[selectedElementId]} 
-                                        alt="Preview" 
-                                        className="w-full h-32 object-cover rounded border mt-2"
+                            )}
+                            {editorType === 'image' && (
+                                <div className="space-y-2">
+                                    <Label>Image Source</Label>
+                                    <div className="flex gap-2">
+                                        <Input 
+                                            value={settings?.content?.[selectedElementId] || ""} 
+                                            placeholder="https://..."
+                                            onChange={(e) => handleContentChange(e.target.value)}
+                                        />
+                                        <Button size="icon" variant="outline" onClick={() => fileInputRef.current?.click()}>
+                                            <Upload className="h-4 w-4" />
+                                        </Button>
+                                        <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileUpload} />
+                                    </div>
+                                    {settings?.content?.[selectedElementId] && (
+                                        <img src={settings.content[selectedElementId]} alt="Preview" className="w-full h-32 object-cover rounded border mt-2" />
+                                    )}
+                                </div>
+                            )}
+                        </TabsContent>
+
+                        <TabsContent value="style" className="flex-1 p-4 overflow-y-auto space-y-6">
+                            {/* Typography Controls */}
+                            {editorType === 'text' && (
+                                <div className="space-y-4">
+                                    <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Typography</h4>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div className="space-y-1">
+                                            <Label className="text-xs">Font Size</Label>
+                                            <div className="flex items-center gap-2">
+                                                <Input 
+                                                    type="number" 
+                                                    value={parseInt(String(currentStyles.fontSize || '16'))} 
+                                                    onChange={(e) => handleStyleChange('fontSize', `${e.target.value}px`)}
+                                                    className="h-8"
+                                                />
+                                                <span className="text-xs text-muted-foreground">px</span>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <Label className="text-xs">Color</Label>
+                                            <div className="flex gap-2">
+                                                <input 
+                                                    type="color" 
+                                                    value={String(currentStyles.color || '#000000')}
+                                                    onChange={(e) => handleStyleChange('color', e.target.value)}
+                                                    className="w-8 h-8 rounded border cursor-pointer"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="space-y-1">
+                                        <Label className="text-xs">Font Weight</Label>
+                                        <Select 
+                                            value={String(currentStyles.fontWeight || 'normal')}
+                                            onValueChange={(v) => handleStyleChange('fontWeight', v)}
+                                        >
+                                            <SelectTrigger className="h-8"><SelectValue /></SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="300">Light</SelectItem>
+                                                <SelectItem value="normal">Regular</SelectItem>
+                                                <SelectItem value="500">Medium</SelectItem>
+                                                <SelectItem value="bold">Bold</SelectItem>
+                                                <SelectItem value="900">Black</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div className="flex gap-1 bg-muted p-1 rounded">
+                                        <Button variant={currentStyles.textAlign === 'left' ? 'default' : 'ghost'} size="icon" className="h-7 w-7" onClick={() => handleStyleChange('textAlign', 'left')}><AlignLeft className="h-3 w-3" /></Button>
+                                        <Button variant={currentStyles.textAlign === 'center' ? 'default' : 'ghost'} size="icon" className="h-7 w-7" onClick={() => handleStyleChange('textAlign', 'center')}><AlignCenter className="h-3 w-3" /></Button>
+                                        <Button variant={currentStyles.textAlign === 'right' ? 'default' : 'ghost'} size="icon" className="h-7 w-7" onClick={() => handleStyleChange('textAlign', 'right')}><AlignRight className="h-3 w-3" /></Button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Dimensions & Spacing */}
+                            <div className="space-y-4 pt-4 border-t">
+                                <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Layout</h4>
+                                <div className="space-y-2">
+                                    <Label className="text-xs">Margin (Top/Bottom)</Label>
+                                    <Slider 
+                                        defaultValue={[parseInt(String(currentStyles.marginTop || '0'))]} 
+                                        max={100} 
+                                        step={1} 
+                                        onValueChange={(v) => {
+                                            handleStyleChange('marginTop', `${v[0]}px`);
+                                            handleStyleChange('marginBottom', `${v[0]}px`);
+                                        }}
                                     />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label className="text-xs">Padding</Label>
+                                    <Slider 
+                                        defaultValue={[parseInt(String(currentStyles.padding || '0'))]} 
+                                        max={50} 
+                                        step={1} 
+                                        onValueChange={(v) => handleStyleChange('padding', `${v[0]}px`)}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Effects */}
+                            <div className="space-y-4 pt-4 border-t">
+                                <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Effects</h4>
+                                <div className="space-y-2">
+                                    <Label className="text-xs">Opacity</Label>
+                                    <Slider 
+                                        defaultValue={[parseFloat(String(currentStyles.opacity || '1')) * 100]} 
+                                        max={100} 
+                                        step={1} 
+                                        onValueChange={(v) => handleStyleChange('opacity', v[0] / 100)}
+                                    />
+                                </div>
+                                {editorType === 'image' && (
+                                    <div className="space-y-2">
+                                        <Label className="text-xs">Rounded Corners</Label>
+                                        <Slider 
+                                            defaultValue={[parseInt(String(currentStyles.borderRadius || '0'))]} 
+                                            max={50} 
+                                            step={1} 
+                                            onValueChange={(v) => handleStyleChange('borderRadius', `${v[0]}px`)}
+                                        />
+                                    </div>
                                 )}
                             </div>
-                        )}
-                    </div>
+                        </TabsContent>
+                    </Tabs>
                 </div>
             ) : (
-                <div className="p-8 text-center text-muted-foreground flex flex-col items-center justify-center min-h-[200px]">
-                    <MousePointer2 className="h-8 w-8 mb-2 opacity-20" />
-                    <p>Click any element on the preview to edit it</p>
-                </div>
-            )}
-
-            {/* General Settings */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-6">
-                <div>
-                    <h3 className="font-semibold mb-3 flex items-center gap-2 text-sm text-muted-foreground">
-                        <Sparkles className="h-4 w-4" />
-                        Theme Presets
-                    </h3>
-                    <div className="grid grid-cols-2 gap-2">
-                        {THEME_PRESETS.map(preset => (
-                            <button
-                                key={preset.name}
-                                onClick={() => applyPreset(preset)}
-                                className="flex flex-col items-center p-2 rounded border hover:border-primary hover:bg-primary/5 transition-all text-xs text-center group"
-                            >
-                                <div className="w-full h-12 rounded mb-2 shadow-sm group-hover:shadow-md transition-shadow" 
-                                     style={{ background: `linear-gradient(135deg, ${preset.colors.primary}, ${preset.colors.secondary})` }} />
-                                {preset.name}
-                            </button>
-                        ))}
+                <div className="flex-1 p-4 overflow-y-auto space-y-6">
+                    <div>
+                        <h3 className="font-semibold mb-3 flex items-center gap-2 text-sm text-muted-foreground">
+                            <Sparkles className="h-4 w-4" />
+                            Theme Presets
+                        </h3>
+                        <div className="grid grid-cols-2 gap-2">
+                            {THEME_PRESETS.map(preset => (
+                                <button
+                                    key={preset.name}
+                                    onClick={() => applyPreset(preset)}
+                                    className="flex flex-col items-center p-2 rounded border hover:border-primary hover:bg-primary/5 transition-all text-xs text-center group"
+                                >
+                                    <div className="w-full h-12 rounded mb-2 shadow-sm group-hover:shadow-md transition-shadow" 
+                                         style={{ background: `linear-gradient(135deg, ${preset.colors.primary}, ${preset.colors.secondary})` }} />
+                                    {preset.name}
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                </div>
-
-                <div className="border-t pt-4">
-                    <h3 className="font-semibold mb-3 text-sm text-muted-foreground">Global Colors</h3>
-                    <div className="space-y-3">
-                        <div className="space-y-1">
-                            <Label className="text-xs">Primary Color</Label>
-                            <div className="flex gap-2">
-                                <div className="relative w-8 h-8 rounded-full overflow-hidden border shadow-sm shrink-0">
+                    <div className="border-t pt-4">
+                        <h3 className="font-semibold mb-3 text-sm text-muted-foreground">Global Colors</h3>
+                        <div className="space-y-3">
+                            <div className="space-y-1">
+                                <Label className="text-xs">Primary Color</Label>
+                                <div className="flex gap-2">
                                     <input
                                         type="color"
                                         value={settings?.colors?.primary}
                                         onChange={(e) => updateSettings({ colors: { ...settings!.colors, primary: e.target.value } })}
-                                        className="absolute inset-0 w-[150%] h-[150%] -translate-x-1/4 -translate-y-1/4 cursor-pointer p-0 border-0"
+                                        className="w-8 h-8 rounded border cursor-pointer"
+                                    />
+                                    <Input 
+                                        value={settings?.colors?.primary}
+                                        onChange={(e) => updateSettings({ colors: { ...settings!.colors, primary: e.target.value } })}
+                                        className="h-8 text-xs font-mono"
                                     />
                                 </div>
-                                <Input 
-                                    value={settings?.colors?.primary}
-                                    onChange={(e) => updateSettings({ colors: { ...settings!.colors, primary: e.target.value } })}
-                                    className="h-8 text-xs font-mono"
-                                />
-                            </div>
-                        </div>
-                        <div className="space-y-1">
-                            <Label className="text-xs">Background Color</Label>
-                            <div className="flex gap-2">
-                                <div className="relative w-8 h-8 rounded-full overflow-hidden border shadow-sm shrink-0">
-                                    <input
-                                        type="color"
-                                        value={settings?.colors?.background}
-                                        onChange={(e) => updateSettings({ colors: { ...settings!.colors, background: e.target.value } })}
-                                        className="absolute inset-0 w-[150%] h-[150%] -translate-x-1/4 -translate-y-1/4 cursor-pointer p-0 border-0"
-                                    />
-                                </div>
-                                <Input 
-                                    value={settings?.colors?.background}
-                                    onChange={(e) => updateSettings({ colors: { ...settings!.colors, background: e.target.value } })}
-                                    className="h-8 text-xs font-mono"
-                                />
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

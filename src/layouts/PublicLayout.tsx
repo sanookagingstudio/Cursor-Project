@@ -7,6 +7,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { FloatingJarvis } from "@/components/FloatingJarvis";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
+import { EditableText } from "@/components/editor/Editable";
 
 import funLogo from "@/assets/fun-logo-2025.png";
 
@@ -48,8 +49,12 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                 <Link to="/" className="flex items-center space-x-3 hover:scale-105 transition-transform">
                   <img src={funLogo} alt="FUN Logo" className="h-14 w-auto" />
                   <div className="hidden md:block">
-                    <div className="font-bold text-2xl text-foreground">{t('brand.name')}</div>
-                    <div className="text-sm text-muted-foreground">{t('brand.tagline')}</div>
+                    <div className="font-bold text-2xl text-foreground">
+                        <EditableText id="brand.name" text={t('brand.name')} />
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                        <EditableText id="brand.tagline" text={t('brand.tagline')} />
+                    </div>
                   </div>
                 </Link>
 
@@ -142,10 +147,12 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                 <div className="container-padding w-full py-12">
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div>
-                      <div className="font-bold text-xl mb-4">{t('brand.name')}</div>
-                      <p className="text-muted-foreground">
-                        {t('footer.tagline')}
-                      </p>
+                      <div className="font-bold text-xl mb-4">
+                        <EditableText id="brand.name.footer" text={t('brand.name')} />
+                      </div>
+                      <div className="text-muted-foreground">
+                        <EditableText id="footer.tagline" text={t('footer.tagline')} as="p" />
+                      </div>
                     </div>
             <div>
               <h4 className="font-semibold mb-4">{t('footer.quickLinks')}</h4>
@@ -167,9 +174,9 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             <div>
               <h4 className="font-semibold mb-4">{t('footer.contact')}</h4>
               <div className="space-y-2 text-muted-foreground">
-                <p>{t('footer.phone')}: +66 XX XXX XXXX</p>
-                <p>{t('footer.email')}: info@funaging.com</p>
-                <p>LINE: @funagingstudio</p>
+                <p>{t('footer.phone')}: <EditableText id="contact.phone" text="+66 XX XXX XXXX" /></p>
+                <p>{t('footer.email')}: <EditableText id="contact.email" text="info@funaging.com" /></p>
+                <p>LINE: <EditableText id="contact.line" text="@funagingstudio" /></p>
               </div>
             </div>
           </div>

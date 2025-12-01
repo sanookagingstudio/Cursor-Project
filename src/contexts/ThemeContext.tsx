@@ -53,6 +53,11 @@ const hexToHsl = (hex: string): string => {
   return `${h} ${s}% ${l}%`;
 };
 
+interface ElementStyle {
+  content?: string;
+  style?: React.CSSProperties;
+}
+
 interface ThemeSettings {
   colors: {
     primary: string;
@@ -122,6 +127,7 @@ interface ThemeSettings {
     position: string;
   };
   content: Record<string, string>;
+  styles: Record<string, React.CSSProperties>; // Add support for element-specific styles
 }
 
 interface Theme {
@@ -219,6 +225,7 @@ const defaultSettings: ThemeSettings = {
     position: "center",
   },
   content: {},
+  styles: {}, // Initialize empty styles
 };
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
