@@ -19,25 +19,25 @@ export function PublicLayout({ children }: PublicLayoutProps) {
   const { t } = useTranslation();
   
   const navItems = [
-    { label: t('nav.home'), path: "/" },
-    { label: t('nav.activities'), path: "/activities" },
-    { label: t('nav.trips'), path: "/trips" },
-    { label: t('nav.customTripBuilder'), path: "/custom-trip-builder" },
-    { label: t('nav.funCalendar'), path: "/fun-calendar" },
-    { label: t('nav.media'), path: "/media" },
-    { label: t('nav.funStore'), path: "/fun-store" },
-    { label: t('nav.promotions'), path: "/promotions" },
-    { label: t('nav.membership'), path: "/membership" },
-    { label: t('nav.about'), path: "/about" },
-    { label: t('nav.contact'), path: "/contact" },
+    { label: t('nav.home'), path: "/", id: "nav.home" },
+    { label: t('nav.activities'), path: "/activities", id: "nav.activities" },
+    { label: t('nav.trips'), path: "/trips", id: "nav.trips" },
+    { label: t('nav.customTripBuilder'), path: "/custom-trip-builder", id: "nav.customTripBuilder" },
+    { label: t('nav.funCalendar'), path: "/fun-calendar", id: "nav.funCalendar" },
+    { label: t('nav.media'), path: "/media", id: "nav.media" },
+    { label: t('nav.funStore'), path: "/fun-store", id: "nav.funStore" },
+    { label: t('nav.promotions'), path: "/promotions", id: "nav.promotions" },
+    { label: t('nav.membership'), path: "/membership", id: "nav.membership" },
+    { label: t('nav.about'), path: "/about", id: "nav.about" },
+    { label: t('nav.contact'), path: "/contact", id: "nav.contact" },
   ];
 
   const mobileNavItems = [
-    { label: t('nav.home'), path: "/", icon: Home },
-    { label: t('nav.activities'), path: "/activities", icon: Calendar },
-    { label: t('nav.trips'), path: "/trips", icon: MapPin },
-    { label: t('nav.media'), path: "/media", icon: Image },
-    { label: t('nav.account'), path: "/sign-in", icon: User },
+    { label: t('nav.home'), path: "/", icon: Home, id: "nav.mobile.home" },
+    { label: t('nav.activities'), path: "/activities", icon: Calendar, id: "nav.mobile.activities" },
+    { label: t('nav.trips'), path: "/trips", icon: MapPin, id: "nav.mobile.trips" },
+    { label: t('nav.media'), path: "/media", icon: Image, id: "nav.mobile.media" },
+    { label: t('nav.account'), path: "/sign-in", icon: User, id: "nav.mobile.account" },
   ];
 
   return (
@@ -66,7 +66,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   to={item.path}
                   activeClassName="bg-[#F36F21] text-white hover:bg-[#D85F1A] hover:text-white shadow-md"
                 >
-                  {item.label}
+                  <EditableText id={item.id} text={item.label} as="span" />
                 </NavLink>
               </Button>
             ))}
@@ -76,10 +76,14 @@ export function PublicLayout({ children }: PublicLayoutProps) {
           <div className="hidden md:flex items-center space-x-2">
             <LanguageSwitcher />
             <Link to="/sign-in">
-              <Button variant="ghost" size="lg">{t('nav.signIn')}</Button>
+              <Button variant="ghost" size="lg">
+                <EditableText id="nav.signIn" text={t('nav.signIn')} as="span" />
+              </Button>
             </Link>
             <Link to="/join-now">
-              <Button size="lg" className="btn-elderly">{t('nav.joinNow')}</Button>
+              <Button size="lg" className="btn-elderly">
+                <EditableText id="nav.joinNow" text={t('nav.joinNow')} as="span" />
+              </Button>
             </Link>
           </div>
 
@@ -98,19 +102,19 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                       to={item.path}
                       activeClassName="bg-[#F36F21] text-white hover:bg-[#D85F1A] hover:text-white"
                     >
-                      {item.label}
+                      <EditableText id={`mobile.${item.id}`} text={item.label} as="span" />
                     </NavLink>
                   </Button>
                 ))}
                 <div className="pt-4 border-t space-y-2">
                   <Link to="/sign-in">
                     <Button variant="outline" size="lg" className="w-full btn-elderly">
-                      {t('nav.signIn')}
+                      <EditableText id="mobile.nav.signIn" text={t('nav.signIn')} as="span" />
                     </Button>
                   </Link>
                   <Link to="/join-now">
                     <Button size="lg" className="w-full btn-elderly">
-                      {t('nav.joinNow')}
+                      <EditableText id="mobile.nav.joinNow" text={t('nav.joinNow')} as="span" />
                     </Button>
                   </Link>
                 </div>
@@ -136,7 +140,9 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               activeClassName="text-[#F36F21] font-bold"
             >
               <item.icon className="h-6 w-6 mb-1" />
-              <span className="text-sm font-medium">{item.label}</span>
+              <span className="text-sm font-medium">
+                <EditableText id={item.id} text={item.label} as="span" />
+              </span>
             </NavLink>
           ))}
         </div>
@@ -155,24 +161,30 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                       </div>
                     </div>
             <div>
-              <h4 className="font-semibold mb-4">{t('footer.quickLinks')}</h4>
+              <h4 className="font-semibold mb-4">
+                <EditableText id="footer.quickLinks" text={t('footer.quickLinks')} as="span" />
+              </h4>
               <div className="space-y-2">
-                <Link to="/about" className="block text-muted-foreground hover:text-primary">{t('footer.aboutUs')}</Link>
-                <Link to="/activities" className="block text-muted-foreground hover:text-primary">{t('nav.activities')}</Link>
-                <Link to="/trips" className="block text-muted-foreground hover:text-primary">{t('nav.trips')}</Link>
-                <Link to="/pricing" className="block text-muted-foreground hover:text-primary">{t('footer.pricing')}</Link>
+                <Link to="/about" className="block text-muted-foreground hover:text-primary"><EditableText id="footer.aboutUs" text={t('footer.aboutUs')} as="span" /></Link>
+                <Link to="/activities" className="block text-muted-foreground hover:text-primary"><EditableText id="footer.activities" text={t('nav.activities')} as="span" /></Link>
+                <Link to="/trips" className="block text-muted-foreground hover:text-primary"><EditableText id="footer.trips" text={t('nav.trips')} as="span" /></Link>
+                <Link to="/pricing" className="block text-muted-foreground hover:text-primary"><EditableText id="footer.pricing" text={t('footer.pricing')} as="span" /></Link>
               </div>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">{t('footer.support')}</h4>
+              <h4 className="font-semibold mb-4">
+                <EditableText id="footer.support" text={t('footer.support')} as="span" />
+              </h4>
               <div className="space-y-2">
-                <Link to="/faq" className="block text-muted-foreground hover:text-primary">{t('footer.faq')}</Link>
-                <Link to="/contact" className="block text-muted-foreground hover:text-primary">{t('footer.contact')}</Link>
-                <Link to="/health-check" className="block text-muted-foreground hover:text-primary">{t('footer.healthCheck')}</Link>
+                <Link to="/faq" className="block text-muted-foreground hover:text-primary"><EditableText id="footer.faq" text={t('footer.faq')} as="span" /></Link>
+                <Link to="/contact" className="block text-muted-foreground hover:text-primary"><EditableText id="footer.contact" text={t('footer.contact')} as="span" /></Link>
+                <Link to="/health-check" className="block text-muted-foreground hover:text-primary"><EditableText id="footer.healthCheck" text={t('footer.healthCheck')} as="span" /></Link>
               </div>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">{t('footer.contact')}</h4>
+              <h4 className="font-semibold mb-4">
+                <EditableText id="footer.contactTitle" text={t('footer.contact')} as="span" />
+              </h4>
               <div className="space-y-2 text-muted-foreground">
                 <p>{t('footer.phone')}: <EditableText id="contact.phone" text="+66 XX XXX XXXX" /></p>
                 <p>{t('footer.email')}: <EditableText id="contact.email" text="info@funaging.com" /></p>
@@ -181,7 +193,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             </div>
           </div>
           <div className="mt-8 pt-8 border-t text-center text-muted-foreground">
-            <p>{t('footer.rights')}</p>
+            <p><EditableText id="footer.rights" text={t('footer.rights')} as="span" /></p>
           </div>
         </div>
       </footer>

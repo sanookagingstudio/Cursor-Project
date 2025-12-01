@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
 import { 
   Save, 
   MousePointer2, 
@@ -31,7 +32,8 @@ import {
   Underline,
   AlignLeft,
   AlignCenter,
-  AlignRight
+  AlignRight,
+  Video
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
@@ -42,6 +44,12 @@ import About from "@/pages/About";
 import Activities from "@/pages/Activities";
 import Trips from "@/pages/Trips";
 import Contact from "@/pages/Contact";
+import MediaLibrary from "@/pages/MediaLibrary";
+import FUNStore from "@/pages/FUNStore";
+import Promotions from "@/pages/Promotions";
+import MembershipPlans from "@/pages/MembershipPlans";
+import CustomTripBuilder from "@/pages/CustomTripBuilder";
+import FUNCalendar from "@/pages/FUNCalendar";
 
 const PAGES = [
     { id: 'home', name: 'Home Page', component: Index },
@@ -49,6 +57,12 @@ const PAGES = [
     { id: 'activities', name: 'Activities', component: Activities },
     { id: 'trips', name: 'Trips', component: Trips },
     { id: 'contact', name: 'Contact', component: Contact },
+    { id: 'media', name: 'Media Library', component: MediaLibrary },
+    { id: 'store', name: 'FUN Store', component: FUNStore },
+    { id: 'promotions', name: 'Promotions', component: Promotions },
+    { id: 'membership', name: 'Membership', component: MembershipPlans },
+    { id: 'custom-trip', name: 'Custom Trip', component: CustomTripBuilder },
+    { id: 'calendar', name: 'Calendar', component: FUNCalendar },
 ];
 
 const THEME_PRESETS = [
@@ -85,6 +99,7 @@ export default function VisualThemeEditor() {
   const [isEditActive, setIsEditActive] = useState(true);
   const [previewMode, setPreviewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [selectedPageId, setSelectedPageId] = useState('home');
+  const [isVideoMode, setIsVideoMode] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -138,8 +153,6 @@ export default function VisualThemeEditor() {
 
   const getEditorType = () => {
       if (!selectedElementId) return null;
-      // Simple heuristic: check if it's an image ID or look at the data attribute in DOM if available
-      // For now, based on ID convention
       if (selectedElementId.includes('image') || selectedElementId.includes('banner') || selectedElementId.includes('logo')) return 'image';
       return 'text';
   };
@@ -162,7 +175,7 @@ export default function VisualThemeEditor() {
             
             {/* Page Selector */}
             <Select value={selectedPageId} onValueChange={setSelectedPageId}>
-                <SelectTrigger className="w-[180px] h-8">
+                <SelectTrigger className="w-[200px] h-8">
                     <SelectValue placeholder="Select Page" />
                 </SelectTrigger>
                 <SelectContent>
@@ -270,22 +283,63 @@ export default function VisualThemeEditor() {
                                 </div>
                             )}
                             {editorType === 'image' && (
-                                <div className="space-y-2">
-                                    <Label>Image Source</Label>
-                                    <div className="flex gap-2">
-                                        <Input 
-                                            value={settings?.content?.[selectedElementId] || ""} 
-                                            placeholder="https://..."
-                                            onChange={(e) => handleContentChange(e.target.value)}
-                                        />
-                                        <Button size="icon" variant="outline" onClick={() => fileInputRef.current?.click()}>
-                                            <Upload className="h-4 w-4" />
-                                        </Button>
-                                        <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileUpload} />
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <Label>Media Type</Label>
+                                        <div className="flex items-center gap-2">
+                                            <span className={cn("text-xs", !isVideoMode && "font-bold")}>Image</span>
+                                            <Switch 
+                                                checked={isVideoMode}
+                                                onCheckedChange={setIsVideoMode}
+                                            />
+                                            <span className={cn("text-xs", isVideoMode && "font-bold")}>Video</span>
+                                        </div>
                                     </div>
+
+                                    <div className="space-y-2">
+                                        <Label>{isVideoMode ? "Video Source" : "Image Source"}</Label>
+                                        <div className="flex gap-2">
+                                            <Input 
+                                                value={settings?.content?.[selectedElementId] || ""} 
+                                                placeholder={isVideoMode ? "https://.../video.mp4" : "https://.../image.jpg"}
+                                                onChange={(e) => handleContentChange(e.target.value)}
+                                            />
+                                            <Button size="icon" variant="outline" onClick={() => fileInputRef.current?.click()}>
+                                                <Upload className="h-4 w-4" />
+                                            </Button>
+                                            <input 
+                                                type="file" 
+                                                ref={fileInputRef} 
+                                                className="hidden" 
+                                                accept={isVideoMode ? "video/*" : "image/*"} 
+                                                onChange={handleFileUpload} 
+                                            />
+                                        </div>
+                                    </div>
+
                                     {settings?.content?.[selectedElementId] && (
-                                        <img src={settings.content[selectedElementId]} alt="Preview" className="w-full h-32 object-cover rounded border mt-2" />
+                                        <div className="rounded border overflow-hidden bg-black/5">
+                                            {isVideoMode || settings.content[selectedElementId].endsWith('.mp4') ? (
+                                                <video 
+                                                    src={settings.content[selectedElementId]} 
+                                                    className="w-full h-32 object-cover" 
+                                                    controls 
+                                                />
+                                            ) : (
+                                                <img 
+                                                    src={settings.content[selectedElementId]} 
+                                                    alt="Preview" 
+                                                    className="w-full h-32 object-cover" 
+                                                />
+                                            )}
+                                        </div>
                                     )}
+                                    
+                                    <div className="text-xs text-muted-foreground">
+                                        {isVideoMode 
+                                            ? "Supported formats: MP4, WebM. Enter a URL or upload." 
+                                            : "Supported formats: JPG, PNG, WEBP. Enter a URL or upload."}
+                                    </div>
                                 </div>
                             )}
                         </TabsContent>
