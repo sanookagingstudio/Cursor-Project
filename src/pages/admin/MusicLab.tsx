@@ -32,6 +32,28 @@ export default function MusicLab() {
   const [tempo, setTempo] = useState<number | undefined>(120);
   const [key, setKey] = useState<string | undefined>();
   const [isGenerating, setIsGenerating] = useState(false);
+  
+  // Job status tracking
+  const [jobStatus, setJobStatus] = useState<{
+    jobId?: string;
+    status?: string;
+    estimatedTime?: number;
+  } | null>(null);
+  
+  // File upload states
+  const [audioFile, setAudioFile] = useState<File | null>(null);
+  
+  // Stems tab states
+  const [selectedStems, setSelectedStems] = useState<string[]>(["vocal", "drums", "bass", "other"]);
+  
+  // Tab generation states
+  const [instrument, setInstrument] = useState("guitar");
+  const [difficulty, setDifficulty] = useState("original");
+  const [format, setFormat] = useState("text");
+  
+  // Karaoke states
+  const [lyrics, setLyrics] = useState("");
+  const [removeVocals, setRemoveVocals] = useState("yes");
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
@@ -61,9 +83,15 @@ export default function MusicLab() {
 
       const data = await response.json();
       
+      setJobStatus({
+        jobId: data.job_id,
+        status: data.status,
+        estimatedTime: data.estimated_time
+      });
+      
       toast({
         title: "Success",
-        description: "Music generation started. Check job status."
+        description: `Music generation started. Job ID: ${data.job_id}`,
       });
     } catch (error) {
       toast({
@@ -73,6 +101,226 @@ export default function MusicLab() {
       });
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const handleSeparateStems = async () => {
+    if (!audioFile) {
+      toast({
+        title: "Error",
+        description: "Please upload an audio file",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      // In a real implementation, you would upload the file first
+      const formData = new FormData();
+      formData.append("file", audioFile);
+      formData.append("stems", JSON.stringify(selectedStems));
+
+      const response = await fetch(getApiUrl("/audio/stems"), {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error("Failed to separate stems");
+
+      const data = await response.json();
+      setJobStatus({
+        jobId: data.job_id,
+        status: data.status,
+        estimatedTime: data.estimated_time
+      });
+
+      toast({
+        title: "Success",
+        description: `Stem separation started. Job ID: ${data.job_id}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to separate stems",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleAnalyze = async () => {
+    if (!audioFile) {
+      toast({
+        title: "Error",
+        description: "Please upload an audio file",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", audioFile);
+
+      const response = await fetch(getApiUrl("/music/analyze"), {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error("Failed to analyze music");
+
+      const data = await response.json();
+      setJobStatus({
+        jobId: data.job_id,
+        status: data.status,
+        estimatedTime: data.estimated_time
+      });
+
+      toast({
+        title: "Success",
+        description: `Music analysis started. Job ID: ${data.job_id}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to analyze music",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleGenerateTab = async () => {
+    if (!audioFile) {
+      toast({
+        title: "Error",
+        description: "Please upload an audio file",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", audioFile);
+      formData.append("instrument", instrument);
+      formData.append("difficulty", difficulty);
+      formData.append("format", format);
+
+      const response = await fetch(getApiUrl("/music/tab"), {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error("Failed to generate tab");
+
+      const data = await response.json();
+      setJobStatus({
+        jobId: data.job_id,
+        status: data.status,
+        estimatedTime: data.estimated_time
+      });
+
+      toast({
+        title: "Success",
+        description: `Tab generation started. Job ID: ${data.job_id}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to generate tab",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleRemaster = async () => {
+    if (!audioFile) {
+      toast({
+        title: "Error",
+        description: "Please upload an audio file",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", audioFile);
+
+      const response = await fetch(getApiUrl("/audio/remaster"), {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error("Failed to remaster audio");
+
+      const data = await response.json();
+      setJobStatus({
+        jobId: data.job_id,
+        status: data.status,
+        estimatedTime: data.estimated_time
+      });
+
+      toast({
+        title: "Success",
+        description: `Audio remaster started. Job ID: ${data.job_id}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to remaster audio",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleGenerateKaraoke = async () => {
+    if (!audioFile) {
+      toast({
+        title: "Error",
+        description: "Please upload an audio file",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      // This would use stem separation + video generation
+      toast({
+        title: "Info",
+        description: "Karaoke generation feature coming soon. This will combine stem separation with video generation.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to generate karaoke",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAudioFile(file);
+      toast({
+        title: "File Selected",
+        description: `Selected: ${file.name}`,
+      });
     }
   };
 
@@ -88,6 +336,35 @@ export default function MusicLab() {
             AI-powered music generation, analysis, and audio processing. Create, analyze, and enhance audio with AI.
           </p>
         </div>
+
+        {/* Job Status Display */}
+        {jobStatus && (
+          <Card className="border-primary">
+            <CardHeader>
+              <CardTitle className="text-xl font-bold">Job Status</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-base font-semibold">Job ID:</span>
+                  <code className="text-base bg-muted px-2 py-1 rounded">{jobStatus.jobId}</code>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-base font-semibold">Status:</span>
+                  <Badge className={jobStatus.status === "completed" ? "bg-green-500" : "bg-yellow-500"}>
+                    {jobStatus.status}
+                  </Badge>
+                </div>
+                {jobStatus.estimatedTime && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-base font-semibold">Estimated Time:</span>
+                    <span className="text-base">{jobStatus.estimatedTime} seconds</span>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-7 text-base">
@@ -210,10 +487,22 @@ export default function MusicLab() {
                 <div className="space-y-2">
                   <Label className="text-lg font-semibold">Upload Audio</Label>
                   <div className="border-2 border-dashed rounded-lg p-8 text-center">
-                    <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                    <p className="text-base text-muted-foreground">
-                      Drag and drop an audio file here, or click to browse
-                    </p>
+                    <input
+                      type="file"
+                      accept="audio/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                      id="stems-audio-upload"
+                    />
+                    <label
+                      htmlFor="stems-audio-upload"
+                      className="cursor-pointer"
+                    >
+                      <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                      <p className="text-base text-muted-foreground">
+                        {audioFile ? `Selected: ${audioFile.name}` : "Drag and drop an audio file here, or click to browse"}
+                      </p>
+                    </label>
                   </div>
                 </div>
 
@@ -221,7 +510,19 @@ export default function MusicLab() {
                   <Label className="text-lg font-semibold">Stems to Extract</Label>
                   <div className="grid gap-2 md:grid-cols-2">
                     {["vocal", "drums", "bass", "other"].map((stem) => (
-                      <div key={stem} className="flex items-center gap-2 p-3 border rounded-lg">
+                      <div
+                        key={stem}
+                        className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer ${
+                          selectedStems.includes(stem) ? "bg-primary/10 border-primary" : ""
+                        }`}
+                        onClick={() => {
+                          setSelectedStems(prev =>
+                            prev.includes(stem)
+                              ? prev.filter(s => s !== stem)
+                              : [...prev, stem]
+                          );
+                        }}
+                      >
                         <Volume2 className="h-5 w-5 text-primary" />
                         <span className="text-base capitalize">{stem}</span>
                       </div>
@@ -229,9 +530,23 @@ export default function MusicLab() {
                   </div>
                 </div>
 
-                <Button size="lg" className="text-base px-6 py-3 w-full">
-                  <Waves className="mr-2 h-5 w-5" />
-                  Separate Stems
+                <Button
+                  size="lg"
+                  className="text-base px-6 py-3 w-full"
+                  onClick={handleSeparateStems}
+                  disabled={isGenerating || !audioFile || selectedStems.length === 0}
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <Waves className="mr-2 h-5 w-5" />
+                      Separate Stems
+                    </>
+                  )}
                 </Button>
               </CardContent>
             </Card>
@@ -250,10 +565,22 @@ export default function MusicLab() {
                 <div className="space-y-2">
                   <Label className="text-lg font-semibold">Upload Audio</Label>
                   <div className="border-2 border-dashed rounded-lg p-8 text-center">
-                    <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                    <p className="text-base text-muted-foreground">
-                      Drag and drop an audio file here
-                    </p>
+                    <input
+                      type="file"
+                      accept="audio/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                      id="analyze-audio-upload"
+                    />
+                    <label
+                      htmlFor="analyze-audio-upload"
+                      className="cursor-pointer"
+                    >
+                      <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                      <p className="text-base text-muted-foreground">
+                        {audioFile ? `Selected: ${audioFile.name}` : "Drag and drop an audio file here"}
+                      </p>
+                    </label>
                   </div>
                 </div>
 
@@ -269,9 +596,23 @@ export default function MusicLab() {
                   </div>
                 </div>
 
-                <Button size="lg" className="text-base px-6 py-3 w-full">
-                  <BarChart3 className="mr-2 h-5 w-5" />
-                  Analyze Music
+                <Button
+                  size="lg"
+                  className="text-base px-6 py-3 w-full"
+                  onClick={handleAnalyze}
+                  disabled={isGenerating || !audioFile}
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Analyzing...
+                    </>
+                  ) : (
+                    <>
+                      <BarChart3 className="mr-2 h-5 w-5" />
+                      Analyze Music
+                    </>
+                  )}
                 </Button>
               </CardContent>
             </Card>
@@ -290,17 +631,29 @@ export default function MusicLab() {
                 <div className="space-y-2">
                   <Label className="text-lg font-semibold">Upload Audio</Label>
                   <div className="border-2 border-dashed rounded-lg p-8 text-center">
-                    <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                    <p className="text-base text-muted-foreground">
-                      Drag and drop an audio file here
-                    </p>
+                    <input
+                      type="file"
+                      accept="audio/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                      id="tab-audio-upload"
+                    />
+                    <label
+                      htmlFor="tab-audio-upload"
+                      className="cursor-pointer"
+                    >
+                      <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                      <p className="text-base text-muted-foreground">
+                        {audioFile ? `Selected: ${audioFile.name}` : "Drag and drop an audio file here"}
+                      </p>
+                    </label>
                   </div>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-3">
                   <div className="space-y-2">
                     <Label className="text-lg font-semibold">Instrument</Label>
-                    <Select defaultValue="guitar">
+                    <Select value={instrument} onValueChange={setInstrument}>
                       <SelectTrigger className="text-base h-12">
                         <SelectValue />
                       </SelectTrigger>
@@ -313,7 +666,7 @@ export default function MusicLab() {
                   </div>
                   <div className="space-y-2">
                     <Label className="text-lg font-semibold">Difficulty</Label>
-                    <Select defaultValue="original">
+                    <Select value={difficulty} onValueChange={setDifficulty}>
                       <SelectTrigger className="text-base h-12">
                         <SelectValue />
                       </SelectTrigger>
@@ -326,7 +679,7 @@ export default function MusicLab() {
                   </div>
                   <div className="space-y-2">
                     <Label className="text-lg font-semibold">Format</Label>
-                    <Select defaultValue="text">
+                    <Select value={format} onValueChange={setFormat}>
                       <SelectTrigger className="text-base h-12">
                         <SelectValue />
                       </SelectTrigger>
@@ -339,9 +692,23 @@ export default function MusicLab() {
                   </div>
                 </div>
 
-                <Button size="lg" className="text-base px-6 py-3 w-full">
-                  <Guitar className="mr-2 h-5 w-5" />
-                  Generate Tab
+                <Button
+                  size="lg"
+                  className="text-base px-6 py-3 w-full"
+                  onClick={handleGenerateTab}
+                  disabled={isGenerating || !audioFile}
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Guitar className="mr-2 h-5 w-5" />
+                      Generate Tab
+                    </>
+                  )}
                 </Button>
               </CardContent>
             </Card>
@@ -360,10 +727,22 @@ export default function MusicLab() {
                 <div className="space-y-2">
                   <Label className="text-lg font-semibold">Upload Audio</Label>
                   <div className="border-2 border-dashed rounded-lg p-8 text-center">
-                    <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                    <p className="text-base text-muted-foreground">
-                      Drag and drop an audio file here
-                    </p>
+                    <input
+                      type="file"
+                      accept="audio/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                      id="remaster-audio-upload"
+                    />
+                    <label
+                      htmlFor="remaster-audio-upload"
+                      className="cursor-pointer"
+                    >
+                      <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                      <p className="text-base text-muted-foreground">
+                        {audioFile ? `Selected: ${audioFile.name}` : "Drag and drop an audio file here"}
+                      </p>
+                    </label>
                   </div>
                 </div>
 
@@ -384,9 +763,23 @@ export default function MusicLab() {
                   </div>
                 </div>
 
-                <Button size="lg" className="text-base px-6 py-3 w-full">
-                  <Wand2 className="mr-2 h-5 w-5" />
-                  Remaster Audio
+                <Button
+                  size="lg"
+                  className="text-base px-6 py-3 w-full"
+                  onClick={handleRemaster}
+                  disabled={isGenerating || !audioFile}
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Remastering...
+                    </>
+                  ) : (
+                    <>
+                      <Wand2 className="mr-2 h-5 w-5" />
+                      Remaster Audio
+                    </>
+                  )}
                 </Button>
               </CardContent>
             </Card>
@@ -405,10 +798,22 @@ export default function MusicLab() {
                 <div className="space-y-2">
                   <Label className="text-lg font-semibold">Upload Audio</Label>
                   <div className="border-2 border-dashed rounded-lg p-8 text-center">
-                    <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                    <p className="text-base text-muted-foreground">
-                      Drag and drop an audio file here, or click to browse
-                    </p>
+                    <input
+                      type="file"
+                      accept="audio/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                      id="karaoke-audio-upload"
+                    />
+                    <label
+                      htmlFor="karaoke-audio-upload"
+                      className="cursor-pointer"
+                    >
+                      <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                      <p className="text-base text-muted-foreground">
+                        {audioFile ? `Selected: ${audioFile.name}` : "Drag and drop an audio file here, or click to browse"}
+                      </p>
+                    </label>
                   </div>
                 </div>
 
@@ -417,13 +822,15 @@ export default function MusicLab() {
                   <Textarea
                     placeholder="Paste lyrics here... (Leave empty for auto-detection)"
                     className="text-base min-h-[150px]"
+                    value={lyrics}
+                    onChange={(e) => setLyrics(e.target.value)}
                   />
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
                     <Label className="text-lg font-semibold">Remove Vocals</Label>
-                    <Select defaultValue="yes">
+                    <Select value={removeVocals} onValueChange={setRemoveVocals}>
                       <SelectTrigger className="text-base h-12">
                         <SelectValue />
                       </SelectTrigger>
@@ -448,9 +855,23 @@ export default function MusicLab() {
                   </div>
                 </div>
 
-                <Button size="lg" className="text-base px-6 py-3 w-full">
-                  <Mic className="mr-2 h-5 w-5" />
-                  Generate Karaoke
+                <Button
+                  size="lg"
+                  className="text-base px-6 py-3 w-full"
+                  onClick={handleGenerateKaraoke}
+                  disabled={isGenerating || !audioFile}
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Mic className="mr-2 h-5 w-5" />
+                      Generate Karaoke
+                    </>
+                  )}
                 </Button>
               </CardContent>
             </Card>
