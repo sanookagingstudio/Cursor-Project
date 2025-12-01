@@ -2,6 +2,7 @@ import { MapPin, Calendar, DollarSign, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface TripCardProps {
   title: string;
@@ -30,6 +31,7 @@ export function TripCard({
   onBook,
   className,
 }: TripCardProps) {
+  const { t } = useTranslation();
   const difficultyColors = {
     Easy: "bg-secondary/10 text-secondary",
     Moderate: "bg-primary/10 text-primary",
@@ -66,7 +68,7 @@ export function TripCard({
         {(difficulty || tags) && (
           <div className="flex flex-wrap gap-2">
             {difficulty && (
-              <Badge className={difficultyColors[difficulty]}>{difficulty}</Badge>
+              <Badge className={difficultyColors[difficulty]}>{t(`tripsPage.${difficulty.toLowerCase()}`)}</Badge>
             )}
             {tags?.map((tag, index) => (
               <Badge key={index} variant="outline">{tag}</Badge>
@@ -76,7 +78,7 @@ export function TripCard({
 
         {onBook && (
           <Button className="w-full btn-elderly" onClick={onBook}>
-            View Trip Details
+            {t('common.viewTrip')}
           </Button>
         )}
       </div>

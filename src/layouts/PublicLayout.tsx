@@ -1,11 +1,14 @@
 import { ReactNode } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { NavLink } from "@/components/NavLink";
 import { Home, Calendar, MapPin, Image, User, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { FloatingJarvis } from "@/components/FloatingJarvis";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
+
+import funLogo from "@/assets/fun-logo-2025.png";
 
 interface PublicLayoutProps {
   children: ReactNode;
@@ -41,14 +44,14 @@ export function PublicLayout({ children }: PublicLayoutProps) {
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-card shadow-sm">
         <div className="container-padding flex h-20 items-center justify-between w-full">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 hover:scale-105 transition-transform">
-            <img src="/src/assets/fun-logo-2025.png" alt="FUN Logo" className="h-14 w-auto" />
-            <div className="hidden md:block">
-              <div className="font-bold text-2xl text-foreground">FunAging Studio</div>
-              <div className="text-sm text-muted-foreground">Active Aging Ecosystem</div>
-            </div>
-          </Link>
+                {/* Logo */}
+                <Link to="/" className="flex items-center space-x-3 hover:scale-105 transition-transform">
+                  <img src={funLogo} alt="FUN Logo" className="h-14 w-auto" />
+                  <div className="hidden md:block">
+                    <div className="font-bold text-2xl text-foreground">{t('brand.name')}</div>
+                    <div className="text-sm text-muted-foreground">{t('brand.tagline')}</div>
+                  </div>
+                </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-1">
@@ -56,9 +59,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               <Button key={item.path} asChild variant="ghost" size="lg" className="text-base font-medium">
                 <NavLink 
                   to={item.path}
-                  className={({ isActive }) => 
-                    isActive ? "bg-[#F36F21] text-white hover:bg-[#D85F1A] hover:text-white shadow-md" : ""
-                  }
+                  activeClassName="bg-[#F36F21] text-white hover:bg-[#D85F1A] hover:text-white shadow-md"
                 >
                   {item.label}
                 </NavLink>
@@ -90,9 +91,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   <Button key={item.path} asChild variant="ghost" size="lg" className="w-full justify-start text-lg">
                     <NavLink 
                       to={item.path}
-                      className={({ isActive }) => 
-                        isActive ? "bg-[#F36F21] text-white hover:bg-[#D85F1A] hover:text-white" : ""
-                      }
+                      activeClassName="bg-[#F36F21] text-white hover:bg-[#D85F1A] hover:text-white"
                     >
                       {item.label}
                     </NavLink>
@@ -128,13 +127,8 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             <NavLink
               key={item.path}
               to={item.path}
-              className={({ isActive }) =>
-                `flex flex-col items-center justify-center flex-1 click-target transition-colors ${
-                  isActive 
-                    ? "text-[#F36F21] font-bold" 
-                    : "text-muted-foreground hover:text-[#F36F21]"
-                }`
-              }
+              className="flex flex-col items-center justify-center flex-1 click-target transition-colors text-muted-foreground hover:text-[#F36F21]"
+              activeClassName="text-[#F36F21] font-bold"
             >
               <item.icon className="h-6 w-6 mb-1" />
               <span className="text-sm font-medium">{item.label}</span>
@@ -143,16 +137,16 @@ export function PublicLayout({ children }: PublicLayoutProps) {
         </div>
       </nav>
 
-      {/* Footer */}
-      <footer className="hidden md:block border-t bg-card mt-auto">
-        <div className="container-padding w-full py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="font-bold text-xl mb-4">FunAging Studio</div>
-              <p className="text-muted-foreground">
-                {t('footer.tagline')}
-              </p>
-            </div>
+              {/* Footer */}
+              <footer className="hidden md:block border-t bg-card mt-auto">
+                <div className="container-padding w-full py-12">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div>
+                      <div className="font-bold text-xl mb-4">{t('brand.name')}</div>
+                      <p className="text-muted-foreground">
+                        {t('footer.tagline')}
+                      </p>
+                    </div>
             <div>
               <h4 className="font-semibold mb-4">{t('footer.quickLinks')}</h4>
               <div className="space-y-2">

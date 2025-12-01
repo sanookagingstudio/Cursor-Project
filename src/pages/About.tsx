@@ -46,7 +46,7 @@ const About = () => {
         subtitle={t('about.subtitle')}
         title={t('about.title')}
         description={t('about.description')}
-        image="/placeholder.svg"
+        image="https://images.unsplash.com/photo-1516307365426-bea591f05011?q=80&w=2940&auto=format&fit=crop"
       />
 
       <section className="section-padding">

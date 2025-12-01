@@ -2,6 +2,7 @@ import { Calendar, Clock, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface ActivityCardProps {
   title: string;
@@ -28,6 +29,7 @@ export function ActivityCard({
   onBook,
   className,
 }: ActivityCardProps) {
+  const { t } = useTranslation();
   const intensityColors = {
     Low: "bg-secondary/10 text-secondary",
     Medium: "bg-primary/10 text-primary",
@@ -59,7 +61,7 @@ export function ActivityCard({
           {capacity && (
             <div className="flex items-center text-muted-foreground">
               <Users className="h-5 w-5 mr-2" />
-              Up to {capacity} people
+              {t('common.upTo', { count: capacity })} {t('common.people')}
             </div>
           )}
         </div>
@@ -67,7 +69,7 @@ export function ActivityCard({
         {(intensity || tags) && (
           <div className="flex flex-wrap gap-2">
             {intensity && (
-              <Badge className={intensityColors[intensity]}>{intensity} Intensity</Badge>
+              <Badge className={intensityColors[intensity]}>{t(`activitiesPage.${intensity.toLowerCase()}`)} {t('common.intensity')}</Badge>
             )}
             {tags?.map((tag, index) => (
               <Badge key={index} variant="outline">{tag}</Badge>
@@ -77,7 +79,7 @@ export function ActivityCard({
 
         {onBook && (
           <Button className="w-full btn-elderly" onClick={onBook}>
-            Book This Activity
+            {t('common.bookActivity')}
           </Button>
         )}
       </div>

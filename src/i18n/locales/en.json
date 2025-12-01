@@ -9,7 +9,7 @@
     "funStore": "FUN Store",
     "promotions": "Promotions",
     "membership": "Membership",
-    "about": "About",
+    "about": "About Us",
     "contact": "Contact",
     "signIn": "Sign In",
     "joinNow": "Join Now",
@@ -23,28 +23,28 @@
       "password": "Password",
       "signInButton": "Sign In",
       "noAccount": "Don't have an account?",
-      "signUp": "Sign up",
+      "signUp": "Sign Up",
       "staffPortal": "Staff?",
       "staffLink": "Sign in here",
       "adminPortal": "Admin?",
       "adminLink": "Sign in here",
       "backHome": "Back to Home",
-      "createAccount": "Create Account",
-      "joinToday": "Join FunAging Studio today",
+      "createAccount": "Create an Account",
+      "joinToday": "Join FunAging Studio Today",
       "fullName": "Full Name",
       "confirmPassword": "Confirm Password",
       "signUpButton": "Sign Up",
       "haveAccount": "Already have an account?",
-      "accountCreated": "Account created!",
+      "accountCreated": "Account Created!",
       "accountCreatedDesc": "Welcome to FunAging Studio!",
       "signUpFailed": "Sign up failed",
-      "alreadyRegistered": "This email is already registered. Please sign in instead."
+      "alreadyRegistered": "This email is already registered. Please sign in."
     },
     "staff": {
       "title": "Staff Portal",
-      "subtitle": "Employee sign in",
-      "alertTitle": "Staff Access Only",
-      "alertDescription": "This portal is for FunAging Studio staff members only.",
+      "subtitle": "Sign in for Staff",
+      "alertTitle": "Staff Only",
+      "alertDescription": "This portal is restricted to FunAging Studio staff members only.",
       "email": "Email",
       "emailPlaceholder": "staff@funaging.com",
       "password": "Password",
@@ -58,9 +58,9 @@
     },
     "admin": {
       "title": "Admin Portal",
-      "subtitle": "Administrator sign in only",
+      "subtitle": "Sign in for Administrators",
       "alertTitle": "Restricted Access",
-      "alertDescription": "This portal is restricted to administrators only. Unauthorized access attempts are logged.",
+      "alertDescription": "This portal is restricted to administrators. Unauthorized access attempts are logged.",
       "email": "Email",
       "emailPlaceholder": "admin@funaging.com",
       "password": "Password",
@@ -76,39 +76,39 @@
   "hero": {
     "subtitle": "Aging with Joy",
     "title": "Welcome to FunAging Studio",
-    "description": "A vibrant community where elderly thrive with dignity, health, and happiness. Join us for enriching activities, safe trips, and compassionate care.",
+    "description": "A vibrant community where seniors thrive with dignity, health, and happiness. Join us for enriching activities, safe trips, and compassionate care.",
     "primaryCTA": "Join Now",
     "secondaryCTA": "Learn More"
   },
   "features": {
     "title": "Why Choose FUN?",
-    "description": "We provide comprehensive care and enriching experiences for elderly in a safe, joyful environment.",
+    "description": "We provide comprehensive care and enriching experiences for seniors in a safe and joyful environment.",
     "health": {
-      "title": "Health-Focused Care",
-      "description": "Professional healthcare monitoring and personalized wellness programs designed for elderly needs."
+      "title": "Health Care",
+      "description": "Professional health monitoring and personalized wellness programs designed for senior needs."
     },
     "safety": {
-      "title": "Safe & Secure",
-      "description": "Certified caregivers and staff with comprehensive safety protocols for complete peace of mind."
+      "title": "Safety & Security",
+      "description": "Certified caregivers and staff with comprehensive safety protocols for total peace of mind."
     },
     "social": {
       "title": "Social Connection",
-      "description": "Engaging group activities and community events that promote joy and meaningful relationships."
+      "description": "Engaging group activities and community events that foster joy and meaningful relationships."
     }
   },
   "activities": {
-    "title": "Featured Activities",
-    "description": "Join our daily activities designed for wellness and fun",
+    "title": "Popular Activities",
+    "description": "Join our daily sessions designed for health and fun",
     "morning": {
       "title": "Morning Exercise",
-      "description": "Gentle stretching and tai chi for flexibility",
+      "description": "Gentle stretching and Tai Chi for flexibility",
       "time": "Mon & Wed, 8:00 AM",
       "duration": "1 hour",
       "intensity": "Low",
-      "tag": "Wellness"
+      "tag": "Health"
     },
     "art": {
-      "title": "Art & Craft",
+      "title": "Arts & Crafts",
       "description": "Creative painting and traditional crafts",
       "time": "Tue & Thu, 2:00 PM",
       "duration": "2 hours",
@@ -129,7 +129,7 @@
     "member1": {
       "name": "Mrs. Sompong",
       "role": "Member since 2023",
-      "content": "FUN has given me a new lease on life. The activities are fun, and I've made wonderful friends."
+      "content": "FUN has given me a second life. The activities are enjoyable, and I've made wonderful friends."
     },
     "member2": {
       "name": "Mr. Chai",
@@ -137,9 +137,9 @@
       "content": "The staff truly cares. I feel safe and happy here. The trips are the highlight of my month!"
     },
     "member3": {
-      "name": "Mrs. Noi",
+      "name": "Ms. Noi",
       "role": "Member since 2024",
-      "content": "Excellent service and caring staff. My family has complete peace of mind knowing I'm well cared for."
+      "content": "Excellent service and caring staff. My family is completely at ease knowing I'm well taken care of."
     }
   },
   "cta": {
@@ -149,7 +149,7 @@
     "secondaryCTA": "Contact Us"
   },
   "footer": {
-    "tagline": "Active Aging Ecosystem - A fulfilling life for the elderly",
+    "tagline": "Active Aging Ecosystem - Enriching Lives for Seniors",
     "quickLinks": "Quick Links",
     "support": "Support",
     "contact": "Contact",
@@ -169,30 +169,42 @@
     "duration": "Duration",
     "intensity": "Intensity",
     "continue": "Continue",
-    "back": "Back"
+    "back": "Back",
+    "bookActivity": "Book This Activity",
+    "viewTrip": "View Trip Details",
+    "people": "people",
+    "hour": "hour",
+    "hours": "hours",
+    "day": "Day",
+    "days": "Days",
+    "upTo": "Up to {{count}}"
+  },
+  "brand": {
+    "name": "FunAging Studio",
+    "tagline": "Active Aging Ecosystem"
   },
   "about": {
     "subtitle": "Our Story",
     "title": "About FunAging Studio",
-    "description": "Founded in 2020, FunAging Studio was created with a vision: to transform elderly care in Thailand by making it joyful, dignified, and health-focused.",
+    "description": "Founded in 2020, FunAging Studio was created with a vision: to transform senior care in Thailand, making it joyful, dignified, and health-oriented.",
     "mission": {
       "title": "Our Mission",
-      "p1": "We believe that growing older should be a celebration, not a limitation. At FUN, we empower elderly individuals to maintain their independence, health, and happiness through carefully designed activities, safe trips, and compassionate support.",
-      "p2": "Our team of certified professionals works tirelessly to create an environment where every member feels valued, engaged, and cared for. We partner with families to provide peace of mind while ensuring their loved ones thrive."
+      "p1": "We believe aging should be a celebration, not a limitation. At FUN, we empower seniors to maintain independence, health, and happiness through carefully designed activities, safe trips, and compassionate support.",
+      "p2": "Our team of certified professionals works tirelessly to create an environment where every member feels valued, engaged, and cared for. We partner with families to ensure peace of mind while their loved ones thrive."
     },
     "different": {
-      "title": "Why We're Different",
-      "point1": "<strong>Elderly-First Design:</strong> Every program, space, and activity is designed specifically for elderly needs and abilities.",
-      "point2": "<strong>Health Integration:</strong> We work with healthcare professionals to monitor and support each member's wellness journey.",
+      "title": "Why We Are Different",
+      "point1": "<strong>Senior-Centric Design:</strong> Every program, space, and event is designed specifically for senior needs and capabilities.",
+      "point2": "<strong>Health Integration:</strong> We work with medical professionals to monitor and support each member's wellness journey.",
       "point3": "<strong>Cultural Respect:</strong> Thai values of family, respect for elders, and community are at the heart of everything we do.",
       "point4": "<strong>Transparent Communication:</strong> Families receive regular updates and can participate in care planning."
     },
     "values": {
       "title": "Our Core Values",
-      "description": "The principles that guide our care and community",
+      "description": "Principles that guide our care and community",
       "care": {
         "title": "Compassionate Care",
-        "description": "Every member is treated with dignity, respect, and personalized attention from our certified caregiving team."
+        "description": "Every member is treated with dignity, respect, and personalized attention by our certified care team."
       },
       "safety": {
         "title": "Safety First",
@@ -204,20 +216,20 @@
       },
       "excellence": {
         "title": "Professional Excellence",
-        "description": "Our staff holds certifications in elderly care, first aid, and specialized training in dementia and mobility support."
+        "description": "Our staff holds certifications in elderly care, first aid, and specialized training for dementia and mobility support."
       },
       "joy": {
-        "title": "Joy & Dignity",
+        "title": "Joy and Dignity",
         "description": "We believe aging should be celebrated. Our programs promote happiness, independence, and quality of life."
       },
       "wellness": {
         "title": "Holistic Wellness",
-        "description": "Physical, mental, and emotional health programs designed specifically for elderly needs and abilities."
+        "description": "Physical, mental, and emotional wellness programs designed specifically for senior needs and capabilities."
       }
     },
     "certification": {
       "title": "Certifications & Trust",
-      "description": "FunAging Studio is licensed by the Thai Ministry of Public Health and certified by the Elderly Care Association of Thailand. Our staff undergoes continuous training in safety, health monitoring, and compassionate care practices.",
+      "description": "FunAging Studio is licensed by the Ministry of Public Health of Thailand and certified by the Thai Elderly Care Association. Our staff undergoes continuous training in safety, health monitoring, and compassionate care practices.",
       "stat1": "10+",
       "stat1Label": "Certified Caregivers",
       "stat2": "500+",
@@ -228,7 +240,7 @@
   },
   "activitiesPage": {
     "title": "Daily Activities",
-    "description": "Join our engaging activities designed for wellness, fun, and social connection",
+    "description": "Join our engaging sessions designed for health, fun, and social connection",
     "searchPlaceholder": "Search activities...",
     "filterIntensity": "Intensity",
     "filterCategory": "Category",
@@ -242,12 +254,12 @@
     "activities": {
       "morningExercise": {
         "title": "Morning Exercise",
-        "description": "Gentle stretching and tai chi for flexibility and balance",
+        "description": "Gentle stretching and Tai Chi for flexibility and balance",
         "time": "Every Monday & Wednesday, 8:00 AM"
       },
       "artCraft": {
-        "title": "Art & Craft",
-        "description": "Creative sessions with painting, pottery, and traditional crafts",
+        "title": "Arts & Crafts",
+        "description": "Creative painting, pottery, and traditional craft sessions",
         "time": "Tuesday & Thursday, 2:00 PM"
       },
       "brainGames": {
@@ -257,7 +269,7 @@
       },
       "music": {
         "title": "Music Therapy",
-        "description": "Sing along and enjoy therapeutic music sessions",
+        "description": "Sing-along and enjoy music therapy sessions",
         "time": "Wednesday, 3:00 PM"
       },
       "garden": {
@@ -267,14 +279,14 @@
       },
       "cooking": {
         "title": "Cooking Class",
-        "description": "Prepare healthy, delicious Thai dishes together",
+        "description": "Cook healthy, delicious Thai meals together",
         "time": "Thursday, 10:00 AM"
       }
     }
   },
   "tripsPage": {
     "title": "Upcoming Trips",
-    "description": "Discover beautiful destinations with safe, guided tours designed for elderly travelers",
+    "description": "Discover beautiful destinations with safe, guided tours designed for senior travelers",
     "searchPlaceholder": "Search trips...",
     "filterDifficulty": "Difficulty",
     "filterDuration": "Duration",
@@ -283,7 +295,8 @@
     "challenging": "Challenging",
     "halfDay": "Half Day",
     "fullDay": "Full Day",
-    "multiDay": "Multiple Days",
+    "multiDay": "Multi-Day",
+    "evening": "Evening",
     "trips": {
       "ayutthaya": {
         "title": "Ayutthaya Heritage",
@@ -293,7 +306,7 @@
       },
       "floatingMarket": {
         "title": "Floating Market Adventure",
-        "description": "Experience traditional Thai markets on the water with local delicacies",
+        "description": "Experience traditional Thai markets on water with local delicacies",
         "location": "Damnoen Saduak, Thailand",
         "date": "March 22, 2025"
       },
@@ -316,8 +329,8 @@
         "date": "March 28, 2025"
       },
       "river": {
-        "title": "River Cruise Experience",
-        "description": "Evening cruise on the Chao Phraya River with dinner",
+        "title": "River Cruise",
+        "description": "Evening cruise along the Chao Phraya River with dinner",
         "location": "Bangkok, Thailand",
         "date": "April 8, 2025"
       }
@@ -326,7 +339,7 @@
   "contactPage": {
     "title": "Contact Us",
     "description": "Get in touch with our team. We're here to help!",
-    "formTitle": "Send Us a Message",
+    "formTitle": "Send us a message",
     "name": "Full Name",
     "namePlaceholder": "Your name",
     "email": "Email",
@@ -347,7 +360,7 @@
     "lineTitle": "LINE Official",
     "lineDetail": "@funaging",
     "addLineButton": "Add LINE",
-    "hoursTitle": "Opening Hours",
+    "hoursTitle": "Business Hours",
     "hoursDetail": "Monday - Friday: 7:00 AM - 6:00 PM\nSaturday: 8:00 AM - 5:00 PM\nSunday: Closed"
   },
   "galleryPage": {
@@ -369,7 +382,7 @@
   },
   "pricingPage": {
     "title": "Pricing & Plans",
-    "description": "Choose the plan that fits your lifestyle and needs",
+    "description": "Choose a plan that fits your lifestyle and needs",
     "walkIn": {
       "name": "Walk-In",
       "description": "Perfect for trying out our services",
@@ -392,20 +405,20 @@
       "feature3": "Priority trip booking",
       "feature4": "Personalized care plan",
       "feature5": "Family portal access",
-      "feature6": "Health assessments",
+      "feature6": "Health assessment",
       "feature7": "Transportation assistance",
       "feature8": "24/7 emergency support",
       "cta": "Join Now"
     },
     "perTrip": {
-      "name": "Per-Trip",
+      "name": "Per Trip",
       "description": "Join our exciting excursions",
       "price": "฿900+",
       "period": "trip",
       "feature1": "Safe guided tours",
       "feature2": "Transportation included",
       "feature3": "Professional care staff",
-      "feature4": "Flexible scheduling",
+      "feature4": "Flexible schedule",
       "feature5": "Group activities",
       "cta": "View Trips"
     },
@@ -418,13 +431,13 @@
     "healthAssessmentPeriod": "Per session",
     "familyPackage": "Family Package",
     "familyPackagePeriod": "Contact us",
-    "ctaTitle": "Have Questions About Pricing?",
+    "ctaTitle": "Have questions about pricing?",
     "ctaDescription": "Contact us to discuss custom packages or learn more about our services",
     "ctaButton": "Contact Us"
   },
   "membershipPlans": {
     "title": "FUN Studio Membership Plans",
-    "description": "Choose the plan that fits your lifestyle - from free to premium",
+    "description": "Choose a plan that suits your lifestyle - from free to premium",
     "tabs": {
       "premium": "Premium",
       "digital": "Digital",
@@ -435,20 +448,20 @@
       "save20": "Save 20%",
       "bestValue": "Best Value"
     },
-    "selectPlan": "Select Plan",
+    "selectPlan": "Select This Plan",
     "buyCredits": "Buy Credits",
     "premium": {
-      "sectionTitle": "Premium Members - Physical Center & Travel Services",
-      "sectionDesc": "Full benefits package - activities, trips, and all premium services",
+      "sectionTitle": "Premium Members - Hub & Travel Services",
+      "sectionDesc": "Full package benefits - Activities, trips, and all premium services",
       "weekly": {
         "name": "Weekly",
         "period": "week",
-        "description": "Try our services - Perfect for beginners"
+        "description": "Try the services - Perfect for newcomers"
       },
       "monthly": {
         "name": "Monthly",
         "period": "month",
-        "description": "Most popular package - Best value"
+        "description": "Most Popular Package - Best Value"
       },
       "halfYearly": {
         "name": "6 Months",
@@ -458,67 +471,67 @@
       "yearly": {
         "name": "Yearly",
         "period": "year",
-        "description": "Best deal! Save 30% + Extra benefits"
+        "description": "Best Deal! Save 30% + Extra Perks"
       },
       "features": {
-        "activities": "Daily activities access",
+        "activities": "Access to daily activities",
         "healthCheck": "Monthly health check",
-        "mediaCenter": "Media Center access",
-        "tripDiscount15": "15% trip discount",
-        "tripDiscount20": "20% trip discount",
-        "tripDiscount25": "25% trip discount",
-        "tripDiscount30": "30% trip discount",
-        "storeDiscount10": "10% FUN Store discount",
-        "storeDiscount15": "15% FUN Store discount",
-        "storeDiscount20": "20% FUN Store discount",
-        "storeDiscount25": "25% FUN Store discount",
-        "unlimitedActivities": "Unlimited activities",
-        "freeHealthCheck": "Free health check monthly",
-        "fullMediaCenter": "Full Media Center access",
-        "priorityBooking": "Priority booking",
-        "allMonthly": "All monthly benefits",
-        "save20": "Save 20% vs monthly",
-        "save30": "Save 30% vs monthly",
-        "exclusiveEvents": "Members-only events",
-        "vipEvents": "VIP special events",
-        "personalCoach": "Personal advisor",
-        "dedicatedCoach": "Dedicated advisor",
-        "birthdayGift": "Special birthday gift"
+        "mediaCenter": "Media center access",
+        "tripDiscount15": "15% Trip Discount",
+        "tripDiscount20": "20% Trip Discount",
+        "tripDiscount25": "25% Trip Discount",
+        "tripDiscount30": "30% Trip Discount",
+        "storeDiscount10": "10% FUN Store Discount",
+        "storeDiscount15": "15% FUN Store Discount",
+        "storeDiscount20": "20% FUN Store Discount",
+        "storeDiscount25": "25% FUN Store Discount",
+        "unlimitedActivities": "Unlimited Activities",
+        "freeHealthCheck": "Free Monthly Health Check",
+        "fullMediaCenter": "Full Media Center Access",
+        "priorityBooking": "Priority Booking",
+        "allMonthly": "All Monthly Benefits",
+        "save20": "Save 20% vs Monthly",
+        "save30": "Save 30% vs Monthly",
+        "exclusiveEvents": "Member-only Events",
+        "vipEvents": "Special VIP Events",
+        "personalCoach": "Personal Coach",
+        "dedicatedCoach": "Dedicated Coach",
+        "birthdayGift": "Special Birthday Gift"
       }
     },
     "digital": {
       "sectionTitle": "Digital Members - Online Services Only",
-      "sectionDesc": "Buy credits for AI, Templates and Digital Content",
+      "sectionDesc": "Buy credits for AI, templates, and digital content",
       "credits": "credits",
       "bonus": "bonus",
       "starter": {
         "name": "Starter",
-        "description": "Perfect for first-time users"
+        "description": "Perfect for new users"
       },
       "popular": {
         "name": "Popular",
-        "description": "Most popular package - Best value"
+        "description": "Most Popular Package - Best Value"
       },
       "pro": {
         "name": "Pro",
-        "description": "For heavy users - Maximum savings"
+        "description": "For power users - Maximize savings"
       },
       "features": {
-        "aiImages10": "10 AI images",
-        "aiImages22": "22 AI images",
-        "aiImages60": "60 AI images",
-        "basicTemplates": "Basic templates",
-        "premiumTemplates": "Premium templates",
-        "allTemplates": "All templates",
-        "premiumArticles": "Premium articles",
-        "digitalDownloads": "Digital downloads",
-        "unlimitedDownloads": "Unlimited downloads",
-        "prioritySupport": "Priority support",
-        "validityMonth": "Valid for 1 month",
-        "validityMonths3": "Valid for 3 months",
-        "validityMonths6": "Valid for 6 months"
+        "aiImages10": "10 AI Images",
+        "aiImages22": "22 AI Images",
+        "aiImages60": "60 AI Images",
+        "basicTemplates": "Basic Templates",
+        "premiumTemplates": "Premium Templates",
+        "allTemplates": "All Templates",
+        "premiumArticles": "Premium Articles",
+        "digitalDownloads": "Digital Downloads",
+        "unlimitedDownloads": "Unlimited Downloads",
+        "prioritySupport": "Priority Support",
+        "validityMonth": "Valid for 1 Month",
+        "validityMonths3": "Valid for 3 Months",
+        "validityMonths6": "Valid for 6 Months"
       },
-      "usageTitle": "Credit Usage Rate",
+      "usageTitle": "Credit Usage Rates",
       "usage": {
         "aiImage": "AI Image Generation",
         "premiumTemplate": "Premium Template",
@@ -530,16 +543,16 @@
       "title": "Free Member",
       "description": "Browse and explore FUN Studio for free",
       "price": "Free",
-      "period": "No cost",
-      "joinFree": "Join Free Now",
+      "period": "No Cost",
+      "joinFree": "Join for Free",
       "upgradeNote": "Upgrade to Premium anytime",
       "features": {
         "browseContent": "Browse all content",
         "viewPublicMedia": "View public media",
         "readBasicArticles": "Read basic articles",
-        "viewEvents": "View activities and trips",
-        "viewPricing": "View pricing and packages",
-        "communityForum": "Join Community Forum"
+        "viewEvents": "View events & trips",
+        "viewPricing": "View pricing & packages",
+        "communityForum": "Join community forum"
       }
     },
     "cta": {
@@ -561,7 +574,7 @@
   },
   "healthCheckPage": {
     "title": "Health Check",
-    "description": "Help us understand your health needs so we can provide the best care",
+    "description": "Help us understand your health needs so we can provide better care",
     "basicInfo": "Basic Information",
     "age": "Age",
     "agePlaceholder": "Your age",
@@ -574,10 +587,10 @@
     "mobility": "Mobility Level",
     "mobilitySelect": "Select mobility level",
     "independent": "Fully Independent",
-    "assistance": "Needs Some Assistance",
-    "wheelchair": "Uses Wheelchair",
-    "walker": "Uses Walker",
-    "conditions": "Existing Health Conditions",
+    "assistance": "Need some assistance",
+    "wheelchair": "Wheelchair user",
+    "walker": "Walker user",
+    "conditions": "Existing Conditions",
     "diabetes": "Diabetes",
     "heartDisease": "Heart Disease",
     "highBloodPressure": "High Blood Pressure",
@@ -585,7 +598,7 @@
     "visionImpairment": "Vision Impairment",
     "hearingImpairment": "Hearing Impairment",
     "medications": "Current Medications",
-    "medicationsPlaceholder": "Please list any medications you're currently taking",
+    "medicationsPlaceholder": "Please list medications you are taking",
     "activityPreferences": "Activity Preferences",
     "interestedIn": "Interested In",
     "exerciseFitness": "Exercise & Fitness",
@@ -595,20 +608,20 @@
     "dayTrips": "Day Trips",
     "socialEvents": "Social Events",
     "additionalNotes": "Additional Notes",
-    "notesPlaceholder": "Any other information you'd like us to know",
+    "notesPlaceholder": "Any other information you want to tell us",
     "submitButton": "Submit Health Check",
     "saveDraft": "Save Draft"
   },
   "customTripPage": {
     "title": "Custom Trip Builder - Create Your Dream Trip",
-    "description": "AI calculates routes, distances, prices and plans automatically",
+    "description": "AI automatically calculates routes, distances, prices, and plans",
     "step1": "Date & People",
     "step2": "Participant Details",
     "step3": "Select Destinations",
-    "step4": "Accommodation & Meals",
+    "step4": "Accom & Food",
     "step5": "Special Requirements",
-    "startDate": "Departure Date",
-    "endDate": "Return Date",
+    "startDate": "Start Date",
+    "endDate": "End Date",
     "departTime": "Departure Time",
     "numPeople": "Number of People",
     "numPeoplePlaceholder": "Enter number",
@@ -617,50 +630,50 @@
     "age": "Age",
     "agePlaceholder": "Years",
     "gender": "Gender",
-    "genderSelect": "Select gender",
+    "genderSelect": "Select Gender",
     "male": "Male",
     "female": "Female",
     "other": "Other",
     "mobility": "Mobility",
     "mobilitySelect": "Select",
-    "mobilityGood": "Can walk well",
-    "mobilityModerate": "Can walk moderately",
-    "mobilityLimited": "Needs assistance",
-    "mobilityWheelchair": "Uses wheelchair",
+    "mobilityGood": "Walks Well",
+    "mobilityModerate": "Walks Moderately",
+    "mobilityLimited": "Needs Assistance",
+    "mobilityWheelchair": "Wheelchair User",
     "addParticipant": "+ Add Participant",
-    "selectDestinations": "Select Travel Destinations",
+    "selectDestinations": "Select Trip Destinations",
     "destination": "Destination",
     "searchDestination": "Search destination...",
     "aiRouteNote": "AI will plan routes without backtracking",
     "addDestination": "+ Add Destination",
-    "aiDistanceNote": "AI system will pull real distances from Google Maps and plan the most optimal route",
-    "accommodationFood": "Accommodation & Meals",
+    "aiDistanceNote": "AI System will pull real distances from Google Maps and plan the optimal route",
+    "accommodationFood": "Accommodation & Food",
     "rooms": "Number of Rooms",
     "roomsPlaceholder": "Number of rooms",
     "roomType": "Room Type",
-    "roomTypeSelect": "Select type",
+    "roomTypeSelect": "Select Type",
     "standard": "Standard",
     "deluxe": "Deluxe",
     "suite": "Suite",
     "meals": "Number of Meals",
-    "mealsSelect": "Select number of meals",
-    "noMeals": "No meals included",
+    "mealsSelect": "Select Number",
+    "noMeals": "No Meals",
     "oneMeal": "1 meal/day",
     "twoMeals": "2 meals/day",
     "threeMeals": "3 meals/day",
     "vehicle": "Vehicle Type",
-    "vehicleSelect": "Select vehicle type",
+    "vehicleSelect": "Select Type",
     "van": "Van",
     "minibus": "Minibus",
     "bus": "Bus",
     "specialRequirements": "Limitations & Special Requirements",
     "dietary": "Dietary Restrictions",
-    "dietaryPlaceholder": "e.g., No pork, Vegetarian, Seafood allergy...",
-    "medical": "Health Information & Drug Allergies",
-    "medicalPlaceholder": "e.g., Diabetes, High blood pressure, Drug allergies...",
+    "dietaryPlaceholder": "e.g. No Pork, Vegetarian, Seafood Allergy...",
+    "medical": "Health Info & Drug Allergies",
+    "medicalPlaceholder": "e.g. Diabetes, High Blood Pressure, Drug Allergies...",
     "otherRequirements": "Other Requirements",
-    "otherPlaceholder": "Additional information you'd like to inform us...",
-    "estimatedPrice": "Estimated Price (AI Calculated)",
+    "otherPlaceholder": "Additional information...",
+    "estimatedPrice": "Estimated Price (AI Calculation)",
     "distance": "Distance",
     "travelTime": "Travel Time",
     "cost": "Cost",
@@ -671,32 +684,32 @@
   },
   "joinNowPage": {
     "title": "Join FUN Studio",
-    "description": "Join the Active Aging family with intelligent OCR + QR Code system",
+    "description": "Join the Active Aging family with smart OCR + QR Code system",
     "chooseMethod": "Choose Registration Method",
     "methodOcr": "Scan ID Card (Recommended)",
-    "methodOcrDesc": "Fast, convenient, no form filling + Special benefits",
-    "methodManual": "Manual Entry",
-    "methodManualDesc": "Enter information manually, suitable for those without ID card",
-    "benefits": "Benefits of ID Card Scanning",
-    "benefit1": "Auto-fill registration, no extensive form filling",
-    "benefit2": "Get 10% discount on your first trip",
-    "benefit3": "Earn 2x loyalty points",
-    "benefit4": "Access to VIP member exclusive promotions",
-    "benefit5": "Digital membership card with QR Code",
-    "benefit6": "Complete trip and activity history",
+    "methodOcrDesc": "Fast, convenient, no typing + Special perks",
+    "methodManual": "Manual Input",
+    "methodManualDesc": "Type information manually, suitable for those without ID card",
+    "benefits": "Benefits of Scanning ID Card",
+    "benefit1": "Auto-fill registration, no tedious typing",
+    "benefit2": "Get 10% Discount on your first trip",
+    "benefit3": "Earn 2x Loyalty Points",
+    "benefit4": "Access exclusive promotions for VIP members",
+    "benefit5": "Digital Membership Card with QR Code",
+    "benefit6": "Complete history of trips and activities",
     "viewPromotions": "View Special Promotions",
     "privacyTitle": "Data Security",
-    "privacyDesc": "Your data is encrypted and stored securely according to Thailand's PDPA standards. We will never disclose your personal information to third parties. Used only within our system to provide you the best service.",
+    "privacyDesc": "Your data is encrypted and stored securely according to Thailand's PDPA standards. We never share your personal information with third parties. Used only within our system to provide you with the best service.",
     "uploadIdCard": "Upload ID Card (Auto OCR)",
     "uploadArea": "Click to upload or drag and drop file here",
-    "ocrNote": "OCR system will automatically read data from ID card",
+    "ocrNote": "OCR System will automatically read data from ID Card",
     "selectFile": "Select ID Card File",
-    "readSuccess": "Data read successfully!",
-    "verifyNote": "System has extracted data from your ID card. Please verify accuracy.",
+    "readSuccess": "Data Read Successfully!",
+    "verifyNote": "System extracted data from your ID card. Please verify accuracy.",
     "firstName": "First Name",
     "lastName": "Last Name",
     "idNumber": "ID Card Number",
-    "birthDate": "Date of Birth",
+    "birthDate": "Birth Date",
     "address": "Address",
     "phone": "Phone Number",
     "phonePlaceholder": "08X-XXX-XXXX",
@@ -714,8 +727,8 @@
     "monthly": "Monthly",
     "limited": "Limited",
     "promo1": {
-      "title": "10% Off First Trip",
-      "description": "For new members who register with ID card, get 10% discount on your first trip"
+      "title": "10% Discount on First Trip",
+      "description": "For new members registering with ID Card, get 10% off your first trip immediately"
     },
     "promo2": {
       "title": "2x Loyalty Points",
@@ -723,44 +736,15 @@
     },
     "promo3": {
       "title": "Free Monthly Health Check",
-      "description": "Monthly package members and above get free Health Check every month, worth ฿800"
+      "description": "Monthly package members and above receive free health check every month, worth ฿800"
     },
     "promo4": {
-      "title": "20% Off FUN Store",
-      "description": "VIP members get special 20% discount on all items at FUN Store"
+      "title": "20% Discount at FUN Store",
+      "description": "VIP members get special 20% discount on all products in FUN Store"
     },
     "promo5": {
       "title": "Exclusive Member Trips",
-      "description": "Access special limited trips available only for VIP members"
-    },
-    "promo6": {
-      "title": "Birthday Gift",
-      "description": "Receive special gift and discount during your birthday month"
-    },
-    "joinNow": "Join Now",
-    "learnMore": "Learn More"
-  },
-  "admin": {
-    "limited": "Limited",
-    "promo1": {
-      "title": "10% Off First Trip",
-      "description": "For new members who register with ID card, get 10% discount on your first trip"
-    },
-    "promo2": {
-      "title": "2x Loyalty Points",
-      "description": "VIP members earn 2x points on all activities and trips. Collect to redeem rewards"
-    },
-    "promo3": {
-      "title": "Free Monthly Health Check",
-      "description": "Monthly package members and above get free Health Check every month, worth ฿800"
-    },
-    "promo4": {
-      "title": "20% Off FUN Store",
-      "description": "VIP members get special 20% discount on all items at FUN Store"
-    },
-    "promo5": {
-      "title": "Exclusive Member Trips",
-      "description": "Access special limited trips available only for VIP members"
+      "description": "Access to special limited trips available only for VIP members"
     },
     "promo6": {
       "title": "Birthday Gift",
@@ -789,7 +773,7 @@
       "imageEditor": "Image Editor",
       "videoEditor": "Video Editor",
       "musicLab": "Music Lab",
-      "inputBrain": "Input Brain",
+      "inputBrain": "Data Input",
       "dashboardPublishing": "Dashboard & Publishing",
       "systemManagement": "⚙️ System Management",
       "coreFoundation": "Core Foundation",
@@ -815,7 +799,7 @@
     },
     "staff": {
       "title": "Staff Management",
-      "description": "Manage your team members, certifications, and schedules",
+      "description": "Manage team members, certifications, and schedules",
       "addStaff": "Add Staff",
       "exportList": "Export List",
       "name": "Staff Member",
@@ -825,7 +809,7 @@
       "status": "Status"
     },
     "finance": {
-      "title": "Finance Overview",
+      "title": "Financial Overview",
       "description": "Track revenue, expenses, and financial performance",
       "exportReport": "Export Report",
       "printReport": "Print Report",
@@ -847,7 +831,7 @@
     },
     "mediaCenter": {
       "title": "Media Center",
-      "description": "Manage your content calendar and media library",
+      "description": "Manage content calendar and media library",
       "createContent": "Create Content",
       "uploadMedia": "Upload Media",
       "contentCalendar": "Content Calendar",
