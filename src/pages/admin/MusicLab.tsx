@@ -81,17 +81,17 @@ export default function MusicLab() {
 
       if (!response.ok) throw new Error("Failed to generate music");
 
-      const data = await response.json();
+      const responseData = await response.json();
       
       setJobStatus({
-        jobId: data.job_id,
-        status: data.status,
-        estimatedTime: data.estimated_time
+        jobId: responseData.job_id,
+        status: responseData.status,
+        estimatedTime: responseData.estimated_time
       });
       
       toast({
         title: "Success",
-        description: `Music generation started. Job ID: ${data.job_id}`,
+        description: `Music generation started. Job ID: ${responseData.job_id}`,
       });
     } catch (error) {
       toast({
@@ -128,16 +128,16 @@ export default function MusicLab() {
 
       if (!response.ok) throw new Error("Failed to separate stems");
 
-      const data = await response.json();
+      const responseData = await response.json();
       setJobStatus({
-        jobId: data.job_id,
-        status: data.status,
-        estimatedTime: data.estimated_time
+        jobId: responseData.job_id,
+        status: responseData.status,
+        estimatedTime: responseData.estimated_time
       });
 
       toast({
         title: "Success",
-        description: `Stem separation started. Job ID: ${data.job_id}`,
+        description: `Stem separation started. Job ID: ${responseData.job_id}`,
       });
     } catch (error) {
       toast({
@@ -172,16 +172,16 @@ export default function MusicLab() {
 
       if (!response.ok) throw new Error("Failed to analyze music");
 
-      const data = await response.json();
+      const responseData = await response.json();
       setJobStatus({
-        jobId: data.job_id,
-        status: data.status,
-        estimatedTime: data.estimated_time
+        jobId: responseData.job_id,
+        status: responseData.status,
+        estimatedTime: responseData.estimated_time
       });
 
       toast({
         title: "Success",
-        description: `Music analysis started. Job ID: ${data.job_id}`,
+        description: `Music analysis started. Job ID: ${responseData.job_id}`,
       });
     } catch (error) {
       toast({
@@ -219,16 +219,16 @@ export default function MusicLab() {
 
       if (!response.ok) throw new Error("Failed to generate tab");
 
-      const data = await response.json();
+      const responseData = await response.json();
       setJobStatus({
-        jobId: data.job_id,
-        status: data.status,
-        estimatedTime: data.estimated_time
+        jobId: responseData.job_id,
+        status: responseData.status,
+        estimatedTime: responseData.estimated_time
       });
 
       toast({
         title: "Success",
-        description: `Tab generation started. Job ID: ${data.job_id}`,
+        description: `Tab generation started. Job ID: ${responseData.job_id}`,
       });
     } catch (error) {
       toast({
@@ -263,16 +263,16 @@ export default function MusicLab() {
 
       if (!response.ok) throw new Error("Failed to remaster audio");
 
-      const data = await response.json();
+      const responseData = await response.json();
       setJobStatus({
-        jobId: data.job_id,
-        status: data.status,
-        estimatedTime: data.estimated_time
+        jobId: responseData.job_id,
+        status: responseData.status,
+        estimatedTime: responseData.estimated_time
       });
 
       toast({
         title: "Success",
-        description: `Audio remaster started. Job ID: ${data.job_id}`,
+        description: `Audio remaster started. Job ID: ${responseData.job_id}`,
       });
     } catch (error) {
       toast({
