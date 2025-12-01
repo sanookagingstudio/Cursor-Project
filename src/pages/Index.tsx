@@ -7,6 +7,7 @@ import { Heart, Shield, Users } from "lucide-react";
 import { ActivityCard } from "@/components/cards/ActivityCard";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@/contexts/ThemeContext";
+import { EditableText } from "@/components/editor/Editable";
 
 const Index = () => {
   const { t } = useTranslation();
@@ -79,13 +80,18 @@ const Index = () => {
         title={t('features.title')}
         description={t('features.description')}
         features={features}
+        idPrefix="home.features"
       />
 
       <section className="section-padding">
         <div className="container-padding w-full">
           <div className="text-center mb-12 space-y-4">
-            <h2 className="text-5xl md:text-6xl font-bold">{t('activities.title')}</h2>
-            <p className="text-2xl text-muted-foreground">{t('activities.description')}</p>
+            <h2 className="text-5xl md:text-6xl font-bold">
+                <EditableText id="home.activities.title" text={t('activities.title')} />
+            </h2>
+            <p className="text-2xl text-muted-foreground">
+                <EditableText id="home.activities.description" text={t('activities.description')} />
+            </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <ActivityCard
@@ -97,6 +103,7 @@ const Index = () => {
               intensity="Low"
               tags={[t('activities.morning.tag')]}
               image="https://images.unsplash.com/photo-1571019614248-3a83737b12d5?q=80&w=2940&auto=format&fit=crop"
+              idPrefix="home.activity.morning"
             />
             <ActivityCard
               title={t('activities.art.title')}
@@ -107,6 +114,7 @@ const Index = () => {
               intensity="Low"
               tags={[t('activities.art.tag')]}
               image="https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=2940&auto=format&fit=crop"
+              idPrefix="home.activity.art"
             />
             <ActivityCard
               title={t('activities.brain.title')}
@@ -117,6 +125,7 @@ const Index = () => {
               intensity="Medium"
               tags={[t('activities.brain.tag')]}
               image="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=2940&auto=format&fit=crop"
+              idPrefix="home.activity.brain"
             />
           </div>
         </div>
@@ -125,6 +134,7 @@ const Index = () => {
       <TestimonialSection
         title={t('testimonials.title')}
         testimonials={testimonials}
+        idPrefix="home.testimonials"
       />
 
       <CTASection
@@ -132,6 +142,7 @@ const Index = () => {
         description={t('cta.description')}
         primaryCTA={{ label: t('cta.primaryCTA'), href: "/join-now" }}
         secondaryCTA={{ label: t('cta.secondaryCTA'), href: "/contact" }}
+        idPrefix="home.cta"
       />
     </PublicLayout>
   );

@@ -1,6 +1,7 @@
 import { Star } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { EditableText } from "@/components/editor/Editable";
 
 interface Testimonial {
   name: string;
@@ -15,6 +16,7 @@ interface TestimonialSectionProps {
   description?: string;
   testimonials: Testimonial[];
   className?: string;
+  idPrefix?: string;
 }
 
 export function TestimonialSection({
@@ -22,17 +24,21 @@ export function TestimonialSection({
   description,
   testimonials,
   className,
+  idPrefix = "testimonials"
 }: TestimonialSectionProps) {
   return (
     <section className={cn("section-padding bg-muted/30", className)}>
       <div className="container-padding w-full">
         {(title || description) && (
           <div className="text-center mb-16 space-y-4">
-            {title && <h2 className="text-5xl md:text-6xl font-bold">{title}</h2>}
+            {title && <EditableText id={`${idPrefix}.title`} as="h2" className="text-5xl md:text-6xl font-bold" text={title} />}
             {description && (
-              <p className="text-2xl text-muted-foreground max-w-3xl mx-auto">
-                {description}
-              </p>
+              <EditableText 
+                id={`${idPrefix}.description`} 
+                as="p" 
+                className="text-2xl text-muted-foreground max-w-3xl mx-auto" 
+                text={description} 
+              />
             )}
           </div>
         )}
@@ -55,9 +61,9 @@ export function TestimonialSection({
                   />
                 ))}
               </div>
-              <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                "{testimonial.content}"
-              </p>
+              <div className="text-lg text-muted-foreground mb-6 leading-relaxed">
+                "<EditableText id={`${idPrefix}.item.${index}.content`} as="span" text={testimonial.content} />"
+              </div>
               <div className="flex items-center gap-3">
                 <Avatar>
                   <AvatarFallback className="bg-primary/10 text-primary">
@@ -65,8 +71,12 @@ export function TestimonialSection({
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="font-semibold text-lg">{testimonial.name}</div>
-                  <div className="text-base text-muted-foreground">{testimonial.role}</div>
+                  <div className="font-semibold text-lg">
+                    <EditableText id={`${idPrefix}.item.${index}.name`} as="span" text={testimonial.name} />
+                  </div>
+                  <div className="text-base text-muted-foreground">
+                    <EditableText id={`${idPrefix}.item.${index}.role`} as="span" text={testimonial.role} />
+                  </div>
                 </div>
               </div>
             </div>

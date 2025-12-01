@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { EditableText } from "@/components/editor/Editable";
 
 interface Feature {
   icon: LucideIcon;
@@ -14,6 +15,7 @@ interface FeatureGridProps {
   features: Feature[];
   columns?: 2 | 3 | 4;
   className?: string;
+  idPrefix?: string;
 }
 
 export function FeatureGrid({
@@ -22,6 +24,7 @@ export function FeatureGrid({
   features,
   columns = 3,
   className,
+  idPrefix = "features"
 }: FeatureGridProps) {
   const gridCols = {
     2: "md:grid-cols-2",
@@ -34,11 +37,14 @@ export function FeatureGrid({
       <div className="container-padding w-full">
         {(title || description) && (
           <div className="text-center mb-16 space-y-4">
-            {title && <h2 className="text-5xl md:text-6xl font-bold">{title}</h2>}
+            {title && <EditableText id={`${idPrefix}.title`} as="h2" className="text-5xl md:text-6xl font-bold" text={title} />}
             {description && (
-              <p className="text-2xl text-muted-foreground max-w-3xl mx-auto">
-                {description}
-              </p>
+              <EditableText 
+                id={`${idPrefix}.description`} 
+                as="p" 
+                className="text-2xl text-muted-foreground max-w-3xl mx-auto" 
+                text={description} 
+              />
             )}
           </div>
         )}
@@ -51,10 +57,18 @@ export function FeatureGrid({
               <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                 <feature.icon className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-2xl font-semibold mb-3">{feature.title}</h3>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                {feature.description}
-              </p>
+              <EditableText 
+                id={`${idPrefix}.item.${index}.title`} 
+                as="h3" 
+                className="text-2xl font-semibold mb-3" 
+                text={feature.title} 
+              />
+              <EditableText 
+                id={`${idPrefix}.item.${index}.description`} 
+                as="p" 
+                className="text-lg text-muted-foreground leading-relaxed" 
+                text={feature.description} 
+              />
             </div>
           ))}
         </div>

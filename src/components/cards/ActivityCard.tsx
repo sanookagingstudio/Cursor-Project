@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { EditableText, EditableImage } from "@/components/editor/Editable";
 
 interface ActivityCardProps {
   title: string;
@@ -15,6 +16,7 @@ interface ActivityCardProps {
   tags?: string[];
   onBook?: () => void;
   className?: string;
+  idPrefix?: string;
 }
 
 export function ActivityCard({
@@ -28,6 +30,7 @@ export function ActivityCard({
   tags,
   onBook,
   className,
+  idPrefix = "activity"
 }: ActivityCardProps) {
   const { t } = useTranslation();
   const intensityColors = {
@@ -40,23 +43,38 @@ export function ActivityCard({
     <div className={cn("rounded-xl bg-card border card-shadow hover:card-shadow-hover transition-all overflow-hidden", className)}>
       {image && (
         <div className="aspect-video overflow-hidden">
-          <img src={image} alt={title} className="w-full h-full object-cover hover:scale-105 transition-transform" />
+          <EditableImage 
+            id={`${idPrefix}.image`}
+            src={image} 
+            alt={title} 
+            className="w-full h-full object-cover hover:scale-105 transition-transform" 
+          />
         </div>
       )}
       <div className="p-6 space-y-4">
         <div>
-          <h3 className="text-2xl font-semibold mb-2">{title}</h3>
-          <p className="text-lg text-muted-foreground">{description}</p>
+          <EditableText 
+            id={`${idPrefix}.title`} 
+            as="h3" 
+            className="text-2xl font-semibold mb-2" 
+            text={title} 
+          />
+          <EditableText 
+            id={`${idPrefix}.description`} 
+            as="p" 
+            className="text-lg text-muted-foreground" 
+            text={description} 
+          />
         </div>
         
         <div className="space-y-2 text-base">
           <div className="flex items-center text-muted-foreground">
             <Calendar className="h-5 w-5 mr-2" />
-            {time}
+            <EditableText id={`${idPrefix}.time`} as="span" text={time} />
           </div>
           <div className="flex items-center text-muted-foreground">
             <Clock className="h-5 w-5 mr-2" />
-            {duration}
+            <EditableText id={`${idPrefix}.duration`} as="span" text={duration} />
           </div>
           {capacity && (
             <div className="flex items-center text-muted-foreground">
