@@ -8,22 +8,92 @@ export default function MediaLibrary() {
   const { t } = useTranslation();
 
   const videos = [
-    { title: "Morning Stretches for Seniors", description: "Gentle exercises to start your day", type: "video" as const, duration: "15 min", category: "Exercise" },
-    { title: "Cooking Healthy Thai Food", description: "Learn to make nutritious Thai dishes", type: "video" as const, duration: "20 min", category: "Lifestyle" },
-    { title: "Memory Games & Brain Training", description: "Fun activities for cognitive health", type: "video" as const, duration: "12 min", category: "Wellness" },
-    { title: "Traditional Dance Class", description: "Learn Thai dance movements", type: "video" as const, duration: "25 min", category: "Activity" },
+    { 
+      title: "Morning Stretches for Seniors", 
+      description: "Gentle exercises to start your day", 
+      type: "video" as const, 
+      duration: "15 min", 
+      category: "Exercise",
+      thumbnail: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=800&auto=format&fit=crop"
+    },
+    { 
+      title: "Cooking Healthy Thai Food", 
+      description: "Learn to make nutritious Thai dishes", 
+      type: "video" as const, 
+      duration: "20 min", 
+      category: "Lifestyle",
+      thumbnail: "https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=800&auto=format&fit=crop"
+    },
+    { 
+      title: "Memory Games & Brain Training", 
+      description: "Fun activities for cognitive health", 
+      type: "video" as const, 
+      duration: "12 min", 
+      category: "Wellness",
+      thumbnail: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=800&auto=format&fit=crop"
+    },
+    { 
+      title: "Traditional Dance Class", 
+      description: "Learn Thai dance movements", 
+      type: "video" as const, 
+      duration: "25 min", 
+      category: "Activity",
+      thumbnail: "https://images.unsplash.com/photo-1515238152791-8216bfdf89a7?q=80&w=800&auto=format&fit=crop"
+    },
   ];
 
   const podcasts = [
-    { title: "Stories from Ayutthaya", description: "Historical tales from ancient Thailand", type: "podcast" as const, duration: "30 min", category: "Culture" },
-    { title: "Health Tips for Active Aging", description: "Expert advice for healthy living", type: "podcast" as const, duration: "25 min", category: "Health" },
-    { title: "Thai Wisdom & Life Lessons", description: "Traditional wisdom for modern life", type: "podcast" as const, duration: "35 min", category: "Wisdom" },
+    { 
+      title: "Stories from Ayutthaya", 
+      description: "Historical tales from ancient Thailand", 
+      type: "podcast" as const, 
+      duration: "30 min", 
+      category: "Culture",
+      thumbnail: "https://images.unsplash.com/photo-1528181304800-259b08848526?q=80&w=800&auto=format&fit=crop"
+    },
+    { 
+      title: "Health Tips for Active Aging", 
+      description: "Expert advice for healthy living", 
+      type: "podcast" as const, 
+      duration: "25 min", 
+      category: "Health",
+      thumbnail: "https://images.unsplash.com/photo-1478737270239-2f02b77ac618?q=80&w=800&auto=format&fit=crop"
+    },
+    { 
+      title: "Thai Wisdom & Life Lessons", 
+      description: "Traditional wisdom for modern life", 
+      type: "podcast" as const, 
+      duration: "35 min", 
+      category: "Wisdom",
+      thumbnail: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=800&auto=format&fit=crop"
+    },
   ];
 
   const articles = [
-    { title: "5 Benefits of Daily Walking", description: "Why walking is the best exercise", type: "article" as const, duration: "5 min read", category: "Health" },
-    { title: "Understanding Thai Herbal Medicine", description: "Ancient healing practices", type: "article" as const, duration: "8 min read", category: "Wellness" },
-    { title: "Social Connection for Healthy Aging", description: "The importance of community", type: "article" as const, duration: "6 min read", category: "Lifestyle" },
+    { 
+      title: "5 Benefits of Daily Walking", 
+      description: "Why walking is the best exercise", 
+      type: "article" as const, 
+      duration: "5 min read", 
+      category: "Health",
+      thumbnail: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?q=80&w=800&auto=format&fit=crop"
+    },
+    { 
+      title: "Understanding Thai Herbal Medicine", 
+      description: "Ancient healing practices", 
+      type: "article" as const, 
+      duration: "8 min read", 
+      category: "Wellness",
+      thumbnail: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800&auto=format&fit=crop"
+    },
+    { 
+      title: "Social Connection for Healthy Aging", 
+      description: "The importance of community", 
+      type: "article" as const, 
+      duration: "6 min read", 
+      category: "Lifestyle",
+      thumbnail: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=800&auto=format&fit=crop"
+    },
   ];
 
   return (
