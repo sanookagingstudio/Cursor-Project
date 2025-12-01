@@ -35,13 +35,30 @@ export function LanguageSwitcher() {
     return current || languages[0];
   };
 
+  const getFlagUrl = (code: string) => {
+    const map: Record<string, string> = {
+      th: 'th',
+      en: 'gb',
+      zh: 'cn',
+      ja: 'jp',
+      ko: 'kr',
+      ru: 'ru',
+      fr: 'fr'
+    };
+    return `https://flagcdn.com/w40/${map[code] || 'th'}.png`;
+  };
+
   const currentLang = getCurrentLanguage();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="relative gap-2 hover:scale-105 transition-transform min-w-[60px]">
-          <span className="text-2xl leading-none">{currentLang.flag}</span>
+          <img 
+            src={getFlagUrl(currentLang.code)} 
+            alt={currentLang.name} 
+            className="w-6 h-4 object-cover rounded-sm shadow-sm" 
+          />
           <span className="font-medium text-sm">{currentLang.shortName}</span>
         </Button>
       </DropdownMenuTrigger>
@@ -52,7 +69,11 @@ export function LanguageSwitcher() {
             onClick={() => changeLanguage(lang.code)}
             className={i18n.language === lang.code ? "bg-accent" : ""}
           >
-            <span className="mr-3 text-xl">{lang.flag}</span>
+            <img 
+              src={getFlagUrl(lang.code)} 
+              alt={lang.name} 
+              className="w-6 h-4 mr-3 object-cover rounded-sm shadow-sm" 
+            />
             <span className="font-medium flex-1">{lang.name}</span>
             <span className="text-xs text-muted-foreground ml-2">{lang.shortName}</span>
           </DropdownMenuItem>
@@ -64,7 +85,11 @@ export function LanguageSwitcher() {
             onClick={() => changeLanguage(lang.code)}
             className={i18n.language === lang.code ? "bg-accent" : ""}
           >
-            <span className="mr-3 text-xl">{lang.flag}</span>
+            <img 
+              src={getFlagUrl(lang.code)} 
+              alt={lang.name} 
+              className="w-6 h-4 mr-3 object-cover rounded-sm shadow-sm" 
+            />
             <span className="font-medium flex-1">{lang.name}</span>
             <span className="text-xs text-muted-foreground ml-2">{lang.shortName}</span>
           </DropdownMenuItem>

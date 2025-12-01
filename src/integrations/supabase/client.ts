@@ -2,15 +2,44 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || (import.meta.env.VITE_SUPABASE_PROJECT_ID ? `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co` : '');
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+// Helper function to clean and extract env value
+const getEnvValue = (value: string | undefined): string => {
+  if (!value) return '';
+  // Remove quotes if present (both single and double)
+  return String(value).replace(/^["']|["']$/g, '').trim();
+};
 
-// Check if environment variables are set
-if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+// Get Supabase URL - support multiple ways of configuration
+const SUPABASE_URL_RAW = import.meta.env.VITE_SUPABASE_URL || '';
+const SUPABASE_PROJECT_ID_RAW = import.meta.env.VITE_SUPABASE_PROJECT_ID || '';
+const SUPABASE_URL = 
+  getEnvValue(SUPABASE_URL_RAW) || 
+  (getEnvValue(SUPABASE_PROJECT_ID_RAW) 
+    ? `https://${getEnvValue(SUPABASE_PROJECT_ID_RAW)}.supabase.co` 
+    : '');
+
+// Get Supabase key - support multiple variable names
+const SUPABASE_PUBLISHABLE_KEY = 
+  getEnvValue(import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY) || 
+  getEnvValue(import.meta.env.VITE_SUPABASE_ANON_KEY) || 
+  '';
+
+// Check if environment variables are set (must be non-empty after cleaning)
+const isConfigured = !!(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY && SUPABASE_URL !== '' && SUPABASE_PUBLISHABLE_KEY !== '');
+
+if (!isConfigured) {
   console.error('❌ Supabase configuration missing!');
+  console.error('Current values:');
+  console.error('  VITE_SUPABASE_URL:', SUPABASE_URL_RAW || '[NOT SET]');
+  console.error('  VITE_SUPABASE_PROJECT_ID:', SUPABASE_PROJECT_ID_RAW || '[NOT SET]');
+  console.error('  VITE_SUPABASE_PUBLISHABLE_KEY:', import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ? '[SET]' : '[NOT SET]');
+  console.error('  VITE_SUPABASE_ANON_KEY:', import.meta.env.VITE_SUPABASE_ANON_KEY ? '[SET]' : '[NOT SET]');
+  console.error('  Final SUPABASE_URL:', SUPABASE_URL || '[EMPTY]');
+  console.error('  Final SUPABASE_PUBLISHABLE_KEY:', SUPABASE_PUBLISHABLE_KEY ? '[SET]' : '[EMPTY]');
+  console.error('');
   console.error('Please set the following environment variables:');
-  console.error('  - VITE_SUPABASE_URL');
-  console.error('  - VITE_SUPABASE_PUBLISHABLE_KEY');
+  console.error('  Option 1: VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY');
+  console.error('  Option 2: VITE_SUPABASE_PROJECT_ID and VITE_SUPABASE_PUBLISHABLE_KEY');
   console.error('');
   console.error('Create a .env file in the root directory with:');
   console.error('  VITE_SUPABASE_URL=your_supabase_url');
@@ -19,7 +48,7 @@ if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
 
 // Create a dummy client if env vars are missing to prevent crashes
 const createSupabaseClient = () => {
-  if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+  if (!isConfigured) {
     // Return a mock client that will fail gracefully
     return createClient<Database>(
       'https://placeholder.supabase.co',
@@ -50,5 +79,5 @@ export const supabase = createSupabaseClient();
 
 // Export a function to check if Supabase is properly configured
 export const isSupabaseConfigured = () => {
-  return !!(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY);
+  return isConfigured;
 };

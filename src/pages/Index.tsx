@@ -56,7 +56,7 @@ const Index = () => {
         description={t('hero.description')}
         primaryCTA={{ label: t('hero.primaryCTA'), href: "/join-now" }}
         secondaryCTA={{ label: t('hero.secondaryCTA'), href: "/about" }}
-        image="/placeholder.svg"
+        image="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2940&auto=format&fit=crop"
       />
 
       <FeatureGrid
@@ -80,7 +80,7 @@ const Index = () => {
               capacity={20}
               intensity="Low"
               tags={[t('activities.morning.tag')]}
-              image="/placeholder.svg"
+              image="https://images.unsplash.com/photo-1571019614248-3a83737b12d5?q=80&w=2940&auto=format&fit=crop"
             />
             <ActivityCard
               title={t('activities.art.title')}
@@ -90,7 +90,7 @@ const Index = () => {
               capacity={15}
               intensity="Low"
               tags={[t('activities.art.tag')]}
-              image="/placeholder.svg"
+              image="https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=2940&auto=format&fit=crop"
             />
             <ActivityCard
               title={t('activities.brain.title')}
@@ -100,7 +100,7 @@ const Index = () => {
               capacity={25}
               intensity="Medium"
               tags={[t('activities.brain.tag')]}
-              image="/placeholder.svg"
+              image="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=2940&auto=format&fit=crop"
             />
           </div>
         </div>

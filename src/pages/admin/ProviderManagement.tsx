@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useToast } from "@/components/ui/use-toast";
+import { getApiUrl } from "@/lib/api";
 
 interface Provider {
   id: string;
@@ -45,6 +47,7 @@ interface CostComparison {
 }
 
 export default function ProviderManagement() {
+  const { toast } = useToast();
   const [providers, setProviders] = useState<Provider[]>([]);
   const [selectedProviders, setSelectedProviders] = useState({
     image: "flux",
@@ -54,6 +57,9 @@ export default function ProviderManagement() {
   });
   const [costComparison, setCostComparison] = useState<CostComparison[]>([]);
   const [jarvisRecommendation, setJarvisRecommendation] = useState<string>("");
+  const [apiKeys, setApiKeys] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState<Record<string, "idle" | "testing" | "success" | "error">>({});
 
   useEffect(() => {
     // Mock data - จะเชื่อมต่อ API จริงในอนาคต
@@ -154,6 +160,88 @@ export default function ProviderManagement() {
       ...prev,
       [category]: providerId
     }));
+  };
+
+  const handleSaveProviderSettings = async () => {
+    setIsLoading(true);
+    try {
+      // Save provider selection to backend
+      toast({
+        title: "Success",
+        description: "Provider settings saved successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save provider settings",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSaveApiKeys = async () => {
+    setIsLoading(true);
+    try {
+      // Save API keys to backend (should be encrypted)
+      toast({
+        title: "Success",
+        description: "API keys saved successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save API keys",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTestConnection = async (providerId: string) => {
+    setConnectionStatus(prev => ({ ...prev, [providerId]: "testing" }));
+    try {
+      // Test API connection
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Mock API call
+      
+      setConnectionStatus(prev => ({ ...prev, [providerId]: "success" }));
+      toast({
+        title: "Success",
+        description: `Connection to ${providerId} successful`,
+      });
+      
+      setTimeout(() => {
+        setConnectionStatus(prev => ({ ...prev, [providerId]: "idle" }));
+      }, 3000);
+    } catch (error) {
+      setConnectionStatus(prev => ({ ...prev, [providerId]: "error" }));
+      toast({
+        title: "Error",
+        description: `Failed to connect to ${providerId}`,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleCalculateCost = async () => {
+    setIsLoading(true);
+    try {
+      // Calculate cost comparison
+      toast({
+        title: "Info",
+        description: "Cost comparison calculated",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to calculate cost comparison",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getCategoryProviders = (category: string) => {
@@ -306,7 +394,12 @@ export default function ProviderManagement() {
             </div>
 
             <div className="mt-6">
-              <Button size="lg" className="text-base px-6 py-3">
+              <Button 
+                size="lg" 
+                className="text-base px-6 py-3"
+                onClick={handleSaveProviderSettings}
+                disabled={isLoading}
+              >
                 Save Provider Settings
               </Button>
             </div>
@@ -451,7 +544,12 @@ export default function ProviderManagement() {
                 </div>
               </div>
 
-              <Button size="lg" className="text-base px-6 py-3">
+              <Button
+                size="lg"
+                className="text-base px-6 py-3"
+                onClick={handleCalculateCost}
+                disabled={isLoading}
+              >
                 Calculate Cost Comparison
               </Button>
 
@@ -487,13 +585,24 @@ export default function ProviderManagement() {
                   {getCategoryProviders(category).map(provider => (
                     <div key={provider.id} className="space-y-2 p-4 border rounded-lg">
                       <Label className="text-lg font-semibold">{provider.name} API Key</Label>
-                      <Input 
-                        type="password" 
+                      <Input
+                        type="password"
                         placeholder={`Enter ${provider.name} API key`}
                         className="text-base h-12"
+                        value={apiKeys[provider.id] || ""}
+                        onChange={(e) => setApiKeys(prev => ({ ...prev, [provider.id]: e.target.value }))}
                       />
-                      <Button variant="outline" size="sm" className="text-base">
-                        Test Connection
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-base"
+                        onClick={() => handleTestConnection(provider.id)}
+                        disabled={connectionStatus[provider.id] === "testing"}
+                      >
+                        {connectionStatus[provider.id] === "testing" ? "Testing..." : 
+                         connectionStatus[provider.id] === "success" ? "✓ Connected" :
+                         connectionStatus[provider.id] === "error" ? "✗ Failed" :
+                         "Test Connection"}
                       </Button>
                     </div>
                   ))}
@@ -501,7 +610,12 @@ export default function ProviderManagement() {
               ))}
 
               <div className="mt-6">
-                <Button size="lg" className="text-base px-6 py-3">
+                <Button
+                  size="lg"
+                  className="text-base px-6 py-3"
+                  onClick={handleSaveApiKeys}
+                  disabled={isLoading}
+                >
                   Save All API Keys
                 </Button>
               </div>

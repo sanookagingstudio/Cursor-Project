@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Home, Calendar, MapPin, Image, User, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -53,11 +53,16 @@ export function PublicLayout({ children }: PublicLayoutProps) {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => (
-              <Link key={item.path} to={item.path}>
-                <Button variant="ghost" size="lg" className="text-base">
+              <Button key={item.path} asChild variant="ghost" size="lg" className="text-base font-medium">
+                <NavLink 
+                  to={item.path}
+                  className={({ isActive }) => 
+                    isActive ? "bg-[#F36F21] text-white hover:bg-[#D85F1A] hover:text-white shadow-md" : ""
+                  }
+                >
                   {item.label}
-                </Button>
-              </Link>
+                </NavLink>
+              </Button>
             ))}
           </nav>
 
@@ -82,11 +87,16 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             <SheetContent side="right" className="w-80">
               <nav className="flex flex-col space-y-4 mt-8">
                 {navItems.map((item) => (
-                  <Link key={item.path} to={item.path}>
-                    <Button variant="ghost" size="lg" className="w-full justify-start text-lg">
+                  <Button key={item.path} asChild variant="ghost" size="lg" className="w-full justify-start text-lg">
+                    <NavLink 
+                      to={item.path}
+                      className={({ isActive }) => 
+                        isActive ? "bg-[#F36F21] text-white hover:bg-[#D85F1A] hover:text-white" : ""
+                      }
+                    >
                       {item.label}
-                    </Button>
-                  </Link>
+                    </NavLink>
+                  </Button>
                 ))}
                 <div className="pt-4 border-t space-y-2">
                   <Link to="/sign-in">
@@ -115,14 +125,20 @@ export function PublicLayout({ children }: PublicLayoutProps) {
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-card border-t shadow-large">
         <div className="flex items-center justify-around h-20">
           {mobileNavItems.map((item) => (
-            <Link
+            <NavLink
               key={item.path}
               to={item.path}
-              className="flex flex-col items-center justify-center flex-1 click-target"
+              className={({ isActive }) =>
+                `flex flex-col items-center justify-center flex-1 click-target transition-colors ${
+                  isActive 
+                    ? "text-[#F36F21] font-bold" 
+                    : "text-muted-foreground hover:text-[#F36F21]"
+                }`
+              }
             >
               <item.icon className="h-6 w-6 mb-1" />
               <span className="text-sm font-medium">{item.label}</span>
-            </Link>
+            </NavLink>
           ))}
         </div>
       </nav>
