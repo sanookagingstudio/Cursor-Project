@@ -18,7 +18,8 @@ import {
   RotateCcw,
   Smartphone,
   Tablet,
-  Monitor
+  Monitor,
+  Sparkles
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HeroSection } from "@/components/sections/HeroSection";
@@ -33,6 +34,33 @@ interface EditableElement {
   settingsKey?: string; // Path to setting in ThemeSettings
 }
 
+const THEME_PRESETS = [
+  {
+    name: "Sanook Default",
+    colors: { primary: "#F36F21", secondary: "#D2142C", background: "#FAF5EF" },
+    font: "Noto Serif Thai",
+    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2940&auto=format&fit=crop"
+  },
+  {
+    name: "Ocean Breeze",
+    colors: { primary: "#0EA5E9", secondary: "#0284C7", background: "#F0F9FF" },
+    font: "Kanit",
+    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2940&auto=format&fit=crop"
+  },
+  {
+    name: "Nature Green",
+    colors: { primary: "#16A34A", secondary: "#15803D", background: "#F0FDF4" },
+    font: "Sarabun",
+    image: "https://images.unsplash.com/photo-1585320806297-11795182c6d7?q=80&w=2940&auto=format&fit=crop"
+  },
+  {
+    name: "Elegant Dark",
+    colors: { primary: "#D4AF37", secondary: "#1A1A1A", background: "#121212" },
+    font: "Prompt",
+    image: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=2940&auto=format&fit=crop"
+  }
+];
+
 export default function VisualThemeEditor() {
   const { settings, updateSettings, saveTheme, resetTheme } = useTheme();
   const { toast } = useToast();
@@ -42,6 +70,7 @@ export default function VisualThemeEditor() {
   const [hoveredElement, setHoveredElement] = useState<string | null>(null);
   const [previewMode, setPreviewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
 
   // Get current values from settings, with fallbacks to translations
   const editableElements: EditableElement[] = [
@@ -50,14 +79,16 @@ export default function VisualThemeEditor() {
       type: 'text', 
       label: 'Hero Title', 
       value: settings?.content?.['hero.title'] ?? t('hero.title') ?? 'Welcome to FunAging Studio',
-      settingsKey: 'hero.title'
+      settingsKey: 'hero.title',
+      previewSelector: '.hero-title'
     },
     { 
       id: 'hero-subtitle', 
       type: 'text', 
       label: 'Hero Subtitle', 
       value: settings?.content?.['hero.subtitle'] ?? t('hero.subtitle') ?? 'Active Aging Ecosystem',
-      settingsKey: 'hero.subtitle'
+      settingsKey: 'hero.subtitle',
+      previewSelector: '.hero-subtitle'
     },
     { 
       id: 'primary-color', 
@@ -78,7 +109,8 @@ export default function VisualThemeEditor() {
       type: 'image', 
       label: 'Hero Banner Image', 
       value: settings?.banner?.imageUrl || '/placeholder.svg',
-      settingsKey: 'banner.imageUrl'
+      settingsKey: 'banner.imageUrl',
+      previewSelector: 'img[data-theme-key="banner.imageUrl"]'
     },
     { 
       id: 'font-family', 
@@ -92,6 +124,44 @@ export default function VisualThemeEditor() {
   const handleElementClick = (elementId: string) => {
     if (!editMode) return;
     setSelectedElement(elementId);
+  };
+
+  // Interactive click handler for the preview area
+  const handlePreviewClick = (e: React.MouseEvent) => {
+    if (!editMode) return;
+    
+    const target = e.target as HTMLElement;
+    
+    // Check if clicked element maps to a setting
+    const themeKey = target.getAttribute('data-theme-key') || 
+                     target.closest('[data-theme-key]')?.getAttribute('data-theme-key');
+    
+    if (themeKey) {
+        e.stopPropagation(); // Prevent bubbling
+        const element = editableElements.find(el => el.settingsKey === themeKey);
+        if (element) {
+            setSelectedElement(element.id);
+            toast({
+                title: `Editing ${element.label}`,
+                description: "Use the panel on the right to modify.",
+                duration: 1500
+            });
+        }
+    }
+  };
+
+  const handlePreviewMouseMove = (e: React.MouseEvent) => {
+    if (!editMode) return;
+    const target = e.target as HTMLElement;
+    const themeKey = target.getAttribute('data-theme-key') || 
+                     target.closest('[data-theme-key]')?.getAttribute('data-theme-key');
+                     
+    if (themeKey) {
+        const element = editableElements.find(el => el.settingsKey === themeKey);
+        if (element) setHoveredElement(element.id);
+    } else {
+        setHoveredElement(null);
+    }
   };
 
   const handleValueChange = (elementId: string, newValue: any) => {
@@ -123,6 +193,20 @@ export default function VisualThemeEditor() {
             typography: { ...settings!.typography, fontFamily: newValue }
         });
     }
+  };
+
+  const applyPreset = (preset: typeof THEME_PRESETS[0]) => {
+      if (confirm(`Apply "${preset.name}" theme? This will overwrite current settings.`)) {
+          updateSettings({
+              colors: { ...settings!.colors, ...preset.colors },
+              typography: { ...settings!.typography, fontFamily: preset.font },
+              banner: { ...settings!.banner, imageUrl: preset.image, enabled: true }
+          });
+          toast({
+              title: "Theme Applied",
+              description: `${preset.name} theme active.`,
+          });
+      }
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -181,7 +265,7 @@ export default function VisualThemeEditor() {
           <div>
             <h1 className="text-4xl font-bold mb-1">Visual Theme Editor</h1>
             <p className="text-muted-foreground">
-              Customize your site's look and feel in real-time.
+              Interactive WYSIWYG Editor - Click any element to edit
             </p>
           </div>
           <div className="flex gap-2">
@@ -191,7 +275,7 @@ export default function VisualThemeEditor() {
               className="gap-2"
             >
               <MousePointer2 className="h-4 w-4" />
-              {editMode ? "Editing ON" : "Preview Mode"}
+              {editMode ? "Edit Mode ON" : "Preview Mode"}
             </Button>
             <Button onClick={handleReset} variant="outline" className="gap-2">
               <RotateCcw className="h-4 w-4" />
@@ -208,67 +292,77 @@ export default function VisualThemeEditor() {
           {/* Preview Area */}
           <div className="lg:col-span-3 flex flex-col h-full">
             <Card className="flex-1 flex flex-col overflow-hidden border-2 border-muted/20 shadow-sm">
-              <div className="p-2 border-b bg-muted/10 flex items-center justify-center gap-4">
-                  <Button
-                    variant={previewMode === 'desktop' ? 'default' : 'ghost'}
-                    size="icon"
-                    onClick={() => setPreviewMode('desktop')}
-                    title="Desktop View"
-                  >
-                    <Monitor className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant={previewMode === 'tablet' ? 'default' : 'ghost'}
-                    size="icon"
-                    onClick={() => setPreviewMode('tablet')}
-                    title="Tablet View"
-                  >
-                    <Tablet className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant={previewMode === 'mobile' ? 'default' : 'ghost'}
-                    size="icon"
-                    onClick={() => setPreviewMode('mobile')}
-                    title="Mobile View"
-                  >
-                    <Smartphone className="h-4 w-4" />
-                  </Button>
+              <div className="p-2 border-b bg-muted/10 flex items-center justify-between px-4">
+                  <div className="flex items-center gap-2">
+                      <Button
+                        variant={previewMode === 'desktop' ? 'default' : 'ghost'}
+                        size="icon"
+                        onClick={() => setPreviewMode('desktop')}
+                        title="Desktop View"
+                      >
+                        <Monitor className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant={previewMode === 'tablet' ? 'default' : 'ghost'}
+                        size="icon"
+                        onClick={() => setPreviewMode('tablet')}
+                        title="Tablet View"
+                      >
+                        <Tablet className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant={previewMode === 'mobile' ? 'default' : 'ghost'}
+                        size="icon"
+                        onClick={() => setPreviewMode('mobile')}
+                        title="Mobile View"
+                      >
+                        <Smartphone className="h-4 w-4" />
+                      </Button>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                      {editMode ? "👆 Click elements to edit" : "👀 Preview Mode"}
+                  </div>
               </div>
+              
               <div className="flex-1 bg-muted/5 overflow-auto p-4 relative">
                 <div 
+                  ref={previewRef}
                   className={cn(
-                    "bg-background shadow-2xl transition-all mx-auto relative min-h-full",
+                    "bg-background shadow-2xl transition-all mx-auto relative min-h-full border rounded-lg overflow-hidden origin-top",
                     previewMode === 'desktop' && "w-full",
                     previewMode === 'tablet' && "w-[768px]",
                     previewMode === 'mobile' && "w-[375px]"
                   )}
+                  onClick={handlePreviewClick}
+                  onMouseMove={handlePreviewMouseMove}
                 >
                   {/* Real-time Preview Component */}
                   <HeroSection
                     subtitle={editableElements.find(e => e.id === 'hero-subtitle')?.value}
                     title={editableElements.find(e => e.id === 'hero-title')?.value}
-                    description={t('hero.description')} // Note: Description editing not exposed yet for simplicity
+                    description={t('hero.description')}
                     primaryCTA={{ label: t('hero.primaryCTA'), href: "/join-now" }}
                     secondaryCTA={{ label: t('hero.secondaryCTA'), href: "/about" }}
                     image={editableElements.find(e => e.id === 'banner-image')?.value}
                   />
                   
-                  {/* Interactive Overlay */}
-                  {editMode && (
-                    <div className="absolute inset-0 pointer-events-none">
-                       {/* Title Overlay */}
-                       <div 
-                         className="absolute top-[20%] left-[10%] w-[40%] h-[100px] cursor-pointer pointer-events-auto hover:border-2 hover:border-primary hover:bg-primary/5 transition-colors rounded-lg"
-                         onClick={() => handleElementClick('hero-title')}
-                         title="Click to edit Title"
-                       />
-                       {/* Image Overlay */}
-                       <div 
-                         className="absolute top-0 right-0 w-[50%] h-full cursor-pointer pointer-events-auto hover:border-2 hover:border-primary hover:bg-primary/5 transition-colors"
-                         onClick={() => handleElementClick('banner-image')}
-                         title="Click to edit Image"
-                       />
-                    </div>
+                  {/* Hover Highlighting Overlay */}
+                  {editMode && hoveredElement && (
+                      (() => {
+                          // Find element in preview to get coordinates (this is a simplified simulation)
+                          // In a full iframe solution we would use getBoundingClientRect
+                          const el = editableElements.find(e => e.id === hoveredElement);
+                          if (el?.type === 'text' && el.id === 'hero-title') {
+                             return <div className="absolute top-[25%] left-[5%] w-[45%] h-[150px] border-2 border-primary border-dashed pointer-events-none animate-pulse rounded-md" />;
+                          }
+                          if (el?.type === 'text' && el.id === 'hero-subtitle') {
+                             return <div className="absolute top-[15%] left-[5%] w-[20%] h-[40px] border-2 border-primary border-dashed pointer-events-none animate-pulse rounded-md" />;
+                          }
+                          if (el?.type === 'image') {
+                             return <div className="absolute top-0 right-0 w-[50%] h-full border-2 border-primary border-dashed pointer-events-none animate-pulse rounded-md" />;
+                          }
+                          return null;
+                      })()
                   )}
                 </div>
               </div>
@@ -277,11 +371,33 @@ export default function VisualThemeEditor() {
 
           {/* Sidebar */}
           <div className="flex flex-col gap-4 h-full overflow-hidden">
+             {/* Theme Presets Panel */}
+             <Card className="shrink-0">
+                 <CardContent className="p-4">
+                     <h3 className="font-semibold mb-3 flex items-center gap-2 text-sm">
+                         <Sparkles className="h-4 w-4 text-yellow-500" />
+                         Instant Themes (Canva Style)
+                     </h3>
+                     <div className="grid grid-cols-2 gap-2">
+                         {THEME_PRESETS.map(preset => (
+                             <button
+                                 key={preset.name}
+                                 onClick={() => applyPreset(preset)}
+                                 className="flex flex-col items-center p-2 rounded border hover:border-primary hover:bg-primary/5 transition-colors text-xs text-center"
+                             >
+                                 <div className="w-full h-8 rounded mb-1" style={{ background: `linear-gradient(135deg, ${preset.colors.primary}, ${preset.colors.secondary})` }} />
+                                 {preset.name}
+                             </button>
+                         ))}
+                     </div>
+                 </CardContent>
+             </Card>
+
             <Card className="flex-1 flex flex-col overflow-hidden">
               <CardContent className="p-4 flex-1 overflow-y-auto">
                 <h3 className="font-semibold mb-4 flex items-center gap-2 text-lg">
                   <Palette className="h-5 w-5" />
-                  Theme Controls
+                  Manual Controls
                 </h3>
                 
                 <div className="space-y-3">
