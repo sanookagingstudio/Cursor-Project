@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { AdminLayout } from "@/layouts/AdminLayout";
 import { SectionHeader } from "@/components/ui/section-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useTranslation } from "react-i18next";
 import { 
   Heart, 
   Activity, 
@@ -30,16 +31,93 @@ import {
   PlusCircle,
   Thermometer,
   Weight,
-  FileEdit
+  FileEdit,
+  Droplet,
+  Stethoscope,
+  AlertCircle,
+  Calendar
 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 // Mock Data for Real-time Monitoring
 const INITIAL_ACTIVE_CLIENTS = [
-  { id: 1, name: "Somchai Jai-dee", age: 72, status: "Active", location: "Garden Zone A", hr: 78, spo2: 98, bp: "120/80", battery: 85, source: "device", lastUpdate: new Date().toISOString(), image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=200&auto=format&fit=crop" },
-  { id: 2, name: "Malee Rak-thai", age: 68, status: "Resting", location: "Lobby", hr: 65, spo2: 97, bp: "118/76", battery: 42, source: "device", lastUpdate: new Date().toISOString(), image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop" },
-  { id: 3, name: "John Smith", age: 75, status: "Walking", location: "Park Trail", hr: 92, spo2: 96, bp: "130/85", battery: 60, source: "device", lastUpdate: new Date().toISOString(), image: "https://images.unsplash.com/photo-1566616213894-2dcdcf0dfda6?q=80&w=200&auto=format&fit=crop" },
-  { id: 4, name: "Arunee Sooksai", age: 80, status: "SOS", location: "Restroom 2", hr: 110, spo2: 94, bp: "145/90", battery: 15, alert: true, source: "device", lastUpdate: new Date().toISOString(), image: "https://images.unsplash.com/photo-1551185253-59878c711002?q=80&w=200&auto=format&fit=crop" },
+  { 
+    id: 1, 
+    name: "Somchai Jai-dee", 
+    age: 72, 
+    status: "Active", 
+    location: "Garden Zone A", 
+    hr: 78, 
+    spo2: 98, 
+    bp: "120/80", 
+    glucose: 110,
+    battery: 85, 
+    source: "device", 
+    lastUpdate: new Date().toISOString(), 
+    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=200&auto=format&fit=crop",
+    admissionDate: "2023-01-15",
+    conditions: ["Hypertension"],
+    allergies: ["Penicillin"],
+    psychHistory: "None"
+  },
+  { 
+    id: 2, 
+    name: "Malee Rak-thai", 
+    age: 68, 
+    status: "Resting", 
+    location: "Lobby", 
+    hr: 65, 
+    spo2: 97, 
+    bp: "118/76", 
+    glucose: 95,
+    battery: 42, 
+    source: "device", 
+    lastUpdate: new Date().toISOString(), 
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop",
+    admissionDate: "2023-03-10",
+    conditions: ["Diabetes Type 2"],
+    allergies: ["None"],
+    psychHistory: "Mild Anxiety"
+  },
+  { 
+    id: 3, 
+    name: "John Smith", 
+    age: 75, 
+    status: "Walking", 
+    location: "Park Trail", 
+    hr: 92, 
+    spo2: 96, 
+    bp: "130/85", 
+    glucose: 105,
+    battery: 60, 
+    source: "device", 
+    lastUpdate: new Date().toISOString(), 
+    image: "https://images.unsplash.com/photo-1566616213894-2dcdcf0dfda6?q=80&w=200&auto=format&fit=crop",
+    admissionDate: "2022-11-05",
+    conditions: ["Arthritis"],
+    allergies: ["Peanuts", "Sulfa"],
+    psychHistory: "None"
+  },
+  { 
+    id: 4, 
+    name: "Arunee Sooksai", 
+    age: 80, 
+    status: "SOS", 
+    location: "Restroom 2", 
+    hr: 110, 
+    spo2: 94, 
+    bp: "145/90", 
+    glucose: 140,
+    battery: 15, 
+    alert: true, 
+    source: "device", 
+    lastUpdate: new Date().toISOString(), 
+    image: "https://images.unsplash.com/photo-1551185253-59878c711002?q=80&w=200&auto=format&fit=crop",
+    admissionDate: "2023-05-20",
+    conditions: ["Hypertension", "Early Dementia"],
+    allergies: ["Aspirin"],
+    psychHistory: "Dementia"
+  },
 ];
 
 // Mock Historical Data for Charts
@@ -54,6 +132,7 @@ const HISTORY_DATA = [
 ];
 
 export default function ClientMonitoring() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [selectedClient, setSelectedClient] = useState<any>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -67,6 +146,7 @@ export default function ClientMonitoring() {
     hr: "",
     spo2: "",
     bp: "",
+    glucose: "",
     temp: "",
     weight: "",
     location: "Lobby",
@@ -89,11 +169,16 @@ export default function ClientMonitoring() {
       hr: parseInt(manualEntry.hr) || 0,
       spo2: parseInt(manualEntry.spo2) || 0,
       bp: manualEntry.bp || "-",
+      glucose: parseInt(manualEntry.glucose) || 0,
       source: "manual",
       lastUpdate: new Date().toISOString(),
       alert: false,
       battery: 0, // Manual entries don't have battery
-      image: null // Default avatar
+      image: null, // Default avatar
+      admissionDate: new Date().toISOString().split('T')[0],
+      conditions: ["Unknown"],
+      allergies: ["Unknown"],
+      psychHistory: "Unknown"
     };
 
     setActiveClients(prev => [newClient, ...prev]);
@@ -105,6 +190,7 @@ export default function ClientMonitoring() {
       hr: "",
       spo2: "",
       bp: "",
+      glucose: "",
       temp: "",
       weight: "",
       location: "Lobby",
@@ -117,7 +203,7 @@ export default function ClientMonitoring() {
       <div className="flex flex-col space-y-6">
         <div className="flex justify-between items-start">
       <SectionHeader
-            title="Smart Client Monitoring"
+            title={t('admin.nav.clientMonitoring')}
             description="Real-time health tracking, location services, and AI-powered care insights."
           />
           <div className="flex items-center gap-2 bg-white p-2 rounded-lg shadow-sm border">
@@ -316,6 +402,21 @@ export default function ClientMonitoring() {
                             </div>
                           </div>
                           <div className="space-y-2">
+                            <Label>Glucose (mg/dL)</Label>
+                            <div className="relative">
+                              <Droplet className="absolute left-2 top-2.5 h-4 w-4 text-pink-500" />
+                              <Input 
+                                type="number" 
+                                className="pl-8"
+                                value={manualEntry.glucose}
+                                onChange={(e) => setManualEntry({...manualEntry, glucose: e.target.value})}
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
                             <Label>Temp (°C)</Label>
                             <div className="relative">
                               <Thermometer className="absolute left-2 top-2.5 h-4 w-4 text-orange-500" />
@@ -327,18 +428,17 @@ export default function ClientMonitoring() {
                               />
                             </div>
                           </div>
-                        </div>
-
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label className="text-right">Weight (kg)</Label>
-                          <div className="col-span-3 relative">
-                            <Weight className="absolute left-2 top-2.5 h-4 w-4 text-slate-500" />
-                            <Input 
-                              type="number" 
-                              className="pl-8"
-                              value={manualEntry.weight}
-                              onChange={(e) => setManualEntry({...manualEntry, weight: e.target.value})}
-                            />
+                          <div className="space-y-2">
+                            <Label>Weight (kg)</Label>
+                            <div className="relative">
+                              <Weight className="absolute left-2 top-2.5 h-4 w-4 text-slate-500" />
+                              <Input 
+                                type="number" 
+                                className="pl-8"
+                                value={manualEntry.weight}
+                                onChange={(e) => setManualEntry({...manualEntry, weight: e.target.value})}
+                              />
+                            </div>
                           </div>
                         </div>
 
@@ -411,9 +511,12 @@ export default function ClientMonitoring() {
                               </div>
                               <div className="bg-slate-50 p-2 rounded-lg">
                                 <div className="text-xs text-muted-foreground mb-1 flex items-center justify-center gap-1">
-                                  <Activity className="w-3 h-3 text-blue-500" /> SpO2
+                                  <Activity className="w-3 h-3 text-blue-500" /> BP/Glu
                                 </div>
-                                <div className="font-mono font-bold text-lg">{client.spo2}%</div>
+                                <div className="font-mono font-bold text-sm">
+                                  {client.bp}
+                                  {client.glucose > 0 && <span className="block text-xs text-pink-600">GLU: {client.glucose}</span>}
+                                </div>
                               </div>
                               <div className="bg-slate-50 p-2 rounded-lg">
                                 {client.source === 'manual' ? (
@@ -437,7 +540,7 @@ export default function ClientMonitoring() {
                             </div>
                           </div>
                         </DialogTrigger>
-                        <DialogContent className="max-w-2xl">
+                        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
                           <DialogHeader>
                             <DialogTitle className="text-2xl flex items-center gap-3">
                               {client.name}
@@ -454,7 +557,27 @@ export default function ClientMonitoring() {
                             </DialogDescription>
                           </DialogHeader>
                           
-                          <div className="grid md:grid-cols-2 gap-6 mt-4">
+                          {/* Medical Context Section */}
+                          <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-4 grid md:grid-cols-4 gap-4">
+                            <div>
+                                <div className="text-xs text-muted-foreground flex items-center gap-1 mb-1"><Calendar className="w-3 h-3" /> Admission Date</div>
+                                <div className="font-medium">{client.admissionDate || "N/A"}</div>
+                            </div>
+                            <div>
+                                <div className="text-xs text-muted-foreground flex items-center gap-1 mb-1"><Stethoscope className="w-3 h-3" /> Conditions</div>
+                                <div className="font-medium">{client.conditions?.join(", ") || "None"}</div>
+                            </div>
+                            <div>
+                                <div className="text-xs text-muted-foreground flex items-center gap-1 mb-1"><AlertCircle className="w-3 h-3 text-red-500" /> Allergies</div>
+                                <div className="font-medium text-red-600">{client.allergies?.join(", ") || "None"}</div>
+                            </div>
+                            <div>
+                                <div className="text-xs text-muted-foreground flex items-center gap-1 mb-1"><Brain className="w-3 h-3" /> Psych History</div>
+                                <div className="font-medium">{client.psychHistory || "None"}</div>
+                            </div>
+                          </div>
+
+                          <div className="grid md:grid-cols-2 gap-6">
                             <div className="space-y-6">
                               {/* Vitals Chart */}
                               <div className="space-y-2">
