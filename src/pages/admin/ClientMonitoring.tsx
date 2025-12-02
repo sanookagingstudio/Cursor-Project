@@ -2,13 +2,17 @@ import { useState, useEffect } from "react";
 import { AdminLayout } from "@/layouts/AdminLayout";
 import { SectionHeader } from "@/components/ui/section-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DataTable } from "@/components/tables/DataTable";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   Heart, 
   Activity, 
@@ -22,16 +26,20 @@ import {
   User,
   RefreshCw,
   Filter,
-  Footprints
+  Footprints,
+  PlusCircle,
+  Thermometer,
+  Weight,
+  FileEdit
 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 // Mock Data for Real-time Monitoring
-const ACTIVE_CLIENTS = [
-  { id: 1, name: "Somchai Jai-dee", age: 72, status: "Active", location: "Garden Zone A", hr: 78, spo2: 98, bp: "120/80", battery: 85, image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=200&auto=format&fit=crop" },
-  { id: 2, name: "Malee Rak-thai", age: 68, status: "Resting", location: "Lobby", hr: 65, spo2: 97, bp: "118/76", battery: 42, image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop" },
-  { id: 3, name: "John Smith", age: 75, status: "Walking", location: "Park Trail", hr: 92, spo2: 96, bp: "130/85", battery: 60, image: "https://images.unsplash.com/photo-1566616213894-2dcdcf0dfda6?q=80&w=200&auto=format&fit=crop" },
-  { id: 4, name: "Arunee Sooksai", age: 80, status: "SOS", location: "Restroom 2", hr: 110, spo2: 94, bp: "145/90", battery: 15, alert: true, image: "https://images.unsplash.com/photo-1551185253-59878c711002?q=80&w=200&auto=format&fit=crop" },
+const INITIAL_ACTIVE_CLIENTS = [
+  { id: 1, name: "Somchai Jai-dee", age: 72, status: "Active", location: "Garden Zone A", hr: 78, spo2: 98, bp: "120/80", battery: 85, source: "device", lastUpdate: new Date().toISOString(), image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=200&auto=format&fit=crop" },
+  { id: 2, name: "Malee Rak-thai", age: 68, status: "Resting", location: "Lobby", hr: 65, spo2: 97, bp: "118/76", battery: 42, source: "device", lastUpdate: new Date().toISOString(), image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop" },
+  { id: 3, name: "John Smith", age: 75, status: "Walking", location: "Park Trail", hr: 92, spo2: 96, bp: "130/85", battery: 60, source: "device", lastUpdate: new Date().toISOString(), image: "https://images.unsplash.com/photo-1566616213894-2dcdcf0dfda6?q=80&w=200&auto=format&fit=crop" },
+  { id: 4, name: "Arunee Sooksai", age: 80, status: "SOS", location: "Restroom 2", hr: 110, spo2: 94, bp: "145/90", battery: 15, alert: true, source: "device", lastUpdate: new Date().toISOString(), image: "https://images.unsplash.com/photo-1551185253-59878c711002?q=80&w=200&auto=format&fit=crop" },
 ];
 
 // Mock Historical Data for Charts
@@ -49,6 +57,21 @@ export default function ClientMonitoring() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [selectedClient, setSelectedClient] = useState<any>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [activeClients, setActiveClients] = useState(INITIAL_ACTIVE_CLIENTS);
+  const [manualDialogOpen, setManualDialogOpen] = useState(false);
+
+  // Manual Entry Form State
+  const [manualEntry, setManualEntry] = useState({
+    name: "",
+    isParticipating: true,
+    hr: "",
+    spo2: "",
+    bp: "",
+    temp: "",
+    weight: "",
+    location: "Lobby",
+    notes: ""
+  });
 
   // Simulate real-time clock
   useEffect(() => {
@@ -56,11 +79,44 @@ export default function ClientMonitoring() {
     return () => clearInterval(timer);
   }, []);
 
+  const handleManualSubmit = () => {
+    const newClient = {
+      id: Date.now(),
+      name: manualEntry.name || "New Guest",
+      age: 70, // Default for mock
+      status: manualEntry.isParticipating ? "Active (Manual)" : "Inactive",
+      location: manualEntry.location,
+      hr: parseInt(manualEntry.hr) || 0,
+      spo2: parseInt(manualEntry.spo2) || 0,
+      bp: manualEntry.bp || "-",
+      source: "manual",
+      lastUpdate: new Date().toISOString(),
+      alert: false,
+      battery: 0, // Manual entries don't have battery
+      image: null // Default avatar
+    };
+
+    setActiveClients(prev => [newClient, ...prev]);
+    setManualDialogOpen(false);
+    // Reset form
+    setManualEntry({
+      name: "",
+      isParticipating: true,
+      hr: "",
+      spo2: "",
+      bp: "",
+      temp: "",
+      weight: "",
+      location: "Lobby",
+      notes: ""
+    });
+  };
+
   return (
     <AdminLayout>
       <div className="flex flex-col space-y-6">
         <div className="flex justify-between items-start">
-          <SectionHeader
+      <SectionHeader
             title="Smart Client Monitoring"
             description="Real-time health tracking, location services, and AI-powered care insights."
           />
@@ -89,7 +145,7 @@ export default function ClientMonitoring() {
                 <CardContent className="pt-6 flex items-center justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground">Active Clients</p>
-                    <h3 className="text-3xl font-bold">24</h3>
+                    <h3 className="text-3xl font-bold">{activeClients.length}</h3>
                   </div>
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
                     <User className="h-6 w-6" />
@@ -100,7 +156,7 @@ export default function ClientMonitoring() {
                 <CardContent className="pt-6 flex items-center justify-between">
                   <div>
                     <p className="text-sm text-red-600 font-medium">Active Alerts</p>
-                    <h3 className="text-3xl font-bold text-red-700">1</h3>
+                    <h3 className="text-3xl font-bold text-red-700">{activeClients.filter(c => c.alert).length}</h3>
                   </div>
                   <div className="w-12 h-12 bg-red-200 rounded-full flex items-center justify-center text-red-600 animate-pulse">
                     <AlertTriangle className="h-6 w-6" />
@@ -111,7 +167,10 @@ export default function ClientMonitoring() {
                 <CardContent className="pt-6 flex items-center justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground">Avg. Heart Rate</p>
-                    <h3 className="text-3xl font-bold">76 <span className="text-sm font-normal text-muted-foreground">bpm</span></h3>
+                    <h3 className="text-3xl font-bold">
+                      {Math.round(activeClients.reduce((acc, curr) => acc + (curr.hr || 0), 0) / activeClients.length)} 
+                      <span className="text-sm font-normal text-muted-foreground"> bpm</span>
+                    </h3>
                   </div>
                   <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center text-rose-600">
                     <Heart className="h-6 w-6" />
@@ -121,11 +180,13 @@ export default function ClientMonitoring() {
               <Card>
                 <CardContent className="pt-6 flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Avg. Activity</p>
-                    <h3 className="text-3xl font-bold">4.2k <span className="text-sm font-normal text-muted-foreground">steps</span></h3>
+                    <p className="text-sm text-muted-foreground">Manual Entries</p>
+                    <h3 className="text-3xl font-bold">
+                      {activeClients.filter(c => c.source === 'manual').length}
+                    </h3>
                   </div>
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
-                    <Footprints className="h-6 w-6" />
+                  <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center text-orange-600">
+                    <FileEdit className="h-6 w-6" />
                   </div>
                 </CardContent>
               </Card>
@@ -140,31 +201,23 @@ export default function ClientMonitoring() {
                 </div>
                 
                 {/* Simulated Map Markers */}
-                <div className="absolute top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 group-hover:scale-110 transition-transform cursor-pointer">
-                  <div className="relative">
-                    <div className="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg" />
-                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white px-2 py-1 rounded text-xs font-bold shadow whitespace-nowrap">Somchai</div>
-                  </div>
-                </div>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 group-hover:scale-110 transition-transform cursor-pointer">
-                  <div className="relative">
-                    <div className="w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg" />
-                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white px-2 py-1 rounded text-xs font-bold shadow whitespace-nowrap">John</div>
-                  </div>
-                </div>
-                {/* SOS Marker */}
-                <div className="absolute bottom-1/3 right-1/3 transform -translate-x-1/2 -translate-y-1/2 animate-bounce cursor-pointer">
-                  <div className="relative">
-                    <div className="w-6 h-6 bg-red-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
-                      <AlertTriangle className="w-3 h-3 text-white" />
+                {activeClients.filter(c => c.source === 'device').map((client, index) => (
+                  <div 
+                    key={client.id}
+                    className={`absolute transform -translate-x-1/2 -translate-y-1/2 group-hover:scale-110 transition-transform cursor-pointer`}
+                    style={{ 
+                      top: `${30 + (index * 15)}%`, 
+                      left: `${30 + (index * 20)}%` 
+                    }}
+                  >
+                    <div className="relative">
+                      <div className={`w-4 h-4 ${client.alert ? 'bg-red-500 animate-ping' : 'bg-blue-500'} rounded-full border-2 border-white shadow-lg`} />
+                      <div className={`absolute -top-8 left-1/2 -translate-x-1/2 bg-white px-2 py-1 rounded text-xs font-bold shadow whitespace-nowrap ${client.alert ? 'text-red-600' : ''}`}>
+                        {client.name}
+                      </div>
                     </div>
-                    <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                    </span>
-                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-red-600 text-white px-2 py-1 rounded text-xs font-bold shadow whitespace-nowrap">SOS: Arunee</div>
                   </div>
-                </div>
+                ))}
 
                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur p-4 rounded-lg shadow border text-sm">
                   <h4 className="font-bold mb-2 flex items-center"><MapPin className="w-4 h-4 mr-2" /> Location Status</h4>
@@ -183,19 +236,156 @@ export default function ClientMonitoring() {
                     <Activity className="w-4 h-4 text-primary" />
                     Live Feeds
                   </h3>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <RefreshCw className="w-4 h-4" />
-                  </Button>
+                  
+                  {/* Manual Entry Dialog */}
+                  <Dialog open={manualDialogOpen} onOpenChange={setManualDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="sm" className="gap-2">
+                        <PlusCircle className="w-4 h-4" /> Manual Entry
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                      <DialogHeader>
+                        <DialogTitle>Manual Vitals Entry</DialogTitle>
+                        <DialogDescription>
+                          Record vital signs for clients without monitoring devices.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="name" className="text-right">Client</Label>
+                          <Input 
+                            id="name" 
+                            value={manualEntry.name}
+                            onChange={(e) => setManualEntry({...manualEntry, name: e.target.value})}
+                            placeholder="Select or type name"
+                            className="col-span-3" 
+                          />
+                        </div>
+                        
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label className="text-right">Status</Label>
+                          <div className="col-span-3 flex items-center space-x-2">
+                            <Switch 
+                              id="participating" 
+                              checked={manualEntry.isParticipating}
+                              onCheckedChange={(checked) => setManualEntry({...manualEntry, isParticipating: checked})}
+                            />
+                            <Label htmlFor="participating">Participating in Activity today?</Label>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label>Heart Rate (bpm)</Label>
+                            <div className="relative">
+                              <Heart className="absolute left-2 top-2.5 h-4 w-4 text-rose-500" />
+                              <Input 
+                                type="number" 
+                                className="pl-8" 
+                                value={manualEntry.hr}
+                                onChange={(e) => setManualEntry({...manualEntry, hr: e.target.value})}
+                              />
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Blood Pressure</Label>
+                            <div className="relative">
+                              <Activity className="absolute left-2 top-2.5 h-4 w-4 text-blue-500" />
+                              <Input 
+                                placeholder="120/80" 
+                                className="pl-8"
+                                value={manualEntry.bp}
+                                onChange={(e) => setManualEntry({...manualEntry, bp: e.target.value})}
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label>SpO2 (%)</Label>
+                            <div className="relative">
+                              <Activity className="absolute left-2 top-2.5 h-4 w-4 text-cyan-500" />
+                              <Input 
+                                type="number" 
+                                className="pl-8"
+                                value={manualEntry.spo2}
+                                onChange={(e) => setManualEntry({...manualEntry, spo2: e.target.value})}
+                              />
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Temp (°C)</Label>
+                            <div className="relative">
+                              <Thermometer className="absolute left-2 top-2.5 h-4 w-4 text-orange-500" />
+                              <Input 
+                                type="number" 
+                                className="pl-8"
+                                value={manualEntry.temp}
+                                onChange={(e) => setManualEntry({...manualEntry, temp: e.target.value})}
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label className="text-right">Weight (kg)</Label>
+                          <div className="col-span-3 relative">
+                            <Weight className="absolute left-2 top-2.5 h-4 w-4 text-slate-500" />
+                            <Input 
+                              type="number" 
+                              className="pl-8"
+                              value={manualEntry.weight}
+                              onChange={(e) => setManualEntry({...manualEntry, weight: e.target.value})}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label className="text-right">Location</Label>
+                          <Select 
+                            value={manualEntry.location}
+                            onValueChange={(v) => setManualEntry({...manualEntry, location: v})}
+                          >
+                            <SelectTrigger className="col-span-3">
+                              <SelectValue placeholder="Select location" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Lobby">Lobby</SelectItem>
+                              <SelectItem value="Garden Zone A">Garden Zone A</SelectItem>
+                              <SelectItem value="Park Trail">Park Trail</SelectItem>
+                              <SelectItem value="Activity Room">Activity Room</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setManualDialogOpen(false)}>Cancel</Button>
+                        <Button onClick={handleManualSubmit}>Save Entry</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 <ScrollArea className="flex-1 p-4">
                   <div className="space-y-4">
-                    {ACTIVE_CLIENTS.map((client) => (
+                    {activeClients.map((client) => (
                       <Dialog key={client.id}>
                         <DialogTrigger asChild>
                           <div 
-                            className={`p-4 rounded-xl border cursor-pointer transition-all hover:shadow-md ${client.alert ? 'bg-red-50 border-red-200 ring-2 ring-red-100' : 'bg-white hover:border-primary/50'}`}
+                            className={`p-4 rounded-xl border cursor-pointer transition-all hover:shadow-md relative overflow-hidden
+                              ${client.alert ? 'bg-red-50 border-red-200 ring-2 ring-red-100' : 'bg-white hover:border-primary/50'}
+                              ${client.source === 'manual' ? 'border-l-4 border-l-orange-400' : ''}
+                            `}
                             onClick={() => setSelectedClient(client)}
                           >
+                            {/* Manual Indicator */}
+                            {client.source === 'manual' && (
+                              <div className="absolute top-0 right-0 bg-orange-100 text-orange-700 text-[10px] px-2 py-0.5 rounded-bl">
+                                Manual Entry
+                              </div>
+                            )}
+
                             <div className="flex items-center gap-3 mb-3">
                               <Avatar>
                                 <AvatarImage src={client.image} />
@@ -226,10 +416,23 @@ export default function ClientMonitoring() {
                                 <div className="font-mono font-bold text-lg">{client.spo2}%</div>
                               </div>
                               <div className="bg-slate-50 p-2 rounded-lg">
-                                <div className="text-xs text-muted-foreground mb-1 flex items-center justify-center gap-1">
-                                  <Battery className={`w-3 h-3 ${client.battery < 20 ? 'text-red-500' : 'text-green-500'}`} /> Bat
-                                </div>
-                                <div className="font-mono font-bold text-lg">{client.battery}%</div>
+                                {client.source === 'manual' ? (
+                                  <>
+                                    <div className="text-xs text-muted-foreground mb-1 flex items-center justify-center gap-1">
+                                      <History className="w-3 h-3 text-slate-500" /> Updated
+                                    </div>
+                                    <div className="font-mono text-xs font-medium pt-1">
+                                      {new Date(client.lastUpdate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                    </div>
+                                  </>
+                                ) : (
+                                  <>
+                                    <div className="text-xs text-muted-foreground mb-1 flex items-center justify-center gap-1">
+                                      <Battery className={`w-3 h-3 ${client.battery < 20 ? 'text-red-500' : 'text-green-500'}`} /> Bat
+                                    </div>
+                                    <div className="font-mono font-bold text-lg">{client.battery}%</div>
+                                  </>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -239,9 +442,15 @@ export default function ClientMonitoring() {
                             <DialogTitle className="text-2xl flex items-center gap-3">
                               {client.name}
                               {client.alert && <Badge variant="destructive">Emergency Alert</Badge>}
+                              {client.source === 'manual' && <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200">Manual Data</Badge>}
                             </DialogTitle>
                             <DialogDescription>
                               Client ID: #{client.id.toString().padStart(4, '0')} • Age: {client.age}
+                              {client.source === 'manual' && (
+                                <span className="block mt-1 text-xs text-muted-foreground">
+                                  Last Manual Check: {new Date(client.lastUpdate).toLocaleString()}
+                                </span>
+                              )}
                             </DialogDescription>
                           </DialogHeader>
                           
@@ -303,8 +512,8 @@ export default function ClientMonitoring() {
                                       </div>
                                     </div>
                                   </div>
-                                </div>
-                              </div>
+        </div>
+      </div>
 
                               {/* Emergency Actions */}
                               <div className="space-y-3 pt-4 border-t">
