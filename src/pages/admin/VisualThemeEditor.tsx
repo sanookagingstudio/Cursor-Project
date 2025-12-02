@@ -93,12 +93,12 @@ const THEME_PRESETS = [
 ];
 
 export default function VisualThemeEditor() {
-  const { settings, updateSettings, saveTheme, resetTheme, setEditMode, selectedElementId, setSelectedElementId } = useTheme();
+  const { settings, updateSettings, saveTheme, resetTheme, setEditMode, selectedElementId, setSelectedElementId, selectedPageId, setSelectedPageId } = useTheme();
   const { toast } = useToast();
   const { t } = useTranslation();
   const [isEditActive, setIsEditActive] = useState(true);
   const [previewMode, setPreviewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
-  const [selectedPageId, setSelectedPageId] = useState('home');
+  // const [selectedPageId, setSelectedPageId] = useState('home'); // Moved to context
   const [isVideoMode, setIsVideoMode] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 

@@ -152,6 +152,8 @@ interface ThemeContextType {
   setEditMode: (mode: boolean) => void;
   selectedElementId: string | null;
   setSelectedElementId: (id: string | null) => void;
+  selectedPageId: string;
+  setSelectedPageId: (id: string) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -234,6 +236,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selectedElementId, setSelectedElementId] = useState<string | null>(null);
+  const [selectedPageId, setSelectedPageId] = useState<string>('home');
 
   // Load active theme on mount
   useEffect(() => {
@@ -400,6 +403,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         setEditMode,
         selectedElementId,
         setSelectedElementId,
+        selectedPageId,
+        setSelectedPageId,
       }}
     >
       {children}
