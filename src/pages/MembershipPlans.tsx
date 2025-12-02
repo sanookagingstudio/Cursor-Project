@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Check, Sparkles, Zap, Crown, Coins } from "lucide-react";
+import { EditableText, Editable } from "@/components/editor/Editable";
 
 export default function MembershipPlans() {
   const { t } = useTranslation();
@@ -126,6 +127,7 @@ export default function MembershipPlans() {
     <PublicLayout>
       <div className="container-padding section-padding max-w-7xl mx-auto">
         <SectionHeader
+          idPrefix="membership.header"
           title={t('membershipPlans.title')}
           description={t('membershipPlans.description')}
         />
@@ -134,23 +136,33 @@ export default function MembershipPlans() {
           <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-3 h-auto p-2">
             <TabsTrigger value="premium" className="text-base py-3">
               <Crown className="h-5 w-5 mr-2" />
-              {t('membershipPlans.tabs.premium')}
+              <EditableText id="membership.tab.premium" text={t('membershipPlans.tabs.premium')} />
             </TabsTrigger>
             <TabsTrigger value="digital" className="text-base py-3">
               <Coins className="h-5 w-5 mr-2" />
-              {t('membershipPlans.tabs.digital')}
+              <EditableText id="membership.tab.digital" text={t('membershipPlans.tabs.digital')} />
             </TabsTrigger>
             <TabsTrigger value="free" className="text-base py-3">
               <Sparkles className="h-5 w-5 mr-2" />
-              {t('membershipPlans.tabs.free')}
+              <EditableText id="membership.tab.free" text={t('membershipPlans.tabs.free')} />
             </TabsTrigger>
           </TabsList>
 
           {/* Premium Members */}
           <TabsContent value="premium" className="space-y-6">
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold mb-2">{t('membershipPlans.premium.sectionTitle')}</h3>
-              <p className="text-muted-foreground text-lg">{t('membershipPlans.premium.sectionDesc')}</p>
+              <EditableText 
+                id="membership.premium.title"
+                as="h3" 
+                className="text-2xl font-bold mb-2" 
+                text={t('membershipPlans.premium.sectionTitle')} 
+              />
+              <EditableText 
+                id="membership.premium.desc"
+                as="p" 
+                className="text-muted-foreground text-lg" 
+                text={t('membershipPlans.premium.sectionDesc')} 
+              />
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -158,15 +170,36 @@ export default function MembershipPlans() {
                 <Card key={index} className={`relative ${plan.popular ? 'border-primary border-2 shadow-xl' : ''}`}>
                   {plan.badge && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <Badge className={plan.popular ? 'bg-primary' : 'bg-accent'}>{plan.badge}</Badge>
+                      <Badge className={plan.popular ? 'bg-primary' : 'bg-accent'}>
+                        <EditableText id={`membership.premium.plan.${index}.badge`} text={plan.badge} />
+                      </Badge>
                     </div>
                   )}
                   <CardHeader>
-                    <CardTitle className="text-xl">{plan.name}</CardTitle>
-                    <CardDescription>{plan.description}</CardDescription>
+                    <EditableText 
+                        id={`membership.premium.plan.${index}.name`}
+                        as={CardTitle} 
+                        className="text-xl" 
+                        text={plan.name} 
+                    />
+                    <EditableText 
+                        id={`membership.premium.plan.${index}.desc`}
+                        as={CardDescription} 
+                        text={plan.description} 
+                    />
                     <div className="mt-4">
-                      <div className="text-4xl font-bold">{plan.price}</div>
-                      <div className="text-muted-foreground">{plan.period}</div>
+                      <EditableText 
+                        id={`membership.premium.plan.${index}.price`}
+                        as="div" 
+                        className="text-4xl font-bold" 
+                        text={plan.price} 
+                      />
+                      <EditableText 
+                        id={`membership.premium.plan.${index}.period`}
+                        as="div" 
+                        className="text-muted-foreground" 
+                        text={plan.period} 
+                      />
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -174,7 +207,12 @@ export default function MembershipPlans() {
                       {plan.features.map((feature, i) => (
                         <li key={i} className="flex items-start gap-2">
                           <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                          <span className="text-sm">{feature}</span>
+                          <EditableText 
+                            id={`membership.premium.plan.${index}.feature.${i}`}
+                            as="span" 
+                            className="text-sm" 
+                            text={feature} 
+                          />
                         </li>
                       ))}
                     </ul>
@@ -182,7 +220,7 @@ export default function MembershipPlans() {
                   <CardFooter>
                     <Link to="/join-now" className="w-full">
                       <Button className="w-full" variant={plan.popular ? 'default' : 'outline'} size="lg">
-                        {t('membershipPlans.selectPlan')}
+                        <EditableText id={`membership.premium.plan.${index}.btn`} text={t('membershipPlans.selectPlan')} />
                       </Button>
                     </Link>
                   </CardFooter>
@@ -194,8 +232,18 @@ export default function MembershipPlans() {
           {/* Digital Members */}
           <TabsContent value="digital" className="space-y-6">
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold mb-2">{t('membershipPlans.digital.sectionTitle')}</h3>
-              <p className="text-muted-foreground text-lg">{t('membershipPlans.digital.sectionDesc')}</p>
+              <EditableText 
+                id="membership.digital.title"
+                as="h3" 
+                className="text-2xl font-bold mb-2" 
+                text={t('membershipPlans.digital.sectionTitle')} 
+              />
+              <EditableText 
+                id="membership.digital.desc"
+                as="p" 
+                className="text-muted-foreground text-lg" 
+                text={t('membershipPlans.digital.sectionDesc')} 
+              />
             </div>
 
             <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -203,17 +251,37 @@ export default function MembershipPlans() {
                 <Card key={index} className={pkg.badge ? 'border-primary border-2 shadow-xl' : ''}>
                   {pkg.badge && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <Badge className="bg-primary">{pkg.badge}</Badge>
+                      <Badge className="bg-primary">
+                        <EditableText id={`membership.digital.pkg.${index}.badge`} text={pkg.badge} />
+                      </Badge>
                     </div>
                   )}
                   <CardHeader>
-                    <CardTitle className="text-xl">{pkg.name}</CardTitle>
-                    <CardDescription>{pkg.description}</CardDescription>
+                    <EditableText 
+                        id={`membership.digital.pkg.${index}.name`}
+                        as={CardTitle} 
+                        className="text-xl" 
+                        text={pkg.name} 
+                    />
+                    <EditableText 
+                        id={`membership.digital.pkg.${index}.desc`}
+                        as={CardDescription} 
+                        text={pkg.description} 
+                    />
                     <div className="mt-4">
-                      <div className="text-4xl font-bold">{pkg.price}</div>
-                      <div className="text-primary font-semibold text-lg">{pkg.credits} {t('membershipPlans.digital.credits')}</div>
+                      <EditableText 
+                        id={`membership.digital.pkg.${index}.price`}
+                        as="div" 
+                        className="text-4xl font-bold" 
+                        text={pkg.price} 
+                      />
+                      <div className="text-primary font-semibold text-lg">
+                         <EditableText id={`membership.digital.pkg.${index}.credits`} text={`${pkg.credits} ${t('membershipPlans.digital.credits')}`} />
+                      </div>
                       {pkg.bonus && (
-                        <Badge variant="secondary" className="mt-2">{pkg.bonus}</Badge>
+                        <Badge variant="secondary" className="mt-2">
+                            <EditableText id={`membership.digital.pkg.${index}.bonus`} text={pkg.bonus} />
+                        </Badge>
                       )}
                     </div>
                   </CardHeader>
@@ -222,7 +290,12 @@ export default function MembershipPlans() {
                       {pkg.features.map((feature, i) => (
                         <li key={i} className="flex items-start gap-2">
                           <Zap className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
-                          <span className="text-sm">{feature}</span>
+                          <EditableText 
+                            id={`membership.digital.pkg.${index}.feature.${i}`}
+                            as="span" 
+                            className="text-sm" 
+                            text={feature} 
+                          />
                         </li>
                       ))}
                     </ul>
@@ -230,7 +303,7 @@ export default function MembershipPlans() {
                   <CardFooter>
                     <Link to="/join-now" className="w-full">
                       <Button className="w-full" variant={pkg.badge ? 'default' : 'outline'} size="lg">
-                        {t('membershipPlans.buyCredits')}
+                        <EditableText id={`membership.digital.pkg.${index}.btn`} text={t('membershipPlans.buyCredits')} />
                       </Button>
                     </Link>
                   </CardFooter>
@@ -241,25 +314,37 @@ export default function MembershipPlans() {
             {/* Credit Usage Guide */}
             <Card className="max-w-3xl mx-auto mt-8 bg-muted/30">
               <CardHeader>
-                <CardTitle>{t('membershipPlans.digital.usageTitle')}</CardTitle>
+                <EditableText 
+                    id="membership.usage.title"
+                    as={CardTitle} 
+                    text={t('membershipPlans.digital.usageTitle')} 
+                />
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="flex justify-between items-center p-3 bg-background rounded-lg">
-                    <span>{t('membershipPlans.digital.usage.aiImage')}</span>
-                    <Badge variant="secondary">10 {t('membershipPlans.digital.credits')}</Badge>
+                    <EditableText id="membership.usage.item1" as="span" text={t('membershipPlans.digital.usage.aiImage')} />
+                    <Badge variant="secondary">
+                        <EditableText id="membership.usage.cost1" text={`10 ${t('membershipPlans.digital.credits')}`} />
+                    </Badge>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-background rounded-lg">
-                    <span>{t('membershipPlans.digital.usage.premiumTemplate')}</span>
-                    <Badge variant="secondary">20-50 {t('membershipPlans.digital.credits')}</Badge>
+                    <EditableText id="membership.usage.item2" as="span" text={t('membershipPlans.digital.usage.premiumTemplate')} />
+                    <Badge variant="secondary">
+                        <EditableText id="membership.usage.cost2" text={`20-50 ${t('membershipPlans.digital.credits')}`} />
+                    </Badge>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-background rounded-lg">
-                    <span>{t('membershipPlans.digital.usage.digitalDownload')}</span>
-                    <Badge variant="secondary">5-30 {t('membershipPlans.digital.credits')}</Badge>
+                    <EditableText id="membership.usage.item3" as="span" text={t('membershipPlans.digital.usage.digitalDownload')} />
+                    <Badge variant="secondary">
+                        <EditableText id="membership.usage.cost3" text={`5-30 ${t('membershipPlans.digital.credits')}`} />
+                    </Badge>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-background rounded-lg">
-                    <span>{t('membershipPlans.digital.usage.premiumArticle')}</span>
-                    <Badge variant="secondary">5 {t('membershipPlans.digital.credits')}</Badge>
+                    <EditableText id="membership.usage.item4" as="span" text={t('membershipPlans.digital.usage.premiumArticle')} />
+                    <Badge variant="secondary">
+                        <EditableText id="membership.usage.cost4" text={`5 ${t('membershipPlans.digital.credits')}`} />
+                    </Badge>
                   </div>
                 </div>
               </CardContent>
@@ -274,12 +359,32 @@ export default function MembershipPlans() {
                   <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
                     <Sparkles className="h-10 w-10 text-primary" />
                   </div>
-                  <CardTitle className="text-3xl">{t('membershipPlans.free.title')}</CardTitle>
-                  <CardDescription className="text-lg">{t('membershipPlans.free.description')}</CardDescription>
+                  <EditableText 
+                    id="membership.free.title"
+                    as={CardTitle} 
+                    className="text-3xl" 
+                    text={t('membershipPlans.free.title')} 
+                  />
+                  <EditableText 
+                    id="membership.free.desc"
+                    as={CardDescription} 
+                    className="text-lg" 
+                    text={t('membershipPlans.free.description')} 
+                  />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-5xl font-bold mb-2">{t('membershipPlans.free.price')}</div>
-                  <p className="text-muted-foreground mb-8">{t('membershipPlans.free.period')}</p>
+                  <EditableText 
+                    id="membership.free.price"
+                    as="div" 
+                    className="text-5xl font-bold mb-2" 
+                    text={t('membershipPlans.free.price')} 
+                  />
+                  <EditableText 
+                    id="membership.free.period"
+                    as="p" 
+                    className="text-muted-foreground mb-8" 
+                    text={t('membershipPlans.free.period')} 
+                  />
                   
                   <div className="grid md:grid-cols-2 gap-4 text-left">
                     {[
@@ -292,7 +397,11 @@ export default function MembershipPlans() {
                     ].map((feature, i) => (
                       <div key={i} className="flex items-start gap-2">
                         <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                        <span>{feature}</span>
+                        <EditableText 
+                            id={`membership.free.feature.${i}`}
+                            as="span" 
+                            text={feature} 
+                        />
                       </div>
                     ))}
                   </div>
@@ -300,12 +409,15 @@ export default function MembershipPlans() {
                 <CardFooter className="flex-col gap-3">
                   <Link to="/sign-up" className="w-full">
                     <Button size="lg" className="w-full">
-                      {t('membershipPlans.free.joinFree')}
+                      <EditableText id="membership.free.join" text={t('membershipPlans.free.joinFree')} />
                     </Button>
                   </Link>
-                  <p className="text-sm text-muted-foreground">
-                    {t('membershipPlans.free.upgradeNote')}
-                  </p>
+                  <EditableText 
+                    id="membership.free.note"
+                    as="p" 
+                    className="text-sm text-muted-foreground" 
+                    text={t('membershipPlans.free.upgradeNote')} 
+                  />
                 </CardFooter>
               </Card>
             </div>
@@ -315,17 +427,27 @@ export default function MembershipPlans() {
         {/* Comparison CTA */}
         <Card className="mt-12 bg-gradient-primary text-white border-0">
           <CardContent className="text-center py-12">
-            <h3 className="text-3xl font-bold mb-4 text-white">{t('membershipPlans.cta.title')}</h3>
-            <p className="text-white/90 text-lg mb-6">{t('membershipPlans.cta.description')}</p>
+            <EditableText 
+                id="membership.cta.title"
+                as="h3" 
+                className="text-3xl font-bold mb-4 text-white" 
+                text={t('membershipPlans.cta.title')} 
+            />
+            <EditableText 
+                id="membership.cta.desc"
+                as="p" 
+                className="text-white/90 text-lg mb-6" 
+                text={t('membershipPlans.cta.description')} 
+            />
             <div className="flex justify-center gap-4">
               <Link to="/contact">
                 <Button size="lg" variant="secondary">
-                  {t('membershipPlans.cta.contactUs')}
+                  <EditableText id="membership.cta.contact" text={t('membershipPlans.cta.contactUs')} />
                 </Button>
               </Link>
               <Link to="/faq">
                 <Button size="lg" variant="outline" className="bg-white/10 text-white border-white hover:bg-white hover:text-primary">
-                  {t('membershipPlans.cta.viewFAQ')}
+                   <EditableText id="membership.cta.faq" text={t('membershipPlans.cta.viewFAQ')} />
                 </Button>
               </Link>
             </div>

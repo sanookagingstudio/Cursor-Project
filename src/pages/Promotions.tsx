@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Gift, Star, Heart, Award, Sparkles, PartyPopper } from "lucide-react";
+import { EditableText, Editable } from "@/components/editor/Editable";
 
 export default function Promotions() {
   const { t } = useTranslation();
@@ -59,6 +60,7 @@ export default function Promotions() {
     <PublicLayout>
       <div className="container-padding section-padding max-w-6xl mx-auto">
         <SectionHeader
+          idPrefix="promotions.header"
           title={t('promotionsPage.title')}
           description={t('promotionsPage.description')}
         />
@@ -71,18 +73,30 @@ export default function Promotions() {
                 <CardHeader>
                   <div className="flex items-start justify-between mb-4">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Icon className="h-6 w-6 text-primary" />
+                      <Editable id={`promotions.item.${index}.icon`} type="icon">
+                        <Icon className="h-6 w-6 text-primary" />
+                      </Editable>
                     </div>
-                    <Badge className={`${promo.badgeColor} text-white`}>
-                      {promo.badge}
-                    </Badge>
+                    <Editable id={`promotions.item.${index}.badge`}>
+                      <Badge className={`${promo.badgeColor} text-white`}>
+                        <EditableText id={`promotions.item.${index}.badgeText`} text={promo.badge} />
+                      </Badge>
+                    </Editable>
                   </div>
-                  <CardTitle className="text-xl">{promo.title}</CardTitle>
+                  <EditableText 
+                    id={`promotions.item.${index}.title`} 
+                    as={CardTitle} 
+                    className="text-xl" 
+                    text={promo.title} 
+                  />
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-base leading-relaxed">
-                    {promo.description}
-                  </CardDescription>
+                  <EditableText 
+                    id={`promotions.item.${index}.description`} 
+                    as={CardDescription} 
+                    className="text-base leading-relaxed" 
+                    text={promo.description} 
+                  />
                 </CardContent>
               </Card>
             );
@@ -92,22 +106,28 @@ export default function Promotions() {
         {/* CTA Section */}
         <Card className="bg-gradient-primary text-white border-0">
           <CardHeader className="text-center">
-            <CardTitle className="text-3xl text-white mb-4">
-              {t('cta.title')}
-            </CardTitle>
-            <CardDescription className="text-white/90 text-lg">
-              {t('cta.description')}
-            </CardDescription>
+            <EditableText 
+                id="promotions.cta.title"
+                as={CardTitle} 
+                className="text-3xl text-white mb-4"
+                text={t('cta.title')}
+            />
+            <EditableText 
+                id="promotions.cta.description"
+                as={CardDescription} 
+                className="text-white/90 text-lg"
+                text={t('cta.description')}
+            />
           </CardHeader>
           <CardContent className="flex justify-center gap-4 pb-8">
             <Link to="/join-now">
               <Button size="lg" variant="secondary" className="text-lg h-14 px-8">
-                {t('promotionsPage.joinNow')}
+                <EditableText id="promotions.cta.join" text={t('promotionsPage.joinNow')} />
               </Button>
             </Link>
             <Link to="/pricing">
               <Button size="lg" variant="outline" className="text-lg h-14 px-8 bg-white/10 text-white border-white hover:bg-white hover:text-primary">
-                {t('promotionsPage.learnMore')}
+                <EditableText id="promotions.cta.learnMore" text={t('promotionsPage.learnMore')} />
               </Button>
             </Link>
           </CardContent>

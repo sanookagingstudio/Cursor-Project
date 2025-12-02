@@ -107,12 +107,12 @@ export default function MediaLibrary() {
           />
 
           <Tabs defaultValue="all" className="mb-8">
-            <TabsList>
-              <TabsTrigger value="all">{t('mediaLibraryPage.allContent')}</TabsTrigger>
-              <TabsTrigger value="videos">{t('mediaLibraryPage.videos')}</TabsTrigger>
-              <TabsTrigger value="podcasts">{t('mediaLibraryPage.podcasts')}</TabsTrigger>
-              <TabsTrigger value="articles">{t('mediaLibraryPage.articles')}</TabsTrigger>
-            </TabsList>
+          <TabsList>
+            <TabsTrigger value="all"><EditableText id="media.tab.all" text={t('mediaLibraryPage.allContent')} /></TabsTrigger>
+            <TabsTrigger value="videos"><EditableText id="media.tab.videos" text={t('mediaLibraryPage.videos')} /></TabsTrigger>
+            <TabsTrigger value="podcasts"><EditableText id="media.tab.podcasts" text={t('mediaLibraryPage.podcasts')} /></TabsTrigger>
+            <TabsTrigger value="articles"><EditableText id="media.tab.articles" text={t('mediaLibraryPage.articles')} /></TabsTrigger>
+          </TabsList>
 
             <TabsContent value="all" className="space-y-8 mt-8">
               <div>

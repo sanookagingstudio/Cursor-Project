@@ -153,7 +153,8 @@ export default function VisualThemeEditor() {
 
   const getEditorType = () => {
       if (!selectedElementId) return null;
-      if (selectedElementId.includes('image') || selectedElementId.includes('banner') || selectedElementId.includes('logo')) return 'image';
+      if (selectedElementId.includes('image') || selectedElementId.includes('banner') || selectedElementId.includes('logo') || selectedElementId.includes('thumbnail')) return 'image';
+      if (selectedElementId.includes('icon')) return 'icon';
       return 'text';
   };
 
@@ -305,6 +306,13 @@ export default function VisualThemeEditor() {
                                         placeholder="Type here..."
                                         onChange={(e) => handleContentChange(e.target.value)}
                                     />
+                                </div>
+                            )}
+                            {editorType === 'icon' && (
+                                <div className="space-y-4">
+                                    <div className="p-4 bg-muted rounded text-sm text-muted-foreground text-center">
+                                        Icon editing is currently limited to styling (color, size) in the Style tab.
+                                    </div>
                                 </div>
                             )}
                             {editorType === 'image' && (
