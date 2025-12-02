@@ -4,6 +4,7 @@ import { FilterBar } from "@/components/ui/filter-bar";
 import { TripCard } from "@/components/cards/TripCard";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTranslation } from "react-i18next";
+import { EditableText, Editable } from "@/components/editor/Editable";
 
 const Trips = () => {
   const { t } = useTranslation();

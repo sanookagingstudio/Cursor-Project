@@ -3,6 +3,7 @@ import { SectionHeader } from "@/components/ui/section-header";
 import { MediaCard } from "@/components/cards/MediaCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslation } from "react-i18next";
+import { EditableText, Editable } from "@/components/editor/Editable";
 
 export default function MediaLibrary() {
   const { t } = useTranslation();
