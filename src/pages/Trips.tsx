@@ -82,6 +82,7 @@ const Trips = () => {
       <div className="section-padding">
         <div className="container-padding max-w-7xl mx-auto">
           <SectionHeader
+            idPrefix="trips.header"
             title={t('tripsPage.title')}
             description={t('tripsPage.description')}
           />
@@ -114,7 +115,11 @@ const Trips = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {trips.map((trip, index) => (
-              <TripCard key={index} {...trip} />
+              <TripCard 
+                key={index} 
+                idPrefix={`trips.item.${index}`}
+                {...trip} 
+              />
             ))}
           </div>
         </div>

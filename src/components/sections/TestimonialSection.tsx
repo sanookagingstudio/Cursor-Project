@@ -1,7 +1,7 @@
 import { Star } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { EditableText } from "@/components/editor/Editable";
+import { EditableText, Editable } from "@/components/editor/Editable";
 
 interface Testimonial {
   name: string;
@@ -48,7 +48,7 @@ export function TestimonialSection({
               key={index}
               className="p-6 rounded-xl bg-card border card-shadow"
             >
-              <div className="flex gap-1 mb-4">
+              <Editable id={`${idPrefix}.item.${index}.rating`} type="container" className="flex gap-1 mb-4">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
@@ -60,7 +60,7 @@ export function TestimonialSection({
                     )}
                   />
                 ))}
-              </div>
+              </Editable>
               <div className="text-lg text-muted-foreground mb-6 leading-relaxed">
                 "<EditableText id={`${idPrefix}.item.${index}.content`} as="span" text={testimonial.content} />"
               </div>

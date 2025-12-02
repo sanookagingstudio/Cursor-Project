@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
-import { EditableText, EditableImage } from "@/components/editor/Editable";
+import { EditableText, EditableImage, Editable } from "@/components/editor/Editable";
 
 interface ActivityCardProps {
   title: string;
@@ -69,17 +69,27 @@ export function ActivityCard({
         
         <div className="space-y-2 text-base">
           <div className="flex items-center text-muted-foreground">
-            <Calendar className="h-5 w-5 mr-2" />
+            <Editable id={`${idPrefix}.icon.time`} type="icon" className="mr-2">
+              <Calendar className="h-5 w-5" />
+            </Editable>
             <EditableText id={`${idPrefix}.time`} as="span" text={time} />
           </div>
           <div className="flex items-center text-muted-foreground">
-            <Clock className="h-5 w-5 mr-2" />
+            <Editable id={`${idPrefix}.icon.duration`} type="icon" className="mr-2">
+              <Clock className="h-5 w-5" />
+            </Editable>
             <EditableText id={`${idPrefix}.duration`} as="span" text={duration} />
           </div>
           {capacity && (
             <div className="flex items-center text-muted-foreground">
-              <Users className="h-5 w-5 mr-2" />
-              {t('common.upTo', { count: capacity })} {t('common.people')}
+              <Editable id={`${idPrefix}.icon.capacity`} type="icon" className="mr-2">
+                <Users className="h-5 w-5" />
+              </Editable>
+              <EditableText 
+                id={`${idPrefix}.capacity`} 
+                as="span" 
+                text={`${t('common.upTo', { count: capacity })} ${t('common.people')}`}
+              />
             </div>
           )}
         </div>
@@ -87,17 +97,27 @@ export function ActivityCard({
         {(intensity || tags) && (
           <div className="flex flex-wrap gap-2">
             {intensity && (
-              <Badge className={intensityColors[intensity]}>{t(`activitiesPage.${intensity.toLowerCase()}`)} {t('common.intensity')}</Badge>
+              <Editable id={`${idPrefix}.badge.intensity`} className={cn("badge", intensityColors[intensity])}>
+                <Badge className={cn(intensityColors[intensity], "bg-transparent hover:bg-transparent shadow-none border-none p-0")}>
+                   {t(`activitiesPage.${intensity.toLowerCase()}`)} {t('common.intensity')}
+                </Badge>
+              </Editable>
             )}
             {tags?.map((tag, index) => (
-              <Badge key={index} variant="outline">{tag}</Badge>
+              <EditableText 
+                key={index}
+                id={`${idPrefix}.tag.${index}`}
+                as={Badge}
+                variant="outline"
+                text={tag}
+              />
             ))}
           </div>
         )}
 
         {onBook && (
           <Button className="w-full btn-elderly" onClick={onBook}>
-            {t('common.bookActivity')}
+            <EditableText id={`${idPrefix}.btn`} text={t('common.bookActivity')} />
           </Button>
         )}
       </div>

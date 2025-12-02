@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { MapPin, Phone, Mail, MessageCircle, Clock } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { EditableText, Editable } from "@/components/editor/Editable";
 
 export default function Contact() {
   const { t } = useTranslation();
@@ -16,6 +17,7 @@ export default function Contact() {
       <div className="section-padding bg-gradient-warm">
         <div className="max-w-6xl mx-auto container-padding">
           <SectionHeader
+            idPrefix="contact.header"
             title={t('contactPage.title')}
             description={t('contactPage.description')}
           />
@@ -24,27 +26,41 @@ export default function Contact() {
             {/* Contact Form */}
             <Card>
               <CardHeader>
-                <CardTitle>{t('contactPage.formTitle')}</CardTitle>
+                <EditableText 
+                  id="contact.form.title" 
+                  as={CardTitle} 
+                  text={t('contactPage.formTitle')} 
+                />
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="name">{t('contactPage.name')}</Label>
+                  <Label htmlFor="name">
+                    <EditableText id="contact.form.label.name" text={t('contactPage.name')} />
+                  </Label>
                   <Input id="name" placeholder={t('contactPage.namePlaceholder')} className="text-lg" />
                 </div>
                 <div>
-                  <Label htmlFor="email">{t('contactPage.email')}</Label>
+                  <Label htmlFor="email">
+                    <EditableText id="contact.form.label.email" text={t('contactPage.email')} />
+                  </Label>
                   <Input id="email" type="email" placeholder={t('contactPage.emailPlaceholder')} className="text-lg" />
                 </div>
                 <div>
-                  <Label htmlFor="phone">{t('contactPage.phone')}</Label>
+                  <Label htmlFor="phone">
+                    <EditableText id="contact.form.label.phone" text={t('contactPage.phone')} />
+                  </Label>
                   <Input id="phone" type="tel" placeholder={t('contactPage.phonePlaceholder')} className="text-lg" />
                 </div>
                 <div>
-                  <Label htmlFor="subject">{t('contactPage.subject')}</Label>
+                  <Label htmlFor="subject">
+                    <EditableText id="contact.form.label.subject" text={t('contactPage.subject')} />
+                  </Label>
                   <Input id="subject" placeholder={t('contactPage.subjectPlaceholder')} className="text-lg" />
                 </div>
                 <div>
-                  <Label htmlFor="message">{t('contactPage.message')}</Label>
+                  <Label htmlFor="message">
+                    <EditableText id="contact.form.label.message" text={t('contactPage.message')} />
+                  </Label>
                   <Textarea
                     id="message"
                     placeholder={t('contactPage.messagePlaceholder')}
@@ -52,7 +68,7 @@ export default function Contact() {
                   />
                 </div>
                 <Button size="lg" className="w-full btn-elderly">
-                  {t('contactPage.sendButton')}
+                  <EditableText id="contact.form.submit" text={t('contactPage.sendButton')} />
                 </Button>
               </CardContent>
             </Card>
@@ -62,12 +78,22 @@ export default function Contact() {
               <Card>
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
-                    <MapPin className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+                    <Editable id="contact.icon.address" type="icon" className="mt-1">
+                      <MapPin className="h-6 w-6 text-primary" />
+                    </Editable>
                     <div>
-                      <h4 className="font-semibold mb-2">{t('contactPage.address')}</h4>
-                      <p className="text-muted-foreground whitespace-pre-line">
-                        {t('contactPage.addressDetail')}
-                      </p>
+                      <EditableText 
+                        id="contact.address.title" 
+                        as="h4" 
+                        className="font-semibold mb-2" 
+                        text={t('contactPage.address')} 
+                      />
+                      <EditableText 
+                        id="contact.address.detail" 
+                        as="p" 
+                        className="text-muted-foreground whitespace-pre-line" 
+                        text={t('contactPage.addressDetail')} 
+                      />
                     </div>
                   </div>
                 </CardContent>
@@ -76,12 +102,22 @@ export default function Contact() {
               <Card>
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
-                    <Phone className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+                    <Editable id="contact.icon.phone" type="icon" className="mt-1">
+                      <Phone className="h-6 w-6 text-primary" />
+                    </Editable>
                     <div>
-                      <h4 className="font-semibold mb-2">{t('contactPage.phoneTitle')}</h4>
-                      <p className="text-muted-foreground whitespace-pre-line">
-                        {t('contactPage.phoneDetail')}
-                      </p>
+                      <EditableText 
+                        id="contact.phone.title" 
+                        as="h4" 
+                        className="font-semibold mb-2" 
+                        text={t('contactPage.phoneTitle')} 
+                      />
+                      <EditableText 
+                        id="contact.phone.detail" 
+                        as="p" 
+                        className="text-muted-foreground whitespace-pre-line" 
+                        text={t('contactPage.phoneDetail')} 
+                      />
                     </div>
                   </div>
                 </CardContent>
@@ -90,12 +126,22 @@ export default function Contact() {
               <Card>
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
-                    <Mail className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+                    <Editable id="contact.icon.email" type="icon" className="mt-1">
+                      <Mail className="h-6 w-6 text-primary" />
+                    </Editable>
                     <div>
-                      <h4 className="font-semibold mb-2">{t('contactPage.emailTitle')}</h4>
-                      <p className="text-muted-foreground whitespace-pre-line">
-                        {t('contactPage.emailDetail')}
-                      </p>
+                      <EditableText 
+                        id="contact.email.title" 
+                        as="h4" 
+                        className="font-semibold mb-2" 
+                        text={t('contactPage.emailTitle')} 
+                      />
+                      <EditableText 
+                        id="contact.email.detail" 
+                        as="p" 
+                        className="text-muted-foreground whitespace-pre-line" 
+                        text={t('contactPage.emailDetail')} 
+                      />
                     </div>
                   </div>
                 </CardContent>
@@ -104,12 +150,24 @@ export default function Contact() {
               <Card>
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
-                    <MessageCircle className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+                    <Editable id="contact.icon.line" type="icon" className="mt-1">
+                      <MessageCircle className="h-6 w-6 text-primary" />
+                    </Editable>
                     <div>
-                      <h4 className="font-semibold mb-2">{t('contactPage.lineTitle')}</h4>
-                      <p className="text-muted-foreground">{t('contactPage.lineDetail')}</p>
+                      <EditableText 
+                        id="contact.line.title" 
+                        as="h4" 
+                        className="font-semibold mb-2" 
+                        text={t('contactPage.lineTitle')} 
+                      />
+                      <EditableText 
+                        id="contact.line.detail" 
+                        as="p" 
+                        className="text-muted-foreground" 
+                        text={t('contactPage.lineDetail')} 
+                      />
                       <Button variant="outline" className="mt-2">
-                        {t('contactPage.addLineButton')}
+                        <EditableText id="contact.line.button" text={t('contactPage.addLineButton')} />
                       </Button>
                     </div>
                   </div>
@@ -119,12 +177,22 @@ export default function Contact() {
               <Card>
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
-                    <Clock className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+                    <Editable id="contact.icon.hours" type="icon" className="mt-1">
+                      <Clock className="h-6 w-6 text-primary" />
+                    </Editable>
                     <div>
-                      <h4 className="font-semibold mb-2">{t('contactPage.hoursTitle')}</h4>
-                      <p className="text-muted-foreground whitespace-pre-line">
-                        {t('contactPage.hoursDetail')}
-                      </p>
+                      <EditableText 
+                        id="contact.hours.title" 
+                        as="h4" 
+                        className="font-semibold mb-2" 
+                        text={t('contactPage.hoursTitle')} 
+                      />
+                      <EditableText 
+                        id="contact.hours.detail" 
+                        as="p" 
+                        className="text-muted-foreground whitespace-pre-line" 
+                        text={t('contactPage.hoursDetail')} 
+                      />
                     </div>
                   </div>
                 </CardContent>

@@ -7,7 +7,7 @@ interface EditableProps {
   className?: string;
   children?: React.ReactNode;
   as?: any;
-  type?: "text" | "image" | "container";
+  type?: "text" | "image" | "container" | "icon";
   style?: React.CSSProperties; // Allow passing default styles
 }
 

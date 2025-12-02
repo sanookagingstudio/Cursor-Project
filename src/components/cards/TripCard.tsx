@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { EditableText, EditableImage, Editable } from "@/components/editor/Editable";
 
 interface TripCardProps {
   title: string;
@@ -16,6 +17,7 @@ interface TripCardProps {
   tags?: string[];
   onBook?: () => void;
   className?: string;
+  idPrefix?: string; // Added idPrefix
 }
 
 export function TripCard({
@@ -30,6 +32,7 @@ export function TripCard({
   tags,
   onBook,
   className,
+  idPrefix = "trip", // Default prefix
 }: TripCardProps) {
   const { t } = useTranslation();
   const difficultyColors = {
@@ -42,43 +45,76 @@ export function TripCard({
     <div className={cn("rounded-xl bg-card border card-shadow hover:card-shadow-hover transition-all overflow-hidden", className)}>
       {image && (
         <div className="aspect-video overflow-hidden relative">
-          <img src={image} alt={title} className="w-full h-full object-cover hover:scale-105 transition-transform" />
+          <EditableImage 
+            id={`${idPrefix}.image`}
+            src={image} 
+            alt={title} 
+            className="w-full h-full object-cover hover:scale-105 transition-transform" 
+          />
           <div className="absolute top-4 right-4 bg-white/95 backdrop-blur px-3 py-1 rounded-full font-semibold text-primary">
-            {price}
+            <EditableText id={`${idPrefix}.price`} text={price} />
           </div>
         </div>
       )}
       <div className="p-6 space-y-4">
         <div>
-          <h3 className="text-xl font-semibold mb-2">{title}</h3>
-          <p className="text-muted-foreground">{description}</p>
+          <EditableText 
+            id={`${idPrefix}.title`} 
+            as="h3" 
+            className="text-xl font-semibold mb-2" 
+            text={title} 
+          />
+          <EditableText 
+            id={`${idPrefix}.description`} 
+            as="p" 
+            className="text-muted-foreground" 
+            text={description} 
+          />
         </div>
         
         <div className="space-y-2 text-sm">
           <div className="flex items-center text-muted-foreground">
-            <MapPin className="h-4 w-4 mr-2" />
-            {location}
+            <Editable id={`${idPrefix}.icon.location`} type="icon" className="mr-2">
+                <MapPin className="h-4 w-4" />
+            </Editable>
+            <EditableText id={`${idPrefix}.location`} as="span" text={location} />
           </div>
           <div className="flex items-center text-muted-foreground">
-            <Calendar className="h-4 w-4 mr-2" />
-            {date} • {duration}
+            <Editable id={`${idPrefix}.icon.calendar`} type="icon" className="mr-2">
+                <Calendar className="h-4 w-4" />
+            </Editable>
+            <span className="flex items-center gap-1">
+                <EditableText id={`${idPrefix}.date`} as="span" text={date} />
+                <span>•</span>
+                <EditableText id={`${idPrefix}.duration`} as="span" text={duration} />
+            </span>
           </div>
         </div>
 
         {(difficulty || tags) && (
           <div className="flex flex-wrap gap-2">
             {difficulty && (
-              <Badge className={difficultyColors[difficulty]}>{t(`tripsPage.${difficulty.toLowerCase()}`)}</Badge>
+              <Editable id={`${idPrefix}.badge.difficulty`} className={cn("badge", difficultyColors[difficulty])}>
+                  <Badge className={cn(difficultyColors[difficulty], "bg-transparent hover:bg-transparent shadow-none border-none p-0")}>
+                    {t(`tripsPage.${difficulty.toLowerCase()}`)}
+                  </Badge>
+              </Editable>
             )}
             {tags?.map((tag, index) => (
-              <Badge key={index} variant="outline">{tag}</Badge>
+              <EditableText 
+                key={index}
+                id={`${idPrefix}.tag.${index}`}
+                as={Badge}
+                variant="outline"
+                text={tag}
+              />
             ))}
           </div>
         )}
 
         {onBook && (
           <Button className="w-full btn-elderly" onClick={onBook}>
-            {t('common.viewTrip')}
+            <EditableText id={`${idPrefix}.btn`} text={t('common.viewTrip')} />
           </Button>
         )}
       </div>

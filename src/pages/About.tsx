@@ -3,6 +3,7 @@ import { HeroSection } from "@/components/sections/HeroSection";
 import { FeatureGrid } from "@/components/sections/FeatureGrid";
 import { Heart, Award, Users, Shield, Sparkles, Target } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { EditableText, Editable } from "@/components/editor/Editable";
 
 const About = () => {
   const { t } = useTranslation();
@@ -43,6 +44,7 @@ const About = () => {
   return (
     <PublicLayout>
       <HeroSection
+        idPrefix="about.hero"
         subtitle={t('about.subtitle')}
         title={t('about.title')}
         description={t('about.description')}
@@ -52,28 +54,53 @@ const About = () => {
       <section className="section-padding">
         <div className="container-padding max-w-4xl mx-auto space-y-8">
           <div className="prose prose-lg max-w-none">
-            <h2 className="text-3xl font-bold mb-6">{t('about.mission.title')}</h2>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              {t('about.mission.p1')}
-            </p>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              {t('about.mission.p2')}
-            </p>
+            <EditableText 
+              id="about.mission.title" 
+              as="h2" 
+              className="text-3xl font-bold mb-6" 
+              text={t('about.mission.title')} 
+            />
+            <EditableText 
+              id="about.mission.p1" 
+              as="p" 
+              className="text-lg text-muted-foreground leading-relaxed" 
+              text={t('about.mission.p1')} 
+            />
+            <EditableText 
+              id="about.mission.p2" 
+              as="p" 
+              className="text-lg text-muted-foreground leading-relaxed" 
+              text={t('about.mission.p2')} 
+            />
           </div>
 
           <div className="prose prose-lg max-w-none">
-            <h2 className="text-3xl font-bold mb-6">{t('about.different.title')}</h2>
+            <EditableText 
+              id="about.different.title" 
+              as="h2" 
+              className="text-3xl font-bold mb-6" 
+              text={t('about.different.title')} 
+            />
             <ul className="space-y-4 text-lg text-muted-foreground">
-              <li dangerouslySetInnerHTML={{ __html: t('about.different.point1') }} />
-              <li dangerouslySetInnerHTML={{ __html: t('about.different.point2') }} />
-              <li dangerouslySetInnerHTML={{ __html: t('about.different.point3') }} />
-              <li dangerouslySetInnerHTML={{ __html: t('about.different.point4') }} />
+              <li className="flex gap-2">
+                <EditableText id="about.different.point1" as="span" text={t('about.different.point1')} />
+              </li>
+              <li className="flex gap-2">
+                <EditableText id="about.different.point2" as="span" text={t('about.different.point2')} />
+              </li>
+              <li className="flex gap-2">
+                <EditableText id="about.different.point3" as="span" text={t('about.different.point3')} />
+              </li>
+              <li className="flex gap-2">
+                <EditableText id="about.different.point4" as="span" text={t('about.different.point4')} />
+              </li>
             </ul>
           </div>
         </div>
       </section>
 
       <FeatureGrid
+        idPrefix="about.values"
         title={t('about.values.title')}
         description={t('about.values.description')}
         features={values}
@@ -82,22 +109,60 @@ const About = () => {
 
       <section className="section-padding bg-muted/30">
         <div className="container-padding max-w-4xl mx-auto text-center space-y-6">
-          <h2 className="text-3xl font-bold">{t('about.certification.title')}</h2>
-          <p className="text-lg text-muted-foreground">
-            {t('about.certification.description')}
-          </p>
+          <EditableText 
+            id="about.certification.title" 
+            as="h2" 
+            className="text-3xl font-bold" 
+            text={t('about.certification.title')} 
+          />
+          <EditableText 
+            id="about.certification.description" 
+            as="p" 
+            className="text-lg text-muted-foreground" 
+            text={t('about.certification.description')} 
+          />
           <div className="flex flex-wrap justify-center gap-8 pt-8">
             <div className="text-center">
-              <div className="text-4xl font-bold text-primary">{t('about.certification.stat1')}</div>
-              <div className="text-muted-foreground">{t('about.certification.stat1Label')}</div>
+              <EditableText 
+                id="about.certification.stat1" 
+                as="div" 
+                className="text-4xl font-bold text-primary" 
+                text={t('about.certification.stat1')} 
+              />
+              <EditableText 
+                id="about.certification.stat1Label" 
+                as="div" 
+                className="text-muted-foreground" 
+                text={t('about.certification.stat1Label')} 
+              />
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-primary">{t('about.certification.stat2')}</div>
-              <div className="text-muted-foreground">{t('about.certification.stat2Label')}</div>
+              <EditableText 
+                id="about.certification.stat2" 
+                as="div" 
+                className="text-4xl font-bold text-primary" 
+                text={t('about.certification.stat2')} 
+              />
+              <EditableText 
+                id="about.certification.stat2Label" 
+                as="div" 
+                className="text-muted-foreground" 
+                text={t('about.certification.stat2Label')} 
+              />
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-primary">{t('about.certification.stat3')}</div>
-              <div className="text-muted-foreground">{t('about.certification.stat3Label')}</div>
+              <EditableText 
+                id="about.certification.stat3" 
+                as="div" 
+                className="text-4xl font-bold text-primary" 
+                text={t('about.certification.stat3')} 
+              />
+              <EditableText 
+                id="about.certification.stat3Label" 
+                as="div" 
+                className="text-muted-foreground" 
+                text={t('about.certification.stat3Label')} 
+              />
             </div>
           </div>
         </div>

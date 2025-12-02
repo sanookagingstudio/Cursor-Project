@@ -2,6 +2,7 @@ import { Play, Headphones, FileText, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { EditableText, EditableImage, Editable } from "@/components/editor/Editable";
 
 interface MediaCardProps {
   title: string;
@@ -12,6 +13,7 @@ interface MediaCardProps {
   category?: string;
   onView?: () => void;
   className?: string;
+  idPrefix?: string;
 }
 
 export function MediaCard({
@@ -23,6 +25,7 @@ export function MediaCard({
   category,
   onView,
   className,
+  idPrefix = "media",
 }: MediaCardProps) {
   const typeIcons = {
     video: Play,
@@ -42,7 +45,12 @@ export function MediaCard({
     <div className={cn("rounded-xl bg-card border card-shadow hover:card-shadow-hover transition-all overflow-hidden", className)}>
       {thumbnail && (
         <div className="aspect-video overflow-hidden relative group">
-          <img src={thumbnail} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+          <EditableImage 
+            id={`${idPrefix}.thumbnail`}
+            src={thumbnail} 
+            alt={title} 
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform" 
+          />
           <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
             <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center">
               <Icon className="h-8 w-8 text-primary" />
@@ -51,7 +59,7 @@ export function MediaCard({
           {duration && (
             <div className="absolute bottom-4 right-4 bg-black/80 text-white px-2 py-1 rounded text-sm flex items-center">
               <Clock className="h-3 w-3 mr-1" />
-              {duration}
+              <EditableText id={`${idPrefix}.duration`} as="span" text={duration} />
             </div>
           )}
         </div>
@@ -62,12 +70,28 @@ export function MediaCard({
             <Icon className="h-3 w-3 mr-1" />
             {typeLabels[type]}
           </Badge>
-          {category && <Badge variant="secondary">{category}</Badge>}
+          {category && (
+             <Editable id={`${idPrefix}.badge.category`} className="badge-secondary">
+                <Badge variant="secondary">
+                    <EditableText id={`${idPrefix}.category`} as="span" text={category} />
+                </Badge>
+             </Editable>
+          )}
         </div>
         
         <div>
-          <h3 className="text-xl font-semibold mb-2">{title}</h3>
-          <p className="text-muted-foreground line-clamp-2">{description}</p>
+          <EditableText 
+            id={`${idPrefix}.title`} 
+            as="h3" 
+            className="text-xl font-semibold mb-2" 
+            text={title} 
+          />
+          <EditableText 
+            id={`${idPrefix}.description`} 
+            as="p" 
+            className="text-muted-foreground line-clamp-2" 
+            text={description} 
+          />
         </div>
 
         {onView && (

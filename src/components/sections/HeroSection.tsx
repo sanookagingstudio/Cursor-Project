@@ -12,6 +12,7 @@ interface HeroSectionProps {
   image?: string;
   className?: string;
   children?: ReactNode;
+  idPrefix?: string;
 }
 
 export function HeroSection({
@@ -23,6 +24,7 @@ export function HeroSection({
   image,
   className,
   children,
+  idPrefix = "hero",
 }: HeroSectionProps) {
   
   return (
@@ -32,21 +34,21 @@ export function HeroSection({
           <div className="space-y-6">
             {subtitle && (
               <EditableText 
-                id="hero.subtitle" 
+                id={`${idPrefix}.subtitle`}
                 as="div" 
                 className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-base font-medium"
                 text={subtitle}
               />
             )}
             <EditableText 
-                id="hero.title"
+                id={`${idPrefix}.title`}
                 as="h1"
                 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight"
                 text={title}
             />
             {description && (
               <EditableText
-                id="hero.description"
+                id={`${idPrefix}.description`}
                 as="p"
                 className="text-2xl text-muted-foreground leading-relaxed"
                 text={description}
@@ -69,7 +71,7 @@ export function HeroSection({
           {image && (
             <div className="relative aspect-square lg:aspect-auto lg:h-[500px] rounded-2xl overflow-hidden shadow-large">
               <EditableImage
-                id="hero.image"
+                id={`${idPrefix}.image`}
                 src={image}
                 alt={title}
                 className="w-full h-full object-cover rounded-2xl"

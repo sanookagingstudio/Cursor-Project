@@ -101,6 +101,7 @@ export default function MediaLibrary() {
       <div className="section-padding bg-gradient-warm">
         <div className="max-w-7xl mx-auto container-padding">
           <SectionHeader
+            idPrefix="media.header"
             title={t('mediaLibraryPage.title')}
             description={t('mediaLibraryPage.description')}
           />
@@ -115,28 +116,28 @@ export default function MediaLibrary() {
 
             <TabsContent value="all" className="space-y-8 mt-8">
               <div>
-                <h3 className="mb-4">{t('mediaLibraryPage.videos')}</h3>
+                <EditableText id="media.section.videos" as="h3" className="mb-4" text={t('mediaLibraryPage.videos')} />
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {videos.map((item) => (
-                    <MediaCard key={item.title} {...item} />
+                  {videos.map((item, i) => (
+                    <MediaCard key={item.title} idPrefix={`media.video.${i}`} {...item} />
                   ))}
                 </div>
               </div>
 
               <div>
-                <h3 className="mb-4">{t('mediaLibraryPage.podcasts')}</h3>
+                <EditableText id="media.section.podcasts" as="h3" className="mb-4" text={t('mediaLibraryPage.podcasts')} />
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {podcasts.map((item) => (
-                    <MediaCard key={item.title} {...item} />
+                  {podcasts.map((item, i) => (
+                    <MediaCard key={item.title} idPrefix={`media.podcast.${i}`} {...item} />
                   ))}
                 </div>
               </div>
 
               <div>
-                <h3 className="mb-4">{t('mediaLibraryPage.articles')}</h3>
+                <EditableText id="media.section.articles" as="h3" className="mb-4" text={t('mediaLibraryPage.articles')} />
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {articles.map((item) => (
-                    <MediaCard key={item.title} {...item} />
+                  {articles.map((item, i) => (
+                    <MediaCard key={item.title} idPrefix={`media.article.${i}`} {...item} />
                   ))}
                 </div>
               </div>
@@ -144,24 +145,24 @@ export default function MediaLibrary() {
 
             <TabsContent value="videos" className="mt-8">
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {videos.map((item) => (
-                  <MediaCard key={item.title} {...item} />
+                {videos.map((item, i) => (
+                  <MediaCard key={item.title} idPrefix={`media.video.${i}`} {...item} />
                 ))}
               </div>
             </TabsContent>
 
             <TabsContent value="podcasts" className="mt-8">
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {podcasts.map((item) => (
-                  <MediaCard key={item.title} {...item} />
+                {podcasts.map((item, i) => (
+                  <MediaCard key={item.title} idPrefix={`media.podcast.${i}`} {...item} />
                 ))}
               </div>
             </TabsContent>
 
             <TabsContent value="articles" className="mt-8">
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {articles.map((item) => (
-                  <MediaCard key={item.title} {...item} />
+                {articles.map((item, i) => (
+                  <MediaCard key={item.title} idPrefix={`media.article.${i}`} {...item} />
                 ))}
               </div>
             </TabsContent>

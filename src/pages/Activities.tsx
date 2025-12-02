@@ -76,6 +76,7 @@ const Activities = () => {
       <div className="section-padding">
         <div className="container-padding max-w-7xl mx-auto">
           <SectionHeader
+            idPrefix="activities.header"
             title={t('activitiesPage.title')}
             description={t('activitiesPage.description')}
           />
@@ -109,7 +110,11 @@ const Activities = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {activities.map((activity, index) => (
-              <ActivityCard key={index} {...activity} />
+              <ActivityCard 
+                key={index} 
+                idPrefix={`activities.item.${index}`}
+                {...activity} 
+              />
             ))}
           </div>
         </div>
