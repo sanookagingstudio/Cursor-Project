@@ -100,3 +100,4 @@
 - ต้อง **commit และ deploy** ถึงจะเห็นผลใน production
 - Handler functions บางส่วนยังเป็น mock implementations - สามารถเชื่อมต่อกับ backend API จริงได้ในอนาคต
 
+

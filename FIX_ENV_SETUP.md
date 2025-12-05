@@ -153,3 +153,4 @@ VITE_SUPABASE_PUBLISHABLE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 
 **Production:** ❓ ต้องตรวจสอบและตั้งค่า Environment Variables ใน Vercel แล้ว Redeploy
 
+

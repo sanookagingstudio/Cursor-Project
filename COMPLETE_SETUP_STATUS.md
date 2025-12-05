@@ -228,3 +228,4 @@ app.add_middleware(
 2. **ตรวจสอบ Backend Deployment** - deploy ที่ไหน? ทำงานอยู่หรือไม่?
 3. **Test ทุกอย่าง** หลัง Redeploy
 
+

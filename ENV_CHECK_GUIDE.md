@@ -157,3 +157,4 @@ VITE_SUPABASE_PUBLISHABLE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJz
 - [ ] รอ build เสร็จ (1-2 นาที)
 - [ ] Hard Refresh หน้า funaging.club
 
+

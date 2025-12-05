@@ -68,3 +68,4 @@ git push origin main
 - ต้อง deploy ทุกครั้งที่แก้ไข code
 - Vercel จะ rebuild อัตโนมัติเมื่อ deploy
 
+

@@ -62,3 +62,4 @@ vercel --prod
 - Vercel จะ rebuild อัตโนมัติเมื่อ deploy
 
 
+
