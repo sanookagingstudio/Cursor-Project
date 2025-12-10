@@ -1,0 +1,9 @@
+{
+  "MODE": "admin",
+  "SAFE_MODE": true,
+  "SUPABASE_URL": "https://klgyptqcegupwtdmuepz.supabase.co",
+  "SUPABASE_SERVICE_ROLE": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsZ3lwdHFjZWd1cHd0ZG11ZXB6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MzExNjUzOSwiZXhwIjoyMDc4NjkyNTM5fQ.pQvClFNL6_FpfO_xewpo6qRDiKl8IoVSlu3NOM7ZQ8o",
+  "SUPABASE_ANON": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsZ3lwdHFjZWd1cHd0ZG11ZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxMTY1MzksImV4cCI6MjA3ODY5MjUzOX0.rrkvIWlJG9gk2zazpYaq-E_6OartiBVVoWrrEzKiH8I",
+  "BACKEND_URL": "http://localhost:8000",
+  "FRONTEND_URL": "http://localhost:3000"
+}

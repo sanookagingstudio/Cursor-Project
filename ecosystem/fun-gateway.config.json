@@ -1,0 +1,112 @@
+﻿# FUN Ecosystem Overview (FunAging.club)
+
+ไฟล์นี้อธิบายภาพรวมการเชื่อมต่อระหว่างเว็บ FunAging.club กับแอปอื่น ๆ ใน Ecosystem เช่น Media OS และแอปในอนาคต
+
+## เป้าหมายหลัก
+
+1. ใช้ FunAging.club เป็นศูนย์กลาง (HQ) ของทุกแอป
+2. ใช้ระบบตัวตนเดียว (FUN ID) แทนการแยก Account หลายชุด
+3. เชื่อมข้อมูลผ่าน API Gateway กลางที่ออกแบบมาชัดเจน
+4. ป้องกันระบบพังด้วย Versioning + Restore ที่ใช้งานง่าย
+
+## ไฟล์สำคัญ
+
+- `ecosystem/fun-gateway.config.json`
+  - เก็บข้อมูลรายชื่อแอปที่เชื่อมกับ FunAging.club
+  - กำหนดรูปแบบ Token / Header / Claim ที่ใช้ร่วมกัน
+- `scripts/fun-system-check.ps1`
+  - ใช้ตรวจสุขภาพระบบก่อนพัฒนา/เชื่อมต่อเพิ่ม
+- `scripts/fun-ecosystem-sync.ps1`
+  - ใช้เป็นจุดเริ่มต้นสำหรับการ Sync สถานะกับแอปอื่นใน Ecosystem
+- `versions/meta.json` และไฟล์ในโฟลเดอร์ `versions`
+  - บันทึก Version ทั้งหมดของระบบ และใช้ Restore ย้อนกลับได้
+
+## หลักการออกแบบ Token
+
+- Header: `x-fun-token`
+- Issuer (iss): `funaging.club`
+- Audience (aud): `funaging-ecosystem`
+- Scope ใช้กำหนดสิทธิ์ เช่น
+  - `media.read`, `media.write`
+  - `member.read`, `member.write`
+
+## แนวทางเชื่อมแอปใหม่
+
+1. เพิ่มรายการแอปใน `fun-gateway.config.json`
+2. ออกแบบ API ระหว่างแอปให้ชัดเจน (URL / Method / Body)
+3. สร้าง Version ใหม่ด้วยคำสั่ง
+
+   ```powershell
+   .\new-version.ps1 "เพิ่มการเชื่อมต่อแอป XXX"
+# =====================================================
+# ONE PACK FINAL V2  FUNAGING.CLUB
+# - Stabilization + Ecosystem Integration Prep
+# - System Health Check + Final Docs
+# - GitHub Sync + Version Tag
+# =====================================================
+
+$ErrorActionPreference = "Stop"
+
+Write-Host "`n=== ONE PACK FINAL V2  FUNAGING.CLUB START ===" -ForegroundColor Cyan
+
+# 0) Verify project root
+if (!(Test-Path "package.json")) {
+    Write-Host "ไม่พบ package.json กรุณา cd มาที่โฟลเดอร์ sanook-master-v2-main ก่อน" -ForegroundColor Red
+    exit 1
+}
+
+# 1) Ensure base folders
+$ecosystemDir = "ecosystem"
+$scriptsDir   = "scripts"
+$versionsDir  = "versions"
+
+if (!(Test-Path $ecosystemDir)) { New-Item -ItemType Directory $ecosystemDir | Out-Null }
+if (!(Test-Path $scriptsDir))   { New-Item -ItemType Directory $scriptsDir   | Out-Null }
+if (!(Test-Path $versionsDir))  { New-Item -ItemType Directory $versionsDir  | Out-Null }
+
+# 2) Create Ecosystem Gateway Config
+@'
+{
+  "issuer": "funaging.club",
+  "tokenHeader": "x-fun-token",
+  "apps": [
+    {
+      "name": "media-os",
+      "code": "MEDIA_OS",
+      "type": "internal",
+      "enabled": true,
+      "baseUrl": "https://media.funaging.local",
+      "notes": "แอป Media OS สำหรับจัดการคอนเทนต์และสื่อต่างๆ"
+    },
+    {
+      "name": "future-app-1",
+      "code": "APP1",
+      "type": "internal",
+      "enabled": false,
+      "baseUrl": "",
+      "notes": "สำรองสำหรับแอปในอนาคต"
+    },
+    {
+      "name": "future-app-2",
+      "code": "APP2",
+      "type": "external",
+      "enabled": false,
+      "baseUrl": "",
+      "notes": "สำรองสำหรับแอปภายนอกในอนาคต"
+    }
+  ],
+  "jwt": {
+    "algo": "HS256",
+    "defaultExpiryMinutes": 60,
+    "claims": {
+      "iss": "funaging.club",
+      "aud": "funaging-ecosystem",
+      "scopeExample": [
+        "media.read",
+        "media.write",
+        "member.read",
+        "member.write"
+      ]
+    }
+  }
+}

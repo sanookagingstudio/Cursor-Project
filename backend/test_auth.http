@@ -1,0 +1,18 @@
+### Login with default admin (if not changed)
+
+POST http://localhost:8000/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "Admin1234!"
+}
+
+### Me (replace TOKEN)
+
+GET http://localhost:8000/auth/me
+Authorization: Bearer TOKEN
+
+### Health
+
+GET http://localhost:8000/health

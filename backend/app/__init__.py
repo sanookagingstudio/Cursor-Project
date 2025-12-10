@@ -1,3 +1,1 @@
-# Media Creator Core Foundation
-__version__ = "1.0.0"
-
+# FunAging Backend App
