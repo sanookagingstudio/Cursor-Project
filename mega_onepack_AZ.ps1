@@ -1,74 +1,70 @@
+# ONEPACK AZ START
+
+
+
 $ErrorActionPreference = "Stop"
 
 
 
 $global:ONEPACK_STATUS = @{}
 
-$global:ONEPACK_LOG = Join-Path -Path (Get-Location) -ChildPath "mega_onepack_AZ.log"
+$global:ONEPACK_LOG = Join-Path (Get-Location) "mega_onepack_AZ.log"
+
+$script:OnePackSummary = @()
 
 
 
-function Write-Log {
+function LogFile { param($p,$m)
 
-    param([string]$Phase,[string]$Message)
-
-    $ts = (Get-Date).ToString("s")
-
-    $line = "[$ts] [$Phase] $Message"
-
-    Add-Content -Path $global:ONEPACK_LOG -Value $line
+    Add-Content -Path $global:ONEPACK_LOG -Value ("["+(Get-Date).ToString("s")+"] [$p] $m")
 
 }
 
 
 
-function Set-PhaseStatus {
+function PhaseSet { param($p,$s)
 
-    param([string]$Phase,[string]$Status)
+    $global:ONEPACK_STATUS[$p] = $s
 
-    $global:ONEPACK_STATUS[$Phase] = $Status
-
-    Write-Log -Phase $Phase -Message "STATUS=$Status"
+    LogFile $p ("STATUS="+$s)
 
 }
 
 
 
-function Invoke-WithRetry {
+function Summary { param($p,$m)
 
-    param(
+    $script:OnePackSummary += "[$p] $m"
 
-        [scriptblock]$Action,
+}
 
-        [int]$MaxRetry = 3,
 
-        [int]$DelaySeconds = 3,
 
-        [string]$Phase = "GENERIC"
+function Mask { param($v)
 
-    )
+    if(!$v){return ""}
 
-    $attempt = 0
+    if($v.Length -le 6){return ("*" * $v.Length)}
 
-    while ($attempt -lt $MaxRetry) {
+    return $v.Substring(0,3)+"*****"+$v.Substring($v.Length-3)
 
-        try {
+}
 
-            $attempt++
 
-            return & $Action
 
-        } catch {
+function Retry { param($a,$p,$r=3,$d=3)
 
-            Write-Log -Phase $Phase -Message "Attempt $attempt failed: $($_.Exception.Message)"
+    for($i=1;$i -le $r;$i++){
 
-            if ($attempt -ge $MaxRetry) {
+        try { return & $a }
 
-                throw
+        catch {
 
-            }
+            LogFile $p ("Retry $i failed: "+$_.Exception.Message)
 
-            Start-Sleep -Seconds $DelaySeconds
+            if($i -eq $r){ throw }
+
+            Start-Sleep $d
 
         }
 
@@ -78,33 +74,27 @@ function Invoke-WithRetry {
 
 
 
-function Load-EnvFile {
+function LoadEnv { param($file,$p)
 
-    param([string]$Path,[string]$Phase)
+    if(!(Test-Path $file)){ LogFile $p "Env not found: $file"; return }
 
-    if (Test-Path $Path) {
+    LogFile $p "Load env: $file"
 
-        Write-Log -Phase $Phase -Message "Loading env file: $Path"
+    foreach($l in Get-Content $file){
 
-        Get-Content $Path | Where-Object {$_ -and -not $_.Trim().StartsWith("#")} | ForEach-Object {
+        if(!$l.Trim() -or $l.Trim().StartsWith("#")){continue}
 
-            if ($_ -match "^\s*([^=]+)=(.*)$") {
+        $i = $l.IndexOf("=")
 
-                $key = $matches[1].Trim()
+        if($i -gt 0){
 
-                $val = $matches[2].Trim()
+            $k = $l.Substring(0,$i).Trim()
 
-                $val = $val.Trim('"').Trim("'")
+            $v = $l.Substring($i+1).Trim().Trim('"').Trim("'")
 
-                Set-Item -Path "env:$key" -Value $val
-
-            }
+            if($k){ Set-Item ("Env:"+$k) $v -ErrorAction SilentlyContinue }
 
         }
-
-    } else {
-
-        Write-Log -Phase $Phase -Message "Env file not found: $Path"
 
     }
 
@@ -112,31 +102,27 @@ function Load-EnvFile {
 
 
 
-function Test-HttpOk {
-
-    param([string]$Url,[int]$TimeoutSec = 8,[string]$Phase = "HTTP")
+function HttpOK { param($u,$p)
 
     try {
 
-        $result = Invoke-WebRequest -Uri $Url -Method GET -TimeoutSec $TimeoutSec
+        $r = Invoke-WebRequest -Uri $u -TimeoutSec 8 -Method GET
 
-        if ($result.StatusCode -ge 200 -and $result.StatusCode -lt 400) {
+        if($r.StatusCode -ge 200 -and $r.StatusCode -lt 400){
 
-            Write-Log -Phase $Phase -Message "HTTP OK: $Url Status=$($result.StatusCode)"
+            LogFile $p "HTTP OK: $u"
 
             return $true
 
-        } else {
-
-            Write-Log -Phase $Phase -Message "HTTP FAIL: $Url Status=$($result.StatusCode)"
-
-            return $false
-
         }
+
+        LogFile $p "HTTP BAD: $u Status="+$r.StatusCode
+
+        return $false
 
     } catch {
 
-        Write-Log -Phase $Phase -Message "HTTP ERROR: $Url Error=$($_.Exception.Message)"
+        LogFile $p "HTTP ERR: $u Error="+$_.Exception.Message
 
         return $false
 
@@ -146,55 +132,29 @@ function Test-HttpOk {
 
 
 
-function Ensure-GitSnapshot {
+function GitSnap { param($p)
 
-    param([string]$Phase)
+    if(!(Test-Path ".git")){ LogFile $p "Skip git snapshot"; return }
 
-    if (-not (Test-Path ".git")) {
+    try{ $s = git status --porcelain 2>$null }catch{ LogFile $p "Git fail"; return }
 
-        Write-Log -Phase $Phase -Message ".git folder not found, skipping git snapshot"
+    if($s){
 
-        return
+        git add -A | Out-Null
 
-    }
+        $m = "[ONEPACK-AZ] Auto snapshot "+(Get-Date -f s)
 
-    try {
+        git commit -m $m | Out-Null
 
-        $status = git status --porcelain 2>$null
+        $t="onepack-az-"+(Get-Date -f yyyyMMddHHmmss)
 
-    } catch {
+        try{ git tag -a $t -m $m | Out-Null }catch{}
 
-        Write-Log -Phase $Phase -Message "git status failed, skipping git snapshot"
-
-        return
-
-    }
-
-    if ($status) {
-
-        try {
-
-            git add -A | Out-Null
-
-            $msg = "[ONEPACK-AZ] Auto snapshot $(Get-Date -Format s)"
-
-            git commit -m $msg | Out-Null
-
-            $tag = "onepack-az-" + (Get-Date -Format "yyyyMMddHHmmss")
-
-            try { git tag -a $tag -m $msg | Out-Null } catch {}
-
-            Write-Log -Phase $Phase -Message "Git snapshot created: $msg Tag=$tag"
-
-        } catch {
-
-            Write-Log -Phase $Phase -Message "Git snapshot failed: $($_.Exception.Message)"
-
-        }
+        LogFile $p "Snapshot: $t"
 
     } else {
 
-        Write-Log -Phase $Phase -Message "No changes to commit, skipping git snapshot"
+        LogFile $p "No changes"
 
     }
 
@@ -202,43 +162,23 @@ function Ensure-GitSnapshot {
 
 
 
-function Ensure-DockerUp {
+function UpDocker { param($f,$p)
 
-    param([string]$ComposeFile,[string]$Phase)
+    if(!(Test-Path $f)){ LogFile $p "Compose missing: $f"; return }
 
-    if (-not (Test-Path $ComposeFile)) {
+    $c1="docker compose -f `"$f`" up -d --build"
 
-        Write-Log -Phase $Phase -Message "Compose file not found: $ComposeFile"
-
-        return
-
-    }
-
-    $cmd1 = "docker compose -f `"$ComposeFile`" up -d --build"
-
-    $cmd2 = "docker-compose -f `"$ComposeFile`" up -d --build"
+    $c2="docker-compose -f `"$f`" up -d --build"
 
     try {
 
-        Write-Log -Phase $Phase -Message "Running: $cmd1"
-
-        cmd.exe /c $cmd1 2>&1 | ForEach-Object { Write-Log -Phase $Phase -Message $_ }
+        cmd.exe /c $c1 2>&1 | % { LogFile $p $_ }
 
     } catch {
 
-        Write-Log -Phase $Phase -Message "docker compose failed, trying docker-compose: $($_.Exception.Message)"
+        try { cmd.exe /c $c2 2>&1 | % { LogFile $p $_ } }
 
-        try {
-
-            Write-Log -Phase $Phase -Message "Running: $cmd2"
-
-            cmd.exe /c $cmd2 2>&1 | ForEach-Object { Write-Log -Phase $Phase -Message $_ }
-
-        } catch {
-
-            Write-Log -Phase $Phase -Message "docker-compose failed: $($_.Exception.Message)"
-
-        }
+        catch { LogFile $p "Docker fail "+$_.Exception.Message }
 
     }
 
@@ -246,491 +186,372 @@ function Ensure-DockerUp {
 
 
 
-function Mask-Value {
+# ==========================
 
-    param([string]$v)
+# PHASE A — FOUNDATION
 
-    if (-not $v) { return "" }
+# ==========================
 
-    if ($v.Length -le 6) { return ("*" * $v.Length) }
+$p="PHASE-A"
 
-    $start = $v.Substring(0,3)
+PhaseSet $p "START"
 
-    $end = $v.Substring($v.Length-3)
+$root=(Get-Location).Path
 
-    return "$start*****$end"
+$backend=Join-Path $root "backend"
 
-}
+$frontend=Join-Path $root "frontend"
 
+$compose=Join-Path $root "docker-compose.sas.yml"
 
-
-$script:OnePackSummary = @()
-
-
-
-function Add-Summary {
-
-    param([string]$Phase,[string]$Message)
-
-    $script:OnePackSummary += "[$Phase] $Message"
-
-}
-
-
-
-# PHASE A - FOUNDATION
-
-$phase = "PHASE-A"
-
-Set-PhaseStatus -Phase $phase -Status "START"
-
-Write-Log -Phase $phase -Message "ONEPACK AZ START"
-
-
-
-$root = Get-Location
-
-$backendPath = Join-Path $root "backend"
-
-$frontendPath = Join-Path $root "frontend"
-
-$composeFile = Join-Path $root "docker-compose.sas.yml"
-
-$guardFile = Join-Path $root ".sas_guard.json"
+$guard=Join-Path $root ".sas_guard.json"
 
 
 
 try {
 
-    if (-not (Test-Path $backendPath)) { throw "backend folder not found: $backendPath" }
+    if(!(Test-Path $backend)){ throw "Missing backend folder" }
 
-    if (-not (Test-Path $frontendPath)) { throw "frontend folder not found: $frontendPath" }
-
-
-
-    Load-EnvFile -Path (Join-Path $backendPath ".env") -Phase $phase
-
-    Load-EnvFile -Path (Join-Path $root ".env") -Phase $phase
-
-    Load-EnvFile -Path (Join-Path $root ".env.local") -Phase $phase
-
-    Load-EnvFile -Path (Join-Path $frontendPath ".env.local") -Phase $phase
+    if(!(Test-Path $frontend)){ throw "Missing frontend folder" }
 
 
 
-    $fingerprint = @{
+    LoadEnv (Join-Path $backend ".env") $p
 
-        project_root = $root.Path
+    LoadEnv (Join-Path $root ".env") $p
 
-        timestamp = (Get-Date).ToString("o")
+    LoadEnv (Join-Path $root ".env.local") $p
 
-        marker = "FunAging.club-SAS-v1"
-
-    } | ConvertTo-Json -Depth 3
-
-    Set-Content -Path $guardFile -Value $fingerprint -Encoding UTF8
-
-    Write-Log -Phase $phase -Message "Guard file updated: $guardFile"
+    LoadEnv (Join-Path $frontend ".env.local") $p
 
 
 
-    Set-PhaseStatus -Phase $phase -Status "PASS"
+    $fp = @{ project_root=$root; time=(Get-Date).ToString("o"); marker="FunAging.club-SAS-v1" } | ConvertTo-Json
 
-    Add-Summary -Phase $phase -Message "Foundation OK"
+    Set-Content $guard $fp
 
-} catch {
 
-    Set-PhaseStatus -Phase $phase -Status "HEALING"
 
-    Write-Log -Phase $phase -Message "Error: $($_.Exception.Message)"
+    PhaseSet $p "PASS"
 
-    Add-Summary -Phase $phase -Message "Foundation issue: $($_.Exception.Message)"
+    Summary $p "Foundation OK"
 
-    Set-PhaseStatus -Phase $phase -Status "PASS-WITH-ISSUES"
+}
+
+catch {
+
+    PhaseSet $p "PASS-WITH-ISSUES"
+
+    Summary $p ("Foundation issue: "+$_.Exception.Message)
 
 }
 
 
 
-# PHASE B - SUPABASE AUTH ENGINE
+# ==========================
 
-$phase = "PHASE-B"
+# PHASE B — SUPABASE AUTH
 
-Set-PhaseStatus -Phase $phase -Status "START"
+# ==========================
 
+$p="PHASE-B"
 
-
-$SUPABASE_URL = $env:SUPABASE_URL
-
-$SUPABASE_ANON_KEY = $env:SUPABASE_ANON_KEY
-
-$SUPABASE_SERVICE_ROLE_KEY = $env:SUPABASE_SERVICE_ROLE_KEY
-
-if (-not $SUPABASE_SERVICE_ROLE_KEY) { $SUPABASE_SERVICE_ROLE_KEY = $env:SUPABASE_SERVICE_ROLE }
+PhaseSet $p "START"
 
 
 
-$ADMIN_EMAIL = "sanookagingstudio@gmail.com"
+$SU=$env:SUPABASE_URL
 
-$STAFF_EMAIL = "akemontree@gmail.com"
+$AN=$env:SUPABASE_ANON_KEY
 
-$DEFAULT_PASSWORD = "Ake@8814883"
+$SR=$env:SUPABASE_SERVICE_ROLE_KEY
+
+if(!$SR){ $SR=$env:SUPABASE_SERVICE_ROLE }
+
+
+
+$ADMIN="sanookagingstudio@gmail.com"
+
+$STAFF="akemontree@gmail.com"
+
+$PWD="Ake@8814883"
 
 
 
 try {
 
-    if (-not $SUPABASE_URL -or -not $SUPABASE_SERVICE_ROLE_KEY) {
-
-        throw "Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY"
-
-    }
-
-    Write-Log -Phase $phase -Message ("SUPABASE_URL=" + (Mask-Value $SUPABASE_URL))
-
-    Write-Log -Phase $phase -Message ("SERVICE_ROLE_KEY=" + (Mask-Value $SUPABASE_SERVICE_ROLE_KEY))
+    if(!$SU -or !$SR){ throw "Missing SUPABASE env" }
 
 
 
-    $baseAuth = ($SUPABASE_URL.TrimEnd('/')) + "/auth/v1"
+    $authBase = ($SU.TrimEnd("/"))+"/auth/v1"
 
-    $headers = @{
-
-        "apikey" = $SUPABASE_SERVICE_ROLE_KEY
-
-        "Authorization" = "Bearer $SUPABASE_SERVICE_ROLE_KEY"
-
-        "Content-Type" = "application/json"
-
-    }
+    $hdr = @{ apikey=$SR; Authorization="Bearer $SR"; "Content-Type"="application/json" }
 
 
 
-    function Ensure-SupabaseUser {
+    function EnsureUser { param($em,$pw)
 
-        param(
+        $url = $authBase + "/admin/users?email=eq."+[uri]::EscapeDataString($em)
 
-            [string]$Email,
+        try { $u = Retry { Invoke-RestMethod -Uri $url -Headers $hdr -Method GET } $p }
 
-            [string]$Password,
+        catch { $u=$null }
 
-            [string]$PhaseName
 
-        )
 
-        $authUrl = $baseAuth + "/admin/users?email=eq.$([uri]::EscapeDataString($Email))"
+        if($u -and $u.Count -gt 0){
 
-        Write-Log -Phase $PhaseName -Message "Checking Supabase user: $Email"
-
-        $existing = $null
-
-        try {
-
-            $existing = Invoke-WithRetry -Phase $PhaseName -Action {
-
-                Invoke-RestMethod -Uri $authUrl -Headers $headers -Method GET -TimeoutSec 8
-
-            }
-
-        } catch {
-
-            Write-Log -Phase $PhaseName -Message "User lookup failed: $($_.Exception.Message)"
-
-        }
-
-        if ($existing -and $existing.Count -gt 0) {
-
-            Write-Log -Phase $PhaseName -Message "User exists: $Email"
+            LogFile $p "User exists: $em"
 
             return
 
         }
 
-        $createUrl = $baseAuth + "/admin/users"
 
-        $body = @{
 
-            email = $Email
+        $body=@{ email=$em; password=$pw; email_confirm=$true }|ConvertTo-Json
 
-            password = $Password
+        $cUrl=$authBase+"/admin/users"
 
-            email_confirm = $true
+        try { Retry { Invoke-RestMethod -Uri $cUrl -Headers $hdr -Method POST -Body $body } $p }
 
-        } | ConvertTo-Json -Depth 3
+        catch { LogFile $p "Create fail: $em" }
 
-        Write-Log -Phase $PhaseName -Message "Creating Supabase user: $Email"
-
-        try {
-
-            Invoke-WithRetry -Phase $PhaseName -Action {
-
-                Invoke-RestMethod -Uri $createUrl -Headers $headers -Method POST -Body $body -TimeoutSec 8
-
-            } | Out-Null
-
-            Write-Log -Phase $PhaseName -Message "User created: $Email"
-
-        } catch {
-
-            Write-Log -Phase $PhaseName -Message "User create failed: $Email Error=$($_.Exception.Message)"
-
-        }
+        LogFile $p "Created user: $em"
 
     }
 
 
 
-    Ensure-SupabaseUser -Email $ADMIN_EMAIL -Password $DEFAULT_PASSWORD -PhaseName $phase
+    EnsureUser $ADMIN $PWD
 
-    Ensure-SupabaseUser -Email $STAFF_EMAIL -Password $DEFAULT_PASSWORD -PhaseName $phase
+    EnsureUser $STAFF $PWD
 
 
 
-    Set-PhaseStatus -Phase $phase -Status "PASS"
+    PhaseSet $p "PASS"
 
-    Add-Summary -Phase $phase -Message "Supabase auth checked and users ensured"
+    Summary $p "Supabase auth synced"
 
-} catch {
+}
 
-    Set-PhaseStatus -Phase $phase -Status "PASS-WITH-ISSUES"
+catch {
 
-    Write-Log -Phase $phase -Message "Error: $($_.Exception.Message)"
+    PhaseSet $p "PASS-WITH-ISSUES"
 
-    Add-Summary -Phase $phase -Message "Supabase auth issue: $($_.Exception.Message)"
+    Summary $p ("Auth issue: "+$_.Exception.Message)
 
 }
 
 
 
-# PHASE C - SAFE GUARD ENGINE
+# ==========================
 
-$phase = "PHASE-C"
+# PHASE C — SAFE GUARD
 
-Set-PhaseStatus -Phase $phase -Status "START"
+# ==========================
+
+$p="PHASE-C"
+
+PhaseSet $p "START"
+
+try{
+
+    if(!(Test-Path $guard)){ throw "Guard missing" }
+
+    PhaseSet $p "PASS"
+
+    Summary $p "Safe guard OK"
+
+}catch{
+
+    PhaseSet $p "PASS-WITH-ISSUES"
+
+    Summary $p ("Guard issue: "+$_.Exception.Message)
+
+}
 
 
 
-try {
+# ==========================
 
-    if (Test-Path $guardFile) {
+# PHASE D — GIT SNAPSHOT
 
-        $guard = Get-Content $guardFile -Raw | ConvertFrom-Json
+# ==========================
 
-        if ($guard.marker -ne "FunAging.club-SAS-v1") {
+$p="PHASE-D"
 
-            Write-Log -Phase $phase -Message "Guard marker mismatch"
+PhaseSet $p "START"
 
-        }
+try{
+
+    GitSnap $p
+
+    PhaseSet $p "PASS"
+
+    Summary $p "Git snapshot done"
+
+}catch{
+
+    PhaseSet $p "PASS-WITH-ISSUES"
+
+    Summary $p ("Git issue: "+$_.Exception.Message)
+
+}
+
+
+
+# ==========================
+
+# PHASE E — SELF HEALING
+
+# ==========================
+
+$p="PHASE-E"
+
+PhaseSet $p "START"
+
+try{
+
+    $main=Join-Path $backend "app/main.py"
+
+    $new=Join-Path $backend "app/new_main.py"
+
+    if(!(Test-Path $main) -and (Test-Path $new)){
+
+        Copy-Item $new $main -Force
+
+        LogFile $p "main.py restored"
 
     }
 
-    Set-PhaseStatus -Phase $phase -Status "PASS"
+    PhaseSet $p "PASS"
 
-    Add-Summary -Phase $phase -Message "Safe guard OK"
+    Summary $p "Self-heal OK"
 
-} catch {
+}catch{
 
-    Set-PhaseStatus -Phase $phase -Status "PASS-WITH-ISSUES"
+    PhaseSet $p "PASS-WITH-ISSUES"
 
-    Write-Log -Phase $phase -Message "Error: $($_.Exception.Message)"
-
-    Add-Summary -Phase $phase -Message "Safe guard issue: $($_.Exception.Message)"
+    Summary $p ("Heal issue: "+$_.Exception.Message)
 
 }
 
 
 
-# PHASE D - GIT AUTO BACKUP ENGINE
+# ==========================
 
-$phase = "PHASE-D"
+# PHASE F — DOCKER
 
-Set-PhaseStatus -Phase $phase -Status "START"
+# ==========================
 
-try {
+$p="PHASE-F"
 
-    Ensure-GitSnapshot -Phase $phase
+PhaseSet $p "START"
 
-    Set-PhaseStatus -Phase $phase -Status "PASS"
+try{
 
-    Add-Summary -Phase $phase -Message "Git snapshot processed"
+    UpDocker $compose $p
 
-} catch {
+    PhaseSet $p "PASS"
 
-    Set-PhaseStatus -Phase $phase -Status "PASS-WITH-ISSUES"
+    Summary $p "Docker up OK"
 
-    Write-Log -Phase $phase -Message "Error: $($_.Exception.Message)"
+}catch{
 
-    Add-Summary -Phase $phase -Message "Git snapshot issue: $($_.Exception.Message)"
+    PhaseSet $p "PASS-WITH-ISSUES"
+
+    Summary $p ("Docker issue: "+$_.Exception.Message)
 
 }
 
 
 
-# PHASE E - SELF HEALING ENGINE (BASIC)
+# ==========================
 
-$phase = "PHASE-E"
+# PHASE G — HEALTHCHECK
 
-Set-PhaseStatus -Phase $phase -Status "START"
+# ==========================
 
-try {
+$p="PHASE-G"
 
-    $backendMain = Join-Path $backendPath "app\main.py"
+PhaseSet $p "START"
 
-    $backendNewMain = Join-Path $backendPath "app\new_main.py"
+$be=$false;$fe=$false
 
-    if (-not (Test-Path $backendMain) -and (Test-Path $backendNewMain)) {
+try{
 
-        Copy-Item -Path $backendNewMain -Destination $backendMain -Force
+    foreach($u in @("http://localhost:8000/health","http://localhost:8000/docs")){
 
-        Write-Log -Phase $phase -Message "main.py restored from new_main.py"
+        if(HttpOK $u $p){$be=$true;break}
 
     }
 
-    Set-PhaseStatus -Phase $phase -Status "PASS"
+    foreach($u in @("http://localhost:3000/","http://localhost:3000")){
 
-    Add-Summary -Phase $phase -Message "Self-healing basic checks done"
-
-} catch {
-
-    Set-PhaseStatus -Phase $phase -Status "PASS-WITH-ISSUES"
-
-    Write-Log -Phase $phase -Message "Error: $($_.Exception.Message)"
-
-    Add-Summary -Phase $phase -Message "Self-healing issue: $($_.Exception.Message)"
-
-}
-
-
-
-# PHASE F - DOCKER ENGINE
-
-$phase = "PHASE-F"
-
-Set-PhaseStatus -Phase $phase -Status "START"
-
-try {
-
-    Ensure-DockerUp -ComposeFile $composeFile -Phase $phase
-
-    Set-PhaseStatus -Phase $phase -Status "PASS"
-
-    Add-Summary -Phase $phase -Message "Docker up executed"
-
-} catch {
-
-    Set-PhaseStatus -Phase $phase -Status "PASS-WITH-ISSUES"
-
-    Write-Log -Phase $phase -Message "Error: $($_.Exception.Message)"
-
-    Add-Summary -Phase $phase -Message "Docker engine issue: $($_.Exception.Message)"
-
-}
-
-
-
-# PHASE G - FINAL HEALTHCHECK
-
-$phase = "PHASE-G"
-
-Set-PhaseStatus -Phase $phase -Status "START"
-
-$backendOk = $false
-
-$frontendOk = $false
-
-try {
-
-    $backendHealthUrls = @(
-
-        "http://localhost:8000/health",
-
-        "http://localhost:8000/docs"
-
-    )
-
-    foreach ($u in $backendHealthUrls) {
-
-        if (Test-HttpOk -Url $u -Phase $phase) { $backendOk = $true; break }
+        if(HttpOK $u $p){$fe=$true;break}
 
     }
 
-    $frontendUrls = @(
 
-        "http://localhost:3000",
 
-        "http://localhost:3000/"
+    if($be -and $fe){ PhaseSet $p "PASS"; Summary $p "Health OK" }
 
-    )
+    else { PhaseSet $p "PASS-WITH-ISSUES"; Summary $p "Health backend=$be frontend=$fe" }
 
-    foreach ($u in $frontendUrls) {
+}catch{
 
-        if (Test-HttpOk -Url $u -Phase $phase) { $frontendOk = $true; break }
+    PhaseSet $p "PASS-WITH-ISSUES"
 
-    }
-
-    if ($backendOk -and $frontendOk) {
-
-        Set-PhaseStatus -Phase $phase -Status "PASS"
-
-        Add-Summary -Phase $phase -Message "Backend and Frontend healthy"
-
-    } else {
-
-        Set-PhaseStatus -Phase $phase -Status "PASS-WITH-ISSUES"
-
-        Add-Summary -Phase $phase -Message ("Healthcheck backend=" + $backendOk + " frontend=" + $frontendOk)
-
-    }
-
-} catch {
-
-    Set-PhaseStatus -Phase $phase -Status "PASS-WITH-ISSUES"
-
-    Write-Log -Phase $phase -Message "Error: $($_.Exception.Message)"
-
-    Add-Summary -Phase $phase -Message "Healthcheck issue: $($_.Exception.Message)"
+    Summary $p ("Health error: "+$_.Exception.Message)
 
 }
 
 
 
-# PHASE Z - FINAL SUMMARY
+# ==========================
 
-$phase = "PHASE-Z"
+# PHASE Z — SUMMARY
 
-Set-PhaseStatus -Phase $phase -Status "START"
+# ==========================
+
+$p="PHASE-Z"
+
+PhaseSet $p "START"
+
+$sum=Join-Path $root "mega_onepack_AZ_summary.txt"
 
 
 
-$summaryFile = Join-Path $root "mega_onepack_AZ_summary.txt"
+$txt=@()
 
-$lines = @()
+$txt+="ONEPACK A→Z Report"
 
-$lines += "ONEPACK AZ SUMMARY"
+$txt+="Time: "+(Get-Date -f s)
 
-$lines += "Timestamp: $(Get-Date -Format s)"
+$txt+=""
 
-$lines += ""
+$txt+="Phase Status:"
 
-$lines += "Phase Status:"
+foreach($k in $global:ONEPACK_STATUS.Keys){
 
-foreach ($k in $global:ONEPACK_STATUS.Keys) {
-
-    $lines += " - $k : $($global:ONEPACK_STATUS[$k])"
+    $txt+=" - $k : "+$global:ONEPACK_STATUS[$k]
 
 }
 
-$lines += ""
+$txt+=""
 
-$lines += "Details:"
+$txt+="Details:"
 
-$lines += $script:OnePackSummary
-
-Set-Content -Path $summaryFile -Value $lines -Encoding UTF8
-
-Write-Log -Phase $phase -Message "Summary written to $summaryFile"
+$txt+=$script:OnePackSummary
 
 
 
-Set-PhaseStatus -Phase $phase -Status "PASS"
+Set-Content $sum $txt
 
+PhaseSet $p "PASS"
+
+
+
+# END OF ONEPACK AZ
