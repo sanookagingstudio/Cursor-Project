@@ -11,5 +11,5 @@ router = APIRouter()
 
 async def list_trips():
 
-    return {"items": [], "message": "Trip API placeholder (v6)"}
+    return {"items": [], "message": "Trip API placeholder (v7)"}
 

@@ -11,5 +11,5 @@ router = APIRouter()
 
 async def office_root():
 
-    return {"items": [], "message": "Office API placeholder (v6)"}
+    return {"items": [], "message": "Office API placeholder (v7)"}
 

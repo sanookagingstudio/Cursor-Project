@@ -33,7 +33,7 @@ app.add_middleware(
 
 async def root():
 
-    return {"status": "ok", "service": "funaging-backend", "version": "v6"}
+    return {"status": "ok", "service": "funaging-backend", "version": "v7"}
 
 
 

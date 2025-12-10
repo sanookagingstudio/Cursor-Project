@@ -11,5 +11,5 @@ router = APIRouter()
 
 async def media_root():
 
-    return {"items": [], "message": "Media API placeholder (v6)"}
+    return {"items": [], "message": "Media API placeholder (v7)"}
 
