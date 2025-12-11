@@ -1,15 +1,7 @@
-
 from fastapi import APIRouter
 
+router = APIRouter(prefix="/media", tags=["media"])
 
-
-router = APIRouter()
-
-
-
-@router.get("/", summary="Media placeholder")
-
-async def media_root():
-
-    return {"items": [], "message": "Media API placeholder (v7)"}
-
+@router.get("/ping")
+async def media_ping():
+    return {"module": "media", "status": "ok"}

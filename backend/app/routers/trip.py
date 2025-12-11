@@ -1,15 +1,7 @@
-
 from fastapi import APIRouter
 
+router = APIRouter(prefix="/trip", tags=["trip"])
 
-
-router = APIRouter()
-
-
-
-@router.get("/", summary="Trip placeholder")
-
-async def list_trips():
-
-    return {"items": [], "message": "Trip API placeholder (v7)"}
-
+@router.get("/ping")
+async def trip_ping():
+    return {"module": "trip", "status": "ok"}

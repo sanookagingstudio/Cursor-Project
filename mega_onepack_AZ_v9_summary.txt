@@ -1,0 +1,8 @@
+ONEPACK A→Z v9 FIXED
+Time: 2025-12-11T00:23:12
+
+Backend started successfully.
+Summary file path = D:\SanookAgingStudio\shadow project\sanook-master-v2-main\mega_onepack_AZ_v9_summary.txt
+Log file path     = D:\SanookAgingStudio\shadow project\sanook-master-v2-main\mega_onepack_AZ_v9.log
+
+(DONE)

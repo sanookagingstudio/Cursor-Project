@@ -1,0 +1,56 @@
+ONEPACK A→Z V10 REPORT
+Time: 2025-12-11T08:21:24
+Backend health URL : http://127.0.0.1:8000/health
+Frontend URL       : http://127.0.0.1:3000/
+
+PHASE STATUS:
+ - PHASE-B : PASS
+ - PHASE-D : PASS
+ - PHASE-E : PASS-WITH-ISSUES
+ - PHASE-A : PASS
+ - PHASE-F : PASS-WITH-ISSUES
+ - PHASE-Z : START
+ - PHASE-C : PASS
+
+LOG TAIL:
+[2025-12-11T08:19:43] [PHASE-A] STATUS=START
+[2025-12-11T08:19:43] [PHASE-A] Load env: D:\SanookAgingStudio\shadow project\sanook-master-v2-main\backend\.env
+[2025-12-11T08:19:43] [PHASE-A] STATUS=PASS
+[2025-12-11T08:19:43] [PHASE-B] STATUS=START
+[2025-12-11T08:19:43] [PHASE-B] HTTP OK 200 http://127.0.0.1:8000/health
+[2025-12-11T08:19:43] [PHASE-B] Backend already healthy — skip code overwrite
+[2025-12-11T08:19:43] [PHASE-B] STATUS=PASS
+[2025-12-11T08:19:43] [PHASE-C] STATUS=START
+[2025-12-11T08:19:43] [PHASE-C] Found existing package.json — keep it
+[2025-12-11T08:19:43] [PHASE-C] Patched page.tsx class → className
+[2025-12-11T08:19:43] [PHASE-C] STATUS=PASS
+[2025-12-11T08:19:43] [PHASE-D] STATUS=START
+[2025-12-11T08:19:43] [PHASE-D] STATUS=PASS
+[2025-12-11T08:19:43] [PHASE-E] STATUS=START
+[2025-12-11T08:19:43] [PHASE-E] ERR Exception calling "Start" with "0" argument(s): "An error occurred trying to start process 'npm' with working directory 'D:\SanookAgingStudio\shadow project\sanook-master-v2-main\frontend'. The system cannot find the file specified."
+[2025-12-11T08:19:43] [PHASE-E] STATUS=PASS-WITH-ISSUES
+[2025-12-11T08:19:43] [PHASE-F] STATUS=START
+[2025-12-11T08:19:43] [PHASE-F] HTTP OK 200 http://127.0.0.1:8000/health
+[2025-12-11T08:19:45] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:19:50] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:19:55] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:20:00] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:20:05] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:20:10] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:20:15] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:20:20] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:20:25] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:20:30] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:20:36] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:20:41] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:20:46] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:20:51] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:20:56] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:21:01] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:21:06] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:21:11] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:21:16] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:21:21] [PHASE-F] HTTP ERR http://127.0.0.1:3000/ :: No connection could be made because the target machine actively refused it. (127.0.0.1:3000)
+[2025-12-11T08:21:24] [PHASE-F] Backend OK = True | Frontend OK = False
+[2025-12-11T08:21:24] [PHASE-F] STATUS=PASS-WITH-ISSUES
+[2025-12-11T08:21:24] [PHASE-Z] STATUS=START

@@ -1,15 +1,7 @@
-
 from fastapi import APIRouter
 
+router = APIRouter(prefix="/office", tags=["office"])
 
-
-router = APIRouter()
-
-
-
-@router.get("/", summary="Office placeholder")
-
-async def office_root():
-
-    return {"items": [], "message": "Office API placeholder (v7)"}
-
+@router.get("/ping")
+async def office_ping():
+    return {"module": "office", "status": "ok"}

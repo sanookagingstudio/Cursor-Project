@@ -260,3 +260,8 @@ Write-Host "Backend + Frontend restored successfully"
 Write-Host "Supabase auto-configured using PAT"
 
 
+
+
+
+
+
