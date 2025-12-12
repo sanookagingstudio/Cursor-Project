@@ -56,3 +56,4 @@ Write-Host "`n=== Forensic scan finished ===" -ForegroundColor Cyan
 
 
 
+

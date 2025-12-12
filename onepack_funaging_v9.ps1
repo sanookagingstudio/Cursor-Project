@@ -311,3 +311,4 @@ Write-Host "  2) ตรวจว่า Docker backend ขึ้นแล้ว (
 Write-Host "  3) ตั้งค่า frontend/.env.local ให้ตรงกับ Supabase/Vercel แล้วรัน frontend dev/prod."
 Write-Host ""
 
+

@@ -312,3 +312,4 @@ Write-Host "  2) ถ้า health check ไม่ 200 ให้ดู docker log
 Write-Host "  3) ตั้งค่า frontend/.env.local แล้วรัน frontend dev หรือ deploy Vercel." 
 Write-Host ""
 
+

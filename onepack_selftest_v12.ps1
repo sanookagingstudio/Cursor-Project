@@ -212,3 +212,4 @@ Write-Host ""
 Write-Host "Backend URL:  http://localhost:8000/health" -ForegroundColor White
 Write-Host "Frontend URL: http://localhost:3000" -ForegroundColor White
 Write-Host ""
+
