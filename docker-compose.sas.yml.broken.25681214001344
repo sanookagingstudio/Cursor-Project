@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  sas_db:
+    image: postgres:15
+    container_name: sas_db
+    restart: always
+    environment:
+      POSTGRES_USER: sas
+      POSTGRES_PASSWORD: sas123
+      POSTGRES_DB: sas_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - sas_db_data:/var/lib/postgresql/data
+    networks:
+      - sas_network
+
+  sas_backend:
+    build:
+    env_file:
+      - ./backend/.env.auth
+      context: ./backend
+      dockerfile: Dockerfile.backend
+    container_name: sas_backend
+    restart: always
+    depends_on:
+      - sas_db
+    environment:
+      DATABASE_URL: postgresql://sas:sas123@sas_db:5432/sas_db
+      PORT: 8000
+    ports:
+      - "8000:8000"
+    networks:
+      - sas_network
+
+volumes:
+  sas_db_data:
+
+networks:
+  sas_network:
+    driver: bridge
+

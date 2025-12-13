@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-12-14T00:29:26",
+  "frontend": "http://localhost:3000",
+  "status": "BASELINE_FROZEN",
+  "rule": "NO CHANGE WITHOUT NEW STEP + BROWSER PROOF",
+  "backend": "http://localhost:8000",
+  "steps": {
+    "stepC": "FRONTEND AUTH COOKIE GUARD — OK",
+    "stepD": "ROLE AWARE DASHBOARD — OK"
+  },
+  "contracts": [
+    "/auth/login (render ok)",
+    "/dashboard (guarded)",
+    "/auth/me (cookie)",
+    "middleware.ts active",
+    "env auth locked"
+  ]
+}

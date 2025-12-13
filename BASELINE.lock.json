@@ -1,0 +1,25 @@
+{
+  "timestamp": "2025-12-14T00:10:29",
+  "frontend": "http://localhost:3000",
+  "status": "FINAL_AUTH_ENVFILE_LOCK_OK",
+  "auth": {
+    "cookie": "fa_session",
+    "roles": [
+      "admin",
+      "staff"
+    ],
+    "env_file": "backend/.env.auth",
+    "admin_email": "sanookagingstudio@gmail.com",
+    "env_only": true,
+    "staff_email": "akemontree@gmail.com"
+  },
+  "backend": "http://localhost:8000",
+  "contracts": [
+    "/health",
+    "/auth/ping",
+    "/auth/login",
+    "/auth/me",
+    "/auth/logout",
+    "/dashboard/summary"
+  ]
+}

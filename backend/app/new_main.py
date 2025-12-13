@@ -1,16 +1,26 @@
 from fastapi import FastAPI
-from .routes import trip, office, media
+from fastapi.middleware.cors import CORSMiddleware
 
 def create_app():
-    app = FastAPI(title='FunAging.club Backend')
+    from app.routes import health, dashboard, auth
 
-    @app.get('/health')
-    async def health(): return {'status': 'ok'}
+    app = FastAPI()
 
-    app.include_router(trip.router)
-    app.include_router(office.router)
-    app.include_router(media.router)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[
+            "http://localhost:3000",
+            "http://127.0.0.1:3000",
+        ],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    app.include_router(health.router)
+    app.include_router(dashboard.router)
     app.include_router(auth.router)
+
     return app
 
 app = create_app()

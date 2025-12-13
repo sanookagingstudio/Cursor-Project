@@ -1,0 +1,11 @@
+{
+  "rules": [
+    "AUTH SOURCE OF TRUTH = backend/.env.auth (via docker-compose env_file).",
+    "NO fallback emails/passwords (ENV ONLY).",
+    "NO CHANGE if /health fails",
+    "NO AUTH CHANGE if /auth/ping fails",
+    "NO SESSION CHANGE if /auth/me fails after login",
+    "If regression: restore BASELINE.lock.json + rebuild backend"
+  ],
+  "enforcement": "FAIL_FAST"
+}

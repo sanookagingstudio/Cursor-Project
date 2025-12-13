@@ -1,60 +1,30 @@
-"use client";
+import axios from "axios"
 
-export class ApiClient {
-  base: string;
+export const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000",
+  withCredentials: true,
+})
 
-  constructor(baseUrl?: string) {
-    this.base = baseUrl ?? process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
-  }
-
-  async request(path: string, options: RequestInit = {}) {
-    const url = `${this.base}${path}`;
-
-    try {
-      const res = await fetch(url, {
-        cache: "no-store",
-        ...options,
-      });
-
-      if (!res.ok) {
-        throw new Error(`API Error (${res.status})`);
-      }
-
-      return await res.json();
-    } catch (err) {
-      console.error("API Request Failed:", err);
-      return null;
-    }
-  }
-
-  get(path: string) {
-    return this.request(path, { method: "GET" });
-  }
-
-  post(path: string, body: any) {
-    return this.request(path, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-  }
+export type ApiHealth = {
+  status: string
+  detail?: string
 }
 
-// global client instance
-export const api = new ApiClient();
-
-export async function fetchHealth() {
-  try {
-    const url = `${api.base}/health`;
-    const res = await fetch(url, { cache: "no-store" });
-    return res.ok;
-  } catch {
-    return false;
-  }
+export async function fetchHealth(): Promise<ApiHealth> {
+  const res = await api.get("/health")
+  return res.data
 }
 
+export type DashboardSummary = {
+  total_members: number
+  upcoming_trips: number
+  media_created: number
+  active_today: number
+}
 
+export async function getDashboardSummary(): Promise<DashboardSummary> {
+  const res = await api.get("/dashboard/summary")
+  return res.data
+}
 
-
-
-
+export default api
