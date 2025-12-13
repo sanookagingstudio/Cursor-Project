@@ -6,6 +6,7 @@ import { me, logout } from "@/lib/authClient";
 export default function Dashboard(){
   const router = useRouter();
   const [user,setUser]=useState(null);
+  const [data,setData]=useState(null);
 
   useEffect(()=>{
     me().then(r=>{
@@ -13,38 +14,39 @@ export default function Dashboard(){
         router.replace("/auth/login");
       } else {
         setUser(r.user);
+        fetchSummary();
       }
     });
   },[]);
 
-  if(!user) return <p>Loading...</p>;
+  const fetchSummary = async ()=>{
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const res = await fetch(base + "/dashboard/summary", { credentials:"include" });
+    if(res.ok){
+      setData(await res.json());
+    }
+  };
+
+  if(!user || !data) return <p>Loading...</p>;
 
   return (
     <div style={{padding:40}}>
-      <h1>Dashboard</h1>
+      <h1>Dashboard ({data.role})</h1>
 
-      {user.role === "admin" && (
-        <section style={{border:"1px solid #ccc",padding:16,marginBottom:16}}>
-          <h2>Admin Panel</h2>
-          <ul>
-            <li>System Settings</li>
-            <li>User Management</li>
-            <li>Reports</li>
-          </ul>
-        </section>
+      {data.role === "admin" && (
+        <ul>
+          <li>Total Members: {data.total_members}</li>
+          <li>Active Staff: {data.active_staff}</li>
+          <li>Reports Today: {data.reports_today}</li>
+        </ul>
       )}
 
-      {user.role === "staff" && (
-        <section style={{border:"1px solid #ccc",padding:16,marginBottom:16}}>
-          <h2>Staff Panel</h2>
-          <ul>
-            <li>Daily Tasks</li>
-            <li>Member Support</li>
-          </ul>
-        </section>
+      {data.role === "staff" && (
+        <ul>
+          <li>Assigned Tasks: {data.assigned_tasks}</li>
+          <li>Completed Today: {data.completed_today}</li>
+        </ul>
       )}
-
-      <pre>{JSON.stringify(user,null,2)}</pre>
 
       <button onClick={()=>logout().then(()=>router.replace("/auth/login"))}>
         Logout
