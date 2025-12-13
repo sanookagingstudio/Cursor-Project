@@ -1,0 +1,25 @@
+'use client'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@supabase/supabase-js'
+
+export default function DashboardPage() {
+  const router = useRouter()
+
+  useEffect(() => {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+    supabase.auth.getSession().then(({ data }) => {
+      if (!data.session) router.replace('/auth/login')
+    })
+  }, [router])
+
+  return (
+    <div style={{ padding: 16 }}>
+      <h1>Dashboard</h1>
+      <p>Baseline working state</p>
+    </div>
+  )
+}
