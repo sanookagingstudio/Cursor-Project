@@ -312,3 +312,5 @@ Write-Host "  3) ตั้งค่า frontend/.env.local ให้ตรงก
 Write-Host ""
 
 
+
+

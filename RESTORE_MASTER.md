@@ -1,7 +1,7 @@
 # FunAging.club — RESTORE MASTER GUIDE
 
 Generated automatically by **ONEPACK v14 — Hybrid Backup & Restore Engine**
-Timestamp: 25681212-072324
+Timestamp: 25681212-072445
 
 ## 1. Concept
 
@@ -13,14 +13,14 @@ Timestamp: 25681212-072324
 
 ## 2. Latest Snapshot Tag (From This Run)
 
-- Latest tag from this run: stable-v14-25681212-072324
+- Latest tag from this run: stable-v14-25681212-072445
 
 ### Restore from this exact snapshot
 
 ``bash
 # สร้าง branch ใหม่จาก snapshot แท็กนี้
 git fetch --all --tags
-git checkout tags/stable-v14-25681212-072324 -b restore-stable-v14-25681212-072324
+git checkout tags/stable-v14-25681212-072445 -b restore-stable-v14-25681212-072445
 
 # จากนั้นสามารถรันระบบตามปกติ เช่น
 pwsh .\onepack_funaging_v13.ps1
@@ -29,6 +29,7 @@ pwsh .\onepack_funaging_v13.ps1
 ## 3. Other Recent Snapshot Tags
 
 Recent tags (max 10):
+- stable-v14-25681212-072445
 - stable-v14-25681212-072324
 - stable-v13-25681212-001803
 - v12-stable
@@ -38,7 +39,6 @@ Recent tags (max 10):
 - onepack-az-v2-25681210214807
 - onepack-az-25681210213402
 - onepack-az-25681210212700
-- onepack-az-25681210211333
 
 ## 4. Full Restore Procedure (Recommended)
 
@@ -47,7 +47,7 @@ Recent tags (max 10):
    git status
    ``
 
-2. เลือกแท็ก snapshot ที่ต้องการ (เช่น stable-v14-25681212-072324 หรือ stable อื่น ๆ)
+2. เลือกแท็ก snapshot ที่ต้องการ (เช่น stable-v14-25681212-072445 หรือ stable อื่น ๆ)
 3. สร้าง branch ใหม่จากแท็กนั้น:
 
    ``bash

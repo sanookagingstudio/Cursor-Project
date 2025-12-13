@@ -313,3 +313,5 @@ Write-Host "  3) ตั้งค่า frontend/.env.local แล้วรัน
 Write-Host ""
 
 
+
+
