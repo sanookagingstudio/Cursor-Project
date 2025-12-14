@@ -224,3 +224,6 @@ Write-Host "⚠ IMPORTANT: Update NEXT_PUBLIC_SUPABASE_ANON_KEY in frontend/.env
 Write-Host ""
 
 
+
+
+
