@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./app/backend
+    image: sas_backend_image
+    container_name: sas_backend
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
